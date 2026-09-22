@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — FTP Client</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1b1b1f;
+    --muted: #5d5d66;
+    --rule: #e2e2e8;
+    --accent: #1a5fb4;
+    --card: #f6f6f9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16161a;
+      --fg: #e8e8ec;
+      --muted: #a2a2ad;
+      --rule: #2e2e36;
+      --accent: #7fb0f0;
+      --card: #1e1e24;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.7 -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px 80px; }
+  h1 { font-size: 1.8rem; line-height: 1.3; margin: 0 0 4px; }
+  h2 { font-size: 1.2rem; margin: 40px 0 8px; padding-top: 16px; border-top: 1px solid var(--rule); }
+  h3 { font-size: 1rem; margin: 24px 0 6px; }
+  p, li { color: var(--fg); }
+  .meta { color: var(--muted); font-size: 0.9rem; margin: 0 0 8px; }
+  .lede { color: var(--muted); }
+  ul { padding-left: 1.25em; }
+  li { margin: 4px 0; }
+  a { color: var(--accent); }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .lang-sep { margin-top: 64px; border-top: 2px solid var(--rule); padding-top: 32px; }
+  footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem; }
+  code { background: var(--card); padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
+</style>
+</head>
+<body>
+<main>
+
+  <h1>Privacy Policy</h1>
+  <p class="meta"><strong>FTP Client</strong> (Android app, package <code>com.bitty.ftpclient</code>)<br>
+  Last updated: 22 September 2026 · Effective: 22 September 2026</p>
+
+  <p class="lede">FTP Client is an FTP / FTPS / SFTP file-transfer client. It connects only to the servers
+  you choose. The developer does not operate any server for this app, and does not collect, receive,
+  or have access to any of your data.</p>
+
+  <div class="card">
+    <strong>Summary:</strong> No data is collected. No analytics, no advertising, no tracking,
+    no accounts, no third-party SDKs that phone home. Everything the app stores stays on your device.
+  </div>
+
+  <h2>1. Data we collect</h2>
+  <p><strong>None.</strong> The developer does not collect, transmit, sell, or share any personal or
+  device data. The app contains no analytics, crash-reporting, advertising, or tracking libraries,
+  and it does not create user accounts.</p>
+
+  <h2>2. Data stored on your device</h2>
+  <p>The app stores the following locally on your phone only. It is never uploaded to the developer
+  or to any third party, and it is removed when you uninstall the app or clear its data.</p>
+  <ul>
+    <li><strong>Site settings</strong> — server name, host address, port, protocol, username, and
+      (only if you enable “Remember password”) the password, plus options such as character encoding
+      and transfer mode. These are kept in the app's private storage (SharedPreferences).</li>
+    <li><strong>SSH host keys</strong> — for SFTP connections, the server's host key fingerprint is
+      remembered on first connect (trust on first use) so later connections can be verified.</li>
+    <li><strong>App preferences</strong> — such as the interface language and last-used folders.</li>
+  </ul>
+  <p>Credentials are stored in plain text in the app's private storage, in the same way desktop
+  clients such as FileZilla store their site manager. If you prefer not to keep them, turn off
+  “Remember password” or use Quick Connect.</p>
+
+  <h2>3. Network connections</h2>
+  <p>The app makes network connections <em>only</em> to the FTP / FTPS / SFTP servers whose addresses
+  you enter yourself. Your credentials and files are sent to those servers so that the transfer can
+  happen — that is the purpose of the app. The developer has no access to those servers or to
+  anything sent over those connections.</p>
+  <p>Plain FTP is an unencrypted protocol: your username, password, and file contents travel in clear
+  text and can be read by anyone on the network path. Use FTPS or SFTP outside a network you trust.
+  How a server you connect to handles your data is governed by that server operator's own policy,
+  not by this one.</p>
+
+  <h2>4. Permissions and why they are needed</h2>
+  <ul>
+    <li><strong>Internet / network state</strong> — to connect to the servers you configure.</li>
+    <li><strong>All files access (MANAGE_EXTERNAL_STORAGE) / storage</strong> — to let you browse your
+      phone's files, upload any file you pick, and save downloads to any folder you choose. Files are
+      read or written only for the transfers you start; they are never sent anywhere except to the
+      server you selected.</li>
+    <li><strong>Foreground service &amp; wake lock</strong> — to keep transfers running when the app is
+      in the background or the screen is off.</li>
+    <li><strong>Notifications</strong> — to show transfer progress and let you cancel transfers.</li>
+  </ul>
+
+  <h2>5. Children</h2>
+  <p>The app is a general-purpose utility, is not directed to children, and collects no data from
+  anyone, including children under 13.</p>
+
+  <h2>6. Your choices</h2>
+  <p>Because nothing leaves your device, there is no data held by the developer to access, correct,
+  export, or delete. You can delete everything the app stores at any time by deleting individual
+  sites in the app, or via Android's <em>Settings → Apps → FTP Client → Storage → Clear data</em>,
+  or by uninstalling the app.</p>
+
+  <h2>7. Changes to this policy</h2>
+  <p>If this policy changes, the updated version will be posted at this same address with a new
+  “Last updated” date.</p>
+
+  <h2>8. Contact</h2>
+  <p>Questions about this policy: <a href="mailto:bittyferrari@gmail.com">bittyferrari@gmail.com</a></p>
+
+  <section class="lang-sep" lang="zh-Hant">
+    <h1>隱私權政策</h1>
+    <p class="meta"><strong>FTP Client</strong>（Android 應用程式，套件名稱 <code>com.bitty.ftpclient</code>）<br>
+    最後更新：2026 年 9 月 22 日 · 生效日：2026 年 9 月 22 日</p>
+
+    <p class="lede">FTP Client 是一款 FTP / FTPS / SFTP 檔案傳輸用戶端，只會連線到您自己指定的伺服器。
+    開發者並未為本 App 架設任何伺服器，也不會蒐集、接收或取得您的任何資料。</p>
+
+    <div class="card">
+      <strong>重點：</strong>本 App 不蒐集任何資料。沒有分析追蹤、沒有廣告、沒有帳號系統，
+      也沒有會回傳資料的第三方 SDK。所有資料都只留在您的裝置上。
+    </div>
+
+    <h2>一、我們蒐集的資料</h2>
+    <p><strong>沒有。</strong>開發者不會蒐集、傳送、販售或分享任何個人或裝置資料。本 App 未內含任何
+    分析、當機回報、廣告或追蹤函式庫，也不需要註冊帳號。</p>
+
+    <h2>二、儲存在您裝置上的資料</h2>
+    <p>以下資料僅儲存在您的手機本機，不會上傳給開發者或任何第三方；解除安裝或清除 App 資料後即一併移除。</p>
+    <ul>
+      <li><strong>站台設定</strong>：站台名稱、主機位址、連接埠、協定、使用者名稱，以及（僅在您勾選
+        「記住密碼」時）密碼，另有編碼、傳輸模式等選項。這些資料存放於 App 的私有儲存空間
+        （SharedPreferences）。</li>
+      <li><strong>SSH host key</strong>：使用 SFTP 時，第一次連線會記下伺服器的 host key 指紋
+        （TOFU，首次信任），供之後連線比對驗證。</li>
+      <li><strong>App 偏好設定</strong>：例如介面語言、最近使用的目錄。</li>
+    </ul>
+    <p>帳號密碼以明文儲存在 App 私有空間，做法與 FileZilla 等桌面用戶端的站台管理員相同。
+    若不希望留存，請關閉「記住密碼」或改用「快速連線」。</p>
+
+    <h2>三、網路連線</h2>
+    <p>本 App <em>只會</em>連線到您自己輸入位址的 FTP / FTPS / SFTP 伺服器。您的帳密與檔案會傳送至
+    這些伺服器以完成傳輸，這正是本 App 的用途。開發者無法存取這些伺服器，也無法取得這些連線上的任何內容。</p>
+    <p>純 FTP 為未加密協定，帳號、密碼與檔案內容以明文傳輸，網路路徑上的任何人都可能讀取。
+    在不信任的網路環境請改用 FTPS 或 SFTP。您所連線的伺服器如何處理您的資料，依該伺服器管理者的
+    政策而定，不在本政策範圍內。</p>
+
+    <h2>四、權限用途</h2>
+    <ul>
+      <li><strong>網際網路／網路狀態</strong>：連線到您設定的伺服器。</li>
+      <li><strong>所有檔案存取權（MANAGE_EXTERNAL_STORAGE）／儲存空間</strong>：讓您瀏覽手機檔案、
+        上傳您選擇的檔案，並將下載內容存到您指定的任意資料夾。檔案僅在您發起的傳輸中被讀寫，
+        除了您選定的伺服器外不會送往任何地方。</li>
+      <li><strong>前景服務與喚醒鎖定</strong>：讓傳輸在切換到背景或關閉螢幕時仍可繼續。</li>
+      <li><strong>通知</strong>：顯示傳輸進度並提供取消操作。</li>
+    </ul>
+
+    <h2>五、兒童</h2>
+    <p>本 App 為一般工具類應用，非以兒童為對象，且不會蒐集任何人的資料，包含 13 歲以下兒童。</p>
+
+    <h2>六、您的選擇</h2>
+    <p>由於沒有任何資料離開您的裝置，開發者端不存在可供查詢、更正、匯出或刪除的資料。
+    您隨時可以在 App 內刪除個別站台，或透過 Android 的
+    <em>設定 → 應用程式 → FTP Client → 儲存空間 → 清除資料</em>，或直接解除安裝，
+    清除本 App 儲存的所有內容。</p>
+
+    <h2>七、政策變更</h2>
+    <p>本政策如有修訂，將於同一網址公布更新版本，並更新「最後更新」日期。</p>
+
+    <h2>八、聯絡方式</h2>
+    <p>如對本政策有任何疑問：<a href="mailto:bittyferrari@gmail.com">bittyferrari@gmail.com</a></p>
+  </section>
+
+  <footer>© 2026 Bitty · FTP Client</footer>
+</main>
+</body>
+</html>

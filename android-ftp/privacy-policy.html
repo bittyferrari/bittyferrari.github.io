@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>隱私權政策 / Privacy Policy — FTP Server</title>
+<style>
+  :root{
+    --bg:#ffffff; --fg:#1c1f23; --muted:#5a6470; --line:#e3e7ec; --accent:#1a6fd4;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#14171a; --fg:#e6e9ed; --muted:#9aa4b0; --line:#2b3138; --accent:#6fb0ff; }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.75; font-size:16px;
+  }
+  .wrap{max-width:780px; margin:0 auto; padding:48px 16px 80px}
+  h1{font-size:1.75rem; line-height:1.3; margin:0 0 .25em}
+  h2{font-size:1.25rem; margin:2.2em 0 .6em; padding-top:.8em; border-top:1px solid var(--line)}
+  h3{font-size:1.02rem; margin:1.6em 0 .4em}
+  p,li{color:var(--fg)}
+  ul{padding-left:1.25em}
+  li{margin:.35em 0}
+  .meta{color:var(--muted); font-size:.92rem; margin:0 0 2em}
+  .lead{background:color-mix(in srgb, var(--accent) 8%, transparent); border-left:3px solid var(--accent); padding:14px 16px; border-radius:0 6px 6px 0}
+  a{color:var(--accent)}
+  hr.sep{border:0; border-top:1px solid var(--line); margin:3.5em 0}
+  .lang-note{color:var(--muted); font-size:.9rem}
+  footer{color:var(--muted); font-size:.88rem; margin-top:3em; border-top:1px solid var(--line); padding-top:1.2em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>隱私權政策</h1>
+<p class="meta">應用程式：FTP Server（套件名稱 <code>com.bitty.ftpserver</code>）<br>
+生效日期：2026 年 9 月 22 日　·　最後更新：2026 年 9 月 22 日</p>
+
+<p class="lead"><strong>簡短版本：</strong>本應用程式不收集、不上傳、不分享任何個人資料。所有檔案與設定都只留在您自己的裝置上。開發者無法存取您的任何資料。</p>
+
+<h2>1. 這個應用程式做什麼</h2>
+<p>FTP Server 會在您的 Android 裝置上啟動一個 FTP 伺服器，讓同一個區域網路（例如同一個 Wi-Fi）中的電腦或其他裝置，可以連線瀏覽、下載、上傳、刪除或重新命名您授權範圍內的檔案。所有連線都是由您的裝置直接與您自己的區域網路裝置進行，不會經過開發者或任何第三方的伺服器。</p>
+
+<h2>2. 我們收集哪些資料</h2>
+<p><strong>沒有。</strong>本應用程式不會收集、記錄或傳送任何個人資料，包括但不限於：</p>
+<ul>
+  <li>姓名、電子郵件、電話號碼或任何帳號資訊</li>
+  <li>裝置識別碼、廣告識別碼、IP 位址</li>
+  <li>位置資訊</li>
+  <li>通訊錄、通話紀錄、簡訊</li>
+  <li>使用行為、分析或當機統計資料</li>
+</ul>
+<p>本應用程式不含任何第三方分析、廣告或追蹤 SDK，也沒有使用任何第三方函式庫傳送資料。</p>
+
+<h2>3. 資料儲存在哪裡</h2>
+<p>您在應用程式中設定的項目（例如通訊埠、使用者名稱、密碼、分享的資料夾路徑）都只儲存在您裝置本機的應用程式私有儲存空間中。這些資料不會離開您的裝置，開發者無從讀取。解除安裝應用程式時，這些設定會一併移除。</p>
+<p>您透過 FTP 存取的檔案本來就在您的裝置上，本應用程式只是在您主動啟動伺服器時提供存取管道，不會複製、上傳或備份這些檔案。</p>
+
+<h2>4. 權限說明</h2>
+<p>本應用程式為了運作而向系統申請下列權限，每一項的用途如下：</p>
+<ul>
+  <li><strong>網際網路／網路狀態／Wi-Fi 狀態</strong>（<code>INTERNET</code>、<code>ACCESS_NETWORK_STATE</code>、<code>ACCESS_WIFI_STATE</code>）：建立本機 FTP 伺服器的網路通訊端，並顯示目前的區域網路 IP 位址，讓您知道要從電腦連到哪裡。本應用程式不會主動對外網連線。</li>
+  <li><strong>存取所有檔案／讀寫外部儲存空間</strong>（<code>MANAGE_EXTERNAL_STORAGE</code>、<code>READ_EXTERNAL_STORAGE</code>、<code>WRITE_EXTERNAL_STORAGE</code>）：FTP 伺服器的核心功能就是讓您從電腦端瀏覽與傳輸手機上的檔案，因此需要檔案存取權限。檔案僅在您自己發起的 FTP 連線中被讀取或寫入，不會傳送給開發者或任何第三方。</li>
+  <li><strong>前景服務</strong>（<code>FOREGROUND_SERVICE</code>、<code>FOREGROUND_SERVICE_SPECIAL_USE</code>）：讓伺服器在您切換到其他應用程式時仍能持續運作，並在通知列顯示執行中的狀態。</li>
+  <li><strong>通知</strong>（<code>POST_NOTIFICATIONS</code>）：顯示伺服器正在執行的常駐通知，方便您隨時停止伺服器。</li>
+  <li><strong>喚醒鎖定</strong>（<code>WAKE_LOCK</code>）：避免裝置在檔案傳輸過程中進入休眠而中斷連線。</li>
+</ul>
+
+<h2>5. 資料分享與第三方</h2>
+<p>本應用程式不會將任何資料分享、販售或傳送給第三方。開發者不會收到任何來自本應用程式的資料。</p>
+
+<h2>6. 安全性提醒</h2>
+<p>FTP 是明文協定，帳號、密碼與檔案內容在網路上傳輸時不會加密。建議您：</p>
+<ul>
+  <li>僅在您信任的私人網路（例如家中或公司的 Wi-Fi）中使用；</li>
+  <li>設定不易猜測的使用者名稱與密碼，避免使用匿名登入；</li>
+  <li>不使用時立即停止伺服器；</li>
+  <li>不要將裝置的 FTP 通訊埠透過路由器轉送到網際網路上。</li>
+</ul>
+<p>您必須自行負責決定要分享哪些資料夾，以及在什麼網路環境下啟用伺服器。</p>
+
+<h2>7. 兒童隱私</h2>
+<p>本應用程式為一般用途的檔案傳輸工具，並未針對 13 歲以下兒童設計，也不會在知情的情況下收集兒童的任何個人資料（事實上本應用程式不收集任何人的個人資料）。</p>
+
+<h2>8. 您的權利</h2>
+<p>由於本應用程式不收集任何個人資料，因此沒有可供查詢、更正或刪除的資料。若您想移除應用程式在本機儲存的設定，只要解除安裝本應用程式即可。</p>
+
+<h2>9. 本政策的變更</h2>
+<p>若本應用程式未來的功能變動影響到資料處理方式，我們會更新本頁面並修改上方的「最後更新」日期。重大變更會一併在應用程式的更新說明中告知。</p>
+
+<h2>10. 聯絡方式</h2>
+<p>對本隱私權政策有任何疑問，請聯絡：<br>
+電子郵件：<a href="mailto:bittyferrari@gmail.com">bittyferrari@gmail.com</a></p>
+
+<hr class="sep">
+
+<h1 id="en">Privacy Policy</h1>
+<p class="meta">App: FTP Server (package <code>com.bitty.ftpserver</code>)<br>
+Effective date: September 22, 2026　·　Last updated: September 22, 2026</p>
+
+<p class="lead"><strong>Short version:</strong> This app collects no data, uploads nothing, and shares nothing. All files and settings stay on your own device. The developer has no access to any of your data.</p>
+
+<h2>1. What this app does</h2>
+<p>FTP Server runs an FTP server on your Android device so that a computer or another device on the same local network (for example, the same Wi-Fi) can browse, download, upload, delete, and rename files you have chosen to make available. All connections go directly between your device and the other devices on your own network. Nothing passes through the developer's servers or any third party.</p>
+
+<h2>2. Data we collect</h2>
+<p><strong>None.</strong> The app does not collect, log, or transmit any personal data, including but not limited to:</p>
+<ul>
+  <li>Names, email addresses, phone numbers, or account information</li>
+  <li>Device identifiers, advertising IDs, or IP addresses</li>
+  <li>Location data</li>
+  <li>Contacts, call logs, or messages</li>
+  <li>Usage analytics or crash statistics</li>
+</ul>
+<p>The app contains no third-party analytics, advertising, or tracking SDKs.</p>
+
+<h2>3. Where data is stored</h2>
+<p>Settings you configure in the app (port number, username, password, shared folder paths) are stored only in the app's private storage on your device. They never leave your device and the developer cannot read them. Uninstalling the app removes them.</p>
+<p>Files you access over FTP already reside on your device. The app only provides access to them while you have explicitly started the server; it does not copy, upload, or back them up.</p>
+
+<h2>4. Permissions</h2>
+<ul>
+  <li><strong>Internet / Network state / Wi-Fi state</strong> (<code>INTERNET</code>, <code>ACCESS_NETWORK_STATE</code>, <code>ACCESS_WIFI_STATE</code>): to open the local server socket and to show your current local IP address so you know where to connect from. The app does not initiate outbound internet connections.</li>
+  <li><strong>All files access / external storage</strong> (<code>MANAGE_EXTERNAL_STORAGE</code>, <code>READ_EXTERNAL_STORAGE</code>, <code>WRITE_EXTERNAL_STORAGE</code>): the core purpose of the app is to let you browse and transfer files on your device from a computer, which requires file access. Files are read or written only during FTP sessions you initiate, and are never sent to the developer or any third party.</li>
+  <li><strong>Foreground service</strong> (<code>FOREGROUND_SERVICE</code>, <code>FOREGROUND_SERVICE_SPECIAL_USE</code>): to keep the server running while you switch to other apps, with a visible status notification.</li>
+  <li><strong>Notifications</strong> (<code>POST_NOTIFICATIONS</code>): to show the ongoing server notification so you can stop the server at any time.</li>
+  <li><strong>Wake lock</strong> (<code>WAKE_LOCK</code>): to keep transfers from being interrupted when the device would otherwise sleep.</li>
+</ul>
+
+<h2>5. Sharing and third parties</h2>
+<p>No data is shared, sold, or transmitted to any third party. The developer receives no data from this app.</p>
+
+<h2>6. Security notice</h2>
+<p>FTP is a plaintext protocol: credentials and file contents are not encrypted in transit. We recommend that you use the app only on networks you trust, set a strong username and password instead of allowing anonymous access, stop the server when you are not using it, and never forward the FTP port from your router to the public internet. You are responsible for deciding which folders to share and on which networks to run the server.</p>
+
+<h2>7. Children's privacy</h2>
+<p>This is a general-purpose file transfer utility. It is not directed at children under 13 and does not knowingly collect personal information from children — indeed, it collects no personal information from anyone.</p>
+
+<h2>8. Your rights</h2>
+<p>Because the app collects no personal data, there is no data to access, correct, or delete. To remove the settings stored locally, simply uninstall the app.</p>
+
+<h2>9. Changes to this policy</h2>
+<p>If future functionality changes how data is handled, this page will be updated and the "Last updated" date above revised. Material changes will also be noted in the app's release notes.</p>
+
+<h2>10. Contact</h2>
+<p>Questions about this privacy policy: <a href="mailto:bittyferrari@gmail.com">bittyferrari@gmail.com</a></p>
+
+<footer>
+  © 2026 FTP Server. 本頁面同時提供繁體中文與英文版本；兩者內容一致，如有歧異以繁體中文版為準。<br>
+  This page is provided in Traditional Chinese and English; in case of discrepancy, the Chinese version prevails.
+</footer>
+
+</div>
+</body>
+</html>
