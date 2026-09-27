@@ -1,16 +1,607 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-Hant">
 <head>
-	<title>Bitty Ferrari</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bitty Ferrari — Apps</title>
+<meta name="description" content="Bitty Ferrari — indie Android / iOS apps: Bluetooth keyboard & mouse, FTP, GPS HUD, slideshows. Privacy-first, zero data collection.">
+<meta name="theme-color" content="#07070c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07070c; --fg:#ecebf5; --muted:#8a89a3; --line:rgba(255,255,255,.08);
+  --card:rgba(255,255,255,.035); --a:#ff2d55; --b:#7c5cff; --c:#00e0ff;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@property --ang{syntax:"<angle>";initial-value:0deg;inherits:false}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{
+  background:var(--bg); color:var(--fg); min-height:100vh; overflow-x:clip;
+  font-family:"Space Grotesk","Noto Sans TC","Noto Sans JP","Noto Sans KR",system-ui,sans-serif; -webkit-font-smoothing:antialiased;
+}
+html[lang=ja] body{font-family:"Space Grotesk","Noto Sans JP",system-ui,sans-serif}
+html[lang=ko] body{font-family:"Space Grotesk","Noto Sans KR",system-ui,sans-serif}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--a);color:#fff}
+.sc{color:var(--c);opacity:.8}
+
+/* ---------- preloader ---------- */
+#boot{position:fixed;inset:0;z-index:100;background:#040406;display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(20px,5vw,60px);font-family:var(--mono);font-size:14px;color:var(--muted);transition:clip-path .9s cubic-bezier(.8,0,.2,1);clip-path:inset(0 0 0 0);cursor:pointer}
+#boot.out{clip-path:inset(0 0 100% 0)}
+#boot .l{white-space:pre;line-height:1.9}
+#boot .l b{color:var(--c);font-weight:400}
+#boot .pct{font-size:clamp(64px,16vw,200px);color:var(--fg);font-family:"Space Grotesk",system-ui,sans-serif;font-weight:700;letter-spacing:-.05em;line-height:1;margin-top:20px}
+#boot .bar{height:2px;background:linear-gradient(90deg,var(--a),var(--b),var(--c));width:0;margin-top:14px}
+#boot .skip{position:absolute;top:24px;right:24px;font-size:12px;opacity:.5}
+
+/* ---------- backgrounds ---------- */
+.aurora{position:fixed;inset:-20%;z-index:0;pointer-events:none;filter:blur(90px);opacity:.5}
+.aurora span{position:absolute;border-radius:50%;mix-blend-mode:screen;animation:float 18s ease-in-out infinite}
+.aurora span:nth-child(1){width:45vw;height:45vw;background:var(--a);left:5%;top:0;opacity:.35}
+.aurora span:nth-child(2){width:50vw;height:50vw;background:var(--b);right:0;top:10%;animation-delay:-6s;opacity:.4}
+.aurora span:nth-child(3){width:40vw;height:40vw;background:var(--c);left:30%;top:45%;animation-delay:-12s;opacity:.25}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(6vw,-4vh) scale(1.1)}66%{transform:translate(-5vw,5vh) scale(.95)}}
+.gridbg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:64px 64px;mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 10%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 10%,transparent 75%);opacity:.6}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+#prog{position:fixed;top:0;left:0;height:2px;z-index:60;background:linear-gradient(90deg,var(--a),var(--b),var(--c));width:0}
+
+/* ---------- cursor ---------- */
+.fine body, .fine a, .fine button{cursor:none}
+.fine input{cursor:text}
+.cur-dot,.cur-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:90;border-radius:50%;transform:translate(-50%,-50%);display:none}
+.fine .cur-dot,.fine .cur-ring{display:block}
+.cur-dot{width:6px;height:6px;background:var(--fg);mix-blend-mode:difference}
+.cur-ring{width:36px;height:36px;border:1px solid rgba(255,255,255,.5);transition:width .25s,height .25s,background .25s,border-color .25s}
+.cur-ring.big{width:74px;height:74px;background:rgba(124,92,255,.12);border-color:transparent}
+
+main{position:relative;z-index:2;max-width:1220px;margin:0 auto;padding:0 20px}
+
+/* ---------- nav ---------- */
+nav{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:20px 0;backdrop-filter:blur(0);transition:backdrop-filter .3s}
+nav.stuck{backdrop-filter:blur(14px)}
+.logo{font-family:var(--mono);font-weight:600;display:flex;align-items:center;gap:10px}
+.logo i{width:10px;height:10px;border-radius:50%;background:var(--a);box-shadow:0 0 12px var(--a);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.navr{display:flex;gap:26px;align-items:center;font-size:14px;color:var(--muted)}
+.navr>a:hover{color:var(--fg)}
+.lang{position:relative}
+.lang>button{font:inherit;font-family:var(--mono);font-size:13px;color:var(--fg);background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:999px;padding:8px 14px;display:flex;gap:8px;align-items:center}
+.lang>button svg{width:15px;height:15px}
+.lang ul{list-style:none;position:absolute;right:0;top:calc(100% + 8px);background:rgba(16,16,24,.92);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:14px;padding:6px;min-width:160px;opacity:0;transform:translateY(-6px) scale(.98);pointer-events:none;transition:.2s}
+.lang.open ul{opacity:1;transform:none;pointer-events:auto}
+.lang li button{all:unset;display:flex;justify-content:space-between;width:100%;box-sizing:border-box;padding:9px 12px;border-radius:9px;color:var(--muted);font-size:14px}
+.lang li button:hover{background:rgba(255,255,255,.06);color:var(--fg)}
+.lang li button.on{color:var(--fg)}
+.lang li button span{font-family:var(--mono);font-size:11px;opacity:.6}
+
+/* ---------- hero ---------- */
+.hero{min-height:calc(100vh - 80px);display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:20px;padding:20px 0 60px}
+.tag{font-family:var(--mono);font-size:13px;color:var(--c);letter-spacing:.15em;text-transform:uppercase;margin-bottom:22px}
+h1{font-size:clamp(60px,11.5vw,172px);line-height:.9;font-weight:700;letter-spacing:-.045em;white-space:nowrap}
+h1>span{display:block}
+h1 .grad{background:linear-gradient(100deg,var(--a),var(--b) 45%,var(--c),var(--a));-webkit-background-clip:text;background-clip:text;color:transparent;background-size:300% 100%;animation:shift 8s linear infinite}
+@keyframes shift{to{background-position:300% 0}}
+.sub{margin-top:32px;max-width:600px;font-size:clamp(17px,1.8vw,20px);color:var(--muted);line-height:1.65}
+.sub b{color:var(--fg);font-weight:500}
+.typed{font-family:var(--mono);color:var(--fg)}
+.typed::after{content:"▋";color:var(--a);margin-left:2px;animation:pulse 1s steps(1) infinite}
+.stats{display:flex;gap:44px;margin-top:48px;flex-wrap:wrap}
+.stat .n{font-size:42px;font-weight:700;letter-spacing:-.03em}
+.stat .l{font-size:13px;color:var(--muted);font-family:var(--mono);margin-top:2px}
+.scroll{margin-top:56px;font-family:var(--mono);font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:10px}
+.scroll::before{content:"";width:40px;height:1px;background:var(--muted)}
+.globe{position:relative;aspect-ratio:1;width:100%;max-width:600px;justify-self:end}
+.globe canvas{width:100%;height:100%;display:block;touch-action:pan-y}
+.globe .hint{position:absolute;bottom:4%;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.1em;white-space:nowrap}
+.hero-in{min-width:0}
+.hero-in>*{opacity:0;transform:translateY(16px);transition:opacity .9s,transform .9s cubic-bezier(.2,.8,.2,1)}
+.ready .hero-in>*{opacity:1;transform:none}
+.ready .hero-in>*:nth-child(2){transition-delay:.05s}.ready .hero-in>*:nth-child(3){transition-delay:.3s}.ready .hero-in>*:nth-child(4){transition-delay:.45s}.ready .hero-in>*:nth-child(5){transition-delay:.6s}
+.globe{opacity:0;transform:scale(.85);transition:opacity 1.4s .2s,transform 1.4s .2s cubic-bezier(.2,.8,.2,1)}
+.ready .globe{opacity:1;transform:none}
+
+/* ---------- marquee ---------- */
+.marquee{position:relative;z-index:2;border-block:1px solid var(--line);overflow:hidden;padding:18px 0;background:rgba(255,255,255,.015);transform:rotate(-1.5deg) scale(1.03);margin:20px 0}
+.marquee .track{display:flex;gap:48px;width:max-content;animation:mq 34s linear infinite;font-size:24px;font-weight:500;color:var(--muted);white-space:nowrap}
+.marquee .track span:nth-child(4n+1){color:var(--fg)}
+.marquee .track em{font-style:normal;color:var(--a)}
+.marquee:hover .track{animation-play-state:paused}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- sections ---------- */
+section.blk{padding:110px 0 40px}
+.head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:40px}
+.kick{display:block;font-size:13px;letter-spacing:.15em;color:var(--c);font-family:var(--mono);font-weight:400;margin-bottom:14px}
+.head h2{font-size:clamp(38px,6vw,68px);letter-spacing:-.035em;line-height:1}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filters button{font:inherit;font-size:14px;color:var(--muted);background:transparent;border:1px solid var(--line);padding:8px 16px;border-radius:999px;transition:.25s}
+.filters button:hover{color:var(--fg);border-color:rgba(255,255,255,.25)}
+.filters button.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.filters button sup{font-family:var(--mono);font-size:10px;margin-left:4px;opacity:.6}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:18px}
+.card{
+  position:relative;border:1px solid var(--line);border-radius:22px;padding:26px;background:var(--card);
+  overflow:hidden;transform-style:preserve-3d;transition:transform .25s ease, opacity .5s, border-color .3s;
+  --mx:50%;--my:50%;--hue:var(--b);backdrop-filter:blur(6px);min-height:260px;display:flex;flex-direction:column
+}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(420px circle at var(--mx) var(--my),color-mix(in srgb,var(--hue) 26%,transparent),transparent 45%);opacity:0;transition:opacity .3s;pointer-events:none}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;
+  background:conic-gradient(from var(--ang),transparent 0 60%,var(--hue) 80%,#fff 85%,transparent 90%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:0;transition:opacity .3s;animation:spin 3s linear infinite}
+@keyframes spin{to{--ang:360deg}}
+.card:hover{border-color:transparent}
+.card:hover::before,.card:hover::after{opacity:1}
+.card.hide{display:none}
+.card .top{display:flex;justify-content:space-between;align-items:start;margin-bottom:26px}
+.icon{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:color-mix(in srgb,var(--hue) 18%,transparent);border:1px solid color-mix(in srgb,var(--hue) 40%,transparent);color:var(--hue);transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s}
+.card:hover .icon{transform:translateZ(40px) rotate(-8deg) scale(1.08);box-shadow:0 10px 30px -6px var(--hue)}
+.icon svg{width:26px;height:26px}
+.plat span{font-family:var(--mono);font-size:11px;padding:4px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.card h3{font-size:23px;letter-spacing:-.02em;transform:translateZ(20px)}
+.card .zh{color:var(--hue);font-size:14px;margin-top:5px;filter:brightness(1.2)}
+.card p{color:var(--muted);font-size:15px;line-height:1.65;margin-top:14px;flex:1}
+.card .foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line);font-size:13px}
+.card .pkg{font-family:var(--mono);color:var(--muted);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.card .pp{display:inline-flex;align-items:center;gap:6px;color:var(--fg);flex:none}
+.card .pp svg{width:14px;height:14px;transition:transform .25s}
+.card:hover .pp svg{transform:translate(3px,-3px)}
+.card .num{position:absolute;right:18px;bottom:-26px;font-size:124px;font-weight:700;color:rgba(255,255,255,.028);letter-spacing:-.06em;pointer-events:none;font-family:"Space Grotesk",system-ui,sans-serif}
+
+.privacy{margin-top:40px;border:1px solid var(--line);border-radius:28px;padding:clamp(28px,5vw,64px);position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(124,92,255,.14),rgba(0,224,255,.05) 60%,transparent)}
+.privacy h2{font-size:clamp(32px,5vw,58px);letter-spacing:-.035em;line-height:1.08;max-width:760px}
+.privacy h2 span{color:var(--c)}
+.privacy p{color:var(--muted);margin-top:20px;max-width:620px;line-height:1.75}
+.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:38px}
+.checks div{display:flex;gap:12px;align-items:center;font-size:15px}
+.checks div::before{content:"✓";width:26px;height:26px;flex:none;border-radius:50%;display:grid;place-items:center;background:rgba(0,224,255,.14);color:var(--c);font-size:13px}
+.lock{position:absolute;right:-30px;top:-30px;width:280px;opacity:.07;color:var(--fg)}
+
+/* ---------- terminal ---------- */
+.term{border:1px solid var(--line);border-radius:18px;background:rgba(8,8,14,.85);backdrop-filter:blur(10px);overflow:hidden;font-family:var(--mono);font-size:14px;box-shadow:0 40px 80px -30px rgba(124,92,255,.35)}
+.term .bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);color:var(--muted);font-size:12px}
+.term .bar i{width:11px;height:11px;border-radius:50%;background:#ff5f57}.term .bar i:nth-child(2){background:#febc2e}.term .bar i:nth-child(3){background:#28c840}
+.term .bar span{margin-left:auto}
+.term .body{padding:18px;height:340px;overflow-y:auto;line-height:1.75}
+.term .body div{white-space:pre-wrap;word-break:break-word}
+.term .p{color:var(--c)}.term .k{color:var(--a)}.term .d{color:var(--muted)}
+.term .in{display:flex;gap:10px}
+.term input{flex:1;background:none;border:0;outline:0;color:var(--fg);font:inherit;caret-color:var(--a)}
+
+footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:110px;padding:30px 20px}
+footer .w{max-width:1220px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted);font-family:var(--mono)}
+.big{font-size:clamp(60px,17vw,260px);font-weight:700;letter-spacing:-.06em;line-height:.8;text-align:center;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.12);margin-top:60px;user-select:none;white-space:nowrap;overflow:hidden}
+
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s, transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.fade{transition:opacity .25s}.fade.o{opacity:0}
+
+.toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,120px);z-index:95;padding:14px 22px;border-radius:999px;background:var(--fg);color:var(--bg);font-weight:500;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.toast.show{transform:translate(-50%,0)}
+.conf{position:fixed;top:-20px;z-index:94;width:9px;height:14px;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translate(var(--dx),110vh) rotate(var(--r))}}
+body.party .aurora{animation:hue 2s linear infinite}
+@keyframes hue{to{filter:blur(90px) hue-rotate(360deg)}}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;min-height:auto;padding-top:30px}
+  .globe{position:absolute;right:-30%;top:0;width:110%;max-width:none;opacity:.35!important;pointer-events:none;z-index:-1}
+  .globe .hint{display:none}
+  .hero{position:relative;overflow:hidden}
+}
+@media (max-width:640px){
+  .navr>a{display:none}
+  .stats{gap:26px}
+  .stat .n{font-size:34px}
+  .grid{grid-template-columns:1fr}
+  .marquee .track{font-size:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}
+}
+</style>
 </head>
-
 <body>
+<div id="boot"><div class="skip">click to skip</div><div id="bootlines"></div><div class="pct" id="pct">0%</div><div class="bar" id="bbar"></div></div>
+<div id="prog"></div>
+<div class="aurora"><span></span><span></span><span></span></div>
+<div class="gridbg"></div>
+<div class="grain"></div>
+<div class="cur-dot" id="cd"></div><div class="cur-ring" id="cr"></div>
 
-	<h1>Hello GitHub Pages</h1>
+<main>
+  <nav id="nav">
+    <a class="logo mag" href="#top"><i></i>bittyferrari</a>
+    <div class="navr">
+      <a href="#apps" class="mag" data-i="nav_apps"></a>
+      <a href="#privacy" class="mag" data-i="nav_privacy"></a>
+      <a href="#term" class="mag" data-i="nav_term"></a>
+      <div class="lang" id="lang">
+        <button class="mag" aria-haspopup="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg><span id="langcode">中</span></button>
+        <ul id="langlist"></ul>
+      </div>
+    </div>
+  </nav>
 
-	<p>My apps:</p>
+  <section class="hero" id="top">
+    <div class="hero-in">
+      <div class="tag" data-i="tag" data-s></div>
+      <h1><span id="h1a">Bitty</span><span class="grad" id="h1b">Ferrari.</span></h1>
+      <p class="sub"><span data-i="sub_a"></span><span class="typed" id="typed"></span><br><span data-i="sub_b" data-html></span></p>
+      <div class="stats">
+        <div class="stat"><div class="n" data-count="9">0</div><div class="l" data-i="st_apps"></div></div>
+        <div class="stat"><div class="n" data-count="2">0</div><div class="l" data-i="st_plat"></div></div>
+        <div class="stat"><div class="n" data-count="0" data-suffix=" bytes">0</div><div class="l" data-i="st_data"></div></div>
+      </div>
+      <a class="scroll" href="#apps" data-i="scroll"></a>
+    </div>
+    <div class="globe"><canvas id="globe"></canvas><div class="hint" data-i="drag"></div></div>
+  </section>
+</main>
 
+<div class="marquee" aria-hidden="true"><div class="track" id="track"></div></div>
+
+<main>
+  <section class="blk" id="apps">
+    <div class="head reveal">
+      <h2><span class="kick" data-i="work_k" data-s></span><span data-i="work_t" data-s></span></h2>
+      <div class="filters" id="filters">
+        <button class="on" data-f="all"><span data-i="f_all"></span><sup>9</sup></button>
+        <button data-f="bluetooth"><span data-i="f_bt"></span><sup>3</sup></button>
+        <button data-f="files"><span data-i="f_files"></span><sup>2</sup></button>
+        <button data-f="media"><span data-i="f_media"></span><sup>4</sup></button>
+        <button data-f="ios">iOS<sup>1</sup></button>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="blk" id="privacy">
+    <div class="privacy reveal">
+      <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <span class="kick" data-i="priv_k" data-s></span>
+      <h2 data-i="priv_h" data-html></h2>
+      <p data-i="priv_p"></p>
+      <div class="checks"><div data-i="c1"></div><div data-i="c2"></div><div data-i="c3"></div><div data-i="c4"></div></div>
+    </div>
+  </section>
+
+  <section class="blk" id="term">
+    <div class="head reveal"><h2><span class="kick" data-i="term_k" data-s></span><span data-i="term_t" data-s></span></h2></div>
+    <div class="term reveal" id="termbox">
+      <div class="bar"><i></i><i></i><i></i><span>visitor@bittyferrari: ~</span></div>
+      <div class="body" id="tbody">
+        <div id="tout"></div>
+        <div class="in"><span class="p">~ $</span><input id="tin" autocomplete="off" spellcheck="false" aria-label="terminal"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="big">BITTYFERRARI</div>
+  <div class="w" style="margin-top:40px"><span>© <span id="yr"></span> Bitty Ferrari</span><span data-i="foot"></span><span class="d">↑↑↓↓←→←→BA</span></div>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= i18n ================= */
+const L = {
+ zh:{label:'繁體中文',code:'中',html:'zh-Hant',
+  nav_apps:'作品',nav_privacy:'隱私',nav_term:'終端機',tag:'// 獨立 App 開發者 · 台灣',
+  sub_a:'我做小而好用的 App —— ',sub_b:'<b>本機運作、不收集資料</b>，把你的手機變成更好用的工具。',
+  words:['藍牙鍵盤','藍牙滑鼠','FTP 伺服器','GPS HUD','日文幻燈片'],
+  st_apps:'款 App 已上架',st_plat:'個平台',st_data:'個人資料收集量',scroll:'往下捲動探索',drag:'拖曳旋轉 ↻',
+  work_k:'01 — 作品',work_t:'我的作品',f_all:'全部',f_bt:'藍牙',f_files:'檔案',f_media:'影像',pp:'隱私權政策',
+  priv_k:'02 — 隱私',priv_h:'隱私優先。<br><span>資料只留在你的裝置。</span>',
+  priv_p:'每個 App 都在你的裝置上本機運作：沒有帳號、沒有追蹤、沒有我自己的伺服器。每個 App 都有公開的隱私權政策，歡迎檢閱。',
+  c1:'不需註冊帳號',c2:'無分析追蹤工具',c3:'檔案只留在本機',c4:'公開隱私權政策',
+  term_k:'03 — 終端機',term_t:'來玩一下',term_hint:'輸入 help 看看能做什麼',foot:'在台灣用 ♥ 製作',
+  whoami:'Bitty Ferrari — 台灣的獨立 App 開發者，專做隱私優先的小工具。',toast:'隱藏模式解鎖！'},
+ en:{label:'English',code:'EN',html:'en',
+  nav_apps:'Apps',nav_privacy:'Privacy',nav_term:'Terminal',tag:'// indie app developer · Taiwan',
+  sub_a:'I build small, useful apps — ',sub_b:'<b>Local-first, zero data collection</b> — tools that make your phone do more.',
+  words:['Bluetooth keyboards','Bluetooth mice','FTP servers','GPS HUDs','Japanese slideshows'],
+  st_apps:'apps shipped',st_plat:'platforms',st_data:'personal data collected',scroll:'scroll to explore',drag:'drag to spin ↻',
+  work_k:'01 — WORK',work_t:'Selected apps',f_all:'All',f_bt:'Bluetooth',f_files:'Files',f_media:'Media',pp:'Privacy policy',
+  priv_k:'02 — PRIVACY',priv_h:'Privacy first.<br><span>Your data stays on your device.</span>',
+  priv_p:'Every app runs locally on your device. No accounts, no tracking, no servers of mine. Each one has a public privacy policy — take a look.',
+  c1:'No sign-up',c2:'No analytics or trackers',c3:'Files stay on-device',c4:'Public privacy policies',
+  term_k:'03 — TERMINAL',term_t:'Play around',term_hint:'type help to see what you can do',foot:'made with ♥ in Taiwan',
+  whoami:'Bitty Ferrari — indie app developer from Taiwan, building small privacy-first tools.',toast:'Cheat mode unlocked!'},
+ ja:{label:'日本語',code:'日',html:'ja',
+  nav_apps:'アプリ',nav_privacy:'プライバシー',nav_term:'ターミナル',tag:'// インディーアプリ開発者 · 台湾',
+  sub_a:'小さくて便利なアプリを作っています —— ',sub_b:'<b>端末内で完結、データ収集ゼロ</b>。スマホをもっと便利な道具に。',
+  words:['Bluetooth キーボード','Bluetooth マウス','FTP サーバー','GPS HUD','日本語スライドショー'],
+  st_apps:'リリース済みアプリ',st_plat:'プラットフォーム',st_data:'収集する個人データ',scroll:'スクロールして見る',drag:'ドラッグで回転 ↻',
+  work_k:'01 — 作品',work_t:'アプリ一覧',f_all:'すべて',f_bt:'Bluetooth',f_files:'ファイル',f_media:'メディア',pp:'プライバシーポリシー',
+  priv_k:'02 — プライバシー',priv_h:'プライバシー最優先。<br><span>データはあなたの端末の中だけに。</span>',
+  priv_p:'すべてのアプリは端末内で動作します。アカウント不要、トラッキングなし、開発者のサーバーもありません。各アプリのプライバシーポリシーを公開しています。',
+  c1:'アカウント登録不要',c2:'解析・トラッキングなし',c3:'ファイルは端末内のみ',c4:'ポリシーを公開',
+  term_k:'03 — ターミナル',term_t:'遊んでみる',term_hint:'help と入力してみてください',foot:'台湾より ♥ を込めて',
+  whoami:'Bitty Ferrari — 台湾のインディーアプリ開発者。プライバシー重視の小さなツールを作っています。',toast:'隠しモード解放！'},
+ ko:{label:'한국어',code:'한',html:'ko',
+  nav_apps:'앱',nav_privacy:'개인정보',nav_term:'터미널',tag:'// 인디 앱 개발자 · 대만',
+  sub_a:'작고 유용한 앱을 만듭니다 — ',sub_b:'<b>기기 안에서만 동작, 데이터 수집 제로</b>. 휴대폰을 더 쓸모 있는 도구로.',
+  words:['블루투스 키보드','블루투스 마우스','FTP 서버','GPS HUD','일본어 슬라이드쇼'],
+  st_apps:'출시한 앱',st_plat:'플랫폼',st_data:'수집하는 개인정보',scroll:'스크롤해서 둘러보기',drag:'드래그해서 회전 ↻',
+  work_k:'01 — 작업',work_t:'내 앱',f_all:'전체',f_bt:'블루투스',f_files:'파일',f_media:'미디어',pp:'개인정보처리방침',
+  priv_k:'02 — 개인정보',priv_h:'프라이버시 우선.<br><span>데이터는 당신의 기기에만.</span>',
+  priv_p:'모든 앱은 기기에서 로컬로 동작합니다. 계정도, 추적도, 개발자 서버도 없습니다. 각 앱의 개인정보처리방침을 공개하고 있습니다.',
+  c1:'회원가입 불필요',c2:'분석·추적 도구 없음',c3:'파일은 기기에만 저장',c4:'공개된 개인정보처리방침',
+  term_k:'03 — 터미널',term_t:'놀아보기',term_hint:'help 를 입력해 보세요',foot:'대만에서 ♥ 를 담아',
+  whoami:'Bitty Ferrari — 대만의 인디 앱 개발자. 프라이버시를 우선하는 작은 도구를 만듭니다.',toast:'치트 모드 해제!'},
+};
+
+const ico = {
+  keyboard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg>',
+  mouse:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="3" width="12" height="18" rx="6"/><path d="M12 7v4"/></svg>',
+  combo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10-5 5V2l5 5L7 17"/></svg>',
+  server:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg>',
+  client:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 10v6M9 13l3 3 3-3"/></svg>',
+  gps:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><path d="M12 8l2.5 6L12 12.8 9.5 14z" fill="currentColor"/></svg>',
+  slides:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 14l5-4 4 3 3-2 6 4"/><circle cx="16" cy="8.5" r="1.3"/></svg>',
+  ja:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>',
+};
+const apps = [
+ {n:'Bluetooth Keyboard & Mouse',i:'combo',c:'#7c5cff',p:'Android',t:'bluetooth',pkg:'com.bittyferrari.bluetooth_combo',u:'android-bluetooth-combo/privacy-policy.html',
+  s:{zh:'藍牙鍵盤＋滑鼠',en:'Keyboard + touchpad in one',ja:'Bluetooth キーボード＋マウス',ko:'블루투스 키보드＋마우스'},
+  d:{zh:'把手機變成二合一藍牙鍵盤與觸控板，一台就能控制電腦、平板或電視。',en:'Turn your phone into a 2-in-1 Bluetooth keyboard and touchpad for your PC, tablet or TV.',ja:'スマホを Bluetooth キーボードとタッチパッドの 2in1 に。PC・タブレット・テレビを操作。',ko:'휴대폰을 블루투스 키보드와 터치패드 2in1으로. PC, 태블릿, TV를 한 번에 제어하세요.'}},
+ {n:'Bluetooth MultiLayout Keyboard',i:'keyboard',c:'#00e0ff',p:'Android',t:'bluetooth',pkg:'Bluetooth HID · local only',u:'android-bluetooth-keyboard/privacy-policy.html',
+  s:{zh:'多語系藍牙鍵盤',en:'Multi-layout wireless keyboard',ja:'マルチレイアウト キーボード',ko:'다국어 블루투스 키보드'},
+  d:{zh:'支援多種鍵盤配置，手機直接變成外接藍牙鍵盤。',en:'Use your phone as a wireless Bluetooth keyboard, with support for many keyboard layouts.',ja:'多数のキーボード配列に対応。スマホをそのままワイヤレスキーボードに。',ko:'다양한 키보드 레이아웃 지원. 휴대폰을 무선 키보드로 사용하세요.'}},
+ {n:'Bluetooth Mouse',i:'mouse',c:'#3d8bff',p:'Android',t:'bluetooth',pkg:'Bluetooth HID · local only',u:'android-bluetooth-mouse/privacy-policy.html',
+  s:{zh:'藍牙滑鼠',en:'Your phone as a trackpad',ja:'Bluetooth マウス',ko:'블루투스 마우스'},
+  d:{zh:'手機螢幕變觸控板，隔空操控電腦游標、點擊與捲動。',en:'Turn your screen into a trackpad — move the cursor, click and scroll from the couch.',ja:'画面がタッチパッドに。カーソル移動・クリック・スクロールを離れた場所から。',ko:'화면이 터치패드로. 멀리서 커서 이동, 클릭, 스크롤까지.'}},
+ {n:'FTP Server',i:'server',c:'#22d39a',p:'Android',t:'files',pkg:'com.bitty.ftpserver',u:'android-ftp/privacy-policy.html',
+  s:{zh:'FTP 伺服器',en:'Pocket FTP server',ja:'FTP サーバー',ko:'FTP 서버'},
+  d:{zh:'一鍵在手機上架起 FTP 伺服器，區網內用電腦直接存取手機檔案。',en:'One tap runs an FTP server on your phone, so any computer on your network can reach its files.',ja:'ワンタップでスマホを FTP サーバーに。LAN 内の PC からファイルに直接アクセス。',ko:'탭 한 번으로 휴대폰에 FTP 서버를 실행하고 같은 네트워크의 PC에서 파일에 접근하세요.'}},
+ {n:'FTP Client',i:'client',c:'#a3e635',p:'Android',t:'files',pkg:'com.bittyferrari.ftpclient',u:'android-ftp-client/privacy-policy.html',
+  s:{zh:'FTP 用戶端',en:'FTP client',ja:'FTP クライアント',ko:'FTP 클라이언트'},
+  d:{zh:'連線到你自己的 FTP 伺服器，上傳、下載、管理遠端檔案。',en:'Connect to your own FTP servers to upload, download and manage remote files.',ja:'自分の FTP サーバーに接続して、アップロード・ダウンロード・ファイル管理。',ko:'내 FTP 서버에 연결해 업로드, 다운로드, 원격 파일 관리를 하세요.'}},
+ {n:'GPS HUD',i:'gps',c:'#ff9f1c',p:'Android',t:'media',pkg:'com.bitty.gpshud',u:'android-gps-hud-editor/privacy-policy.html',
+  s:{zh:'GPS 儀表疊加編輯器',en:'GPS overlay video editor',ja:'GPS オーバーレイ編集',ko:'GPS 오버레이 편집기'},
+  d:{zh:'把 GPX 軌跡的速度、路線疊到行車／運動影片上，全部在裝置本機輸出。',en:'Overlay speed and route from GPX tracks onto your ride videos — rendered entirely on-device.',ja:'GPX の速度やルートを走行動画に重ねて書き出し。処理はすべて端末内で完結。',ko:'GPX 트랙의 속도와 경로를 주행 영상에 합성. 모든 처리는 기기 안에서.'}},
+ {n:'SlideShow',i:'slides',c:'#ff5ca8',p:'Android',t:'media',pkg:'com.bittyferrari.slideshow',u:'android-slideshow/privacy-policy.html',
+  s:{zh:'幻燈片播放',en:'Photo slideshow',ja:'スライドショー',ko:'슬라이드쇼'},
+  d:{zh:'選個資料夾就開始播放，簡單乾淨的相片幻燈片。',en:'Pick a folder and press play. A clean, simple photo slideshow.',ja:'フォルダを選ぶだけで再生開始。シンプルな写真スライドショー。',ko:'폴더를 고르면 바로 재생. 깔끔하고 단순한 사진 슬라이드쇼.'}},
+ {n:'Japanese Slideshow',i:'ja',c:'#ff2d55',p:'Android',t:'media',pkg:'com.bitty.jaslideshow',u:'android-japanese-slideshow/privacy-policy.html',
+  s:{zh:'日文幻燈片',en:'Learn Japanese, slide by slide',ja:'日本語スライドショー',ko:'일본어 슬라이드쇼'},
+  d:{zh:'用幻燈片方式反覆瀏覽日文，零碎時間輕鬆學習。',en:'Flip through Japanese as a slideshow and learn in spare moments.',ja:'日本語をスライドショーで繰り返し表示。すき間時間に気軽に学習。',ko:'일본어를 슬라이드쇼로 반복 학습. 자투리 시간에 가볍게.'}},
+ {n:'Japanese Slideshow',i:'ja',c:'#ff2d55',p:'iOS',t:'media ios',pkg:'com.bittyferrari.japanese-slideshow',u:'ios-japanese-slideshow/privacy-policy.html',
+  s:{zh:'日文幻燈片 · iOS',en:'Japanese Slideshow for iOS',ja:'日本語スライドショー · iOS',ko:'일본어 슬라이드쇼 · iOS'},
+  d:{zh:'iPhone / iPad 版本，隨時隨地複習日文。',en:'The iPhone & iPad edition — review Japanese anywhere.',ja:'iPhone / iPad 版。いつでもどこでも復習。',ko:'iPhone / iPad 버전. 언제 어디서나 복습하세요.'}},
+];
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fine=matchMedia('(pointer:fine)').matches; if(fine) document.documentElement.classList.add('fine');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* text scramble */
+const GLYPHS='01#$%&*+=<>/\\ABCDEFXYZ?!';
+function scramble(el,text,dur=26){
+  if(reduce){el.textContent=text;return}
+  cancelAnimationFrame(el._raf);
+  const from=el.textContent,len=Math.max(from.length,text.length),q=[];
+  for(let i=0;i<len;i++){const st=Math.floor(Math.random()*dur*.5);q.push({f:from[i]||'',t:text[i]||'',st,en:st+Math.floor(Math.random()*dur*.6)+4,ch:''})}
+  const t0=performance.now();let fr=0;
+  (function up(){fr=(performance.now()-t0)/16.7;
+    let out='',done=0;
+    for(const x of q){
+      if(fr>=x.en){done++;out+=esc(x.t)}
+      else if(fr>=x.st){if(!x.ch||Math.random()<.3)x.ch=GLYPHS[Math.random()*GLYPHS.length|0];out+=`<span class="sc">${esc(x.ch)}</span>`}
+      else out+=esc(x.f);
+    }
+    el.innerHTML=out;
+    if(done===q.length){el.textContent=text;return}
+    el._raf=requestAnimationFrame(up);
+  })();
+}
+
+/* language */
+let lang=(new URLSearchParams(location.search).get('lang'))||store.get('lang')||(()=>{const n=(navigator.language||'en').toLowerCase();return n.startsWith('zh')?'zh':n.startsWith('ja')?'ja':n.startsWith('ko')?'ko':'en'})();
+if(!L[lang]) lang='en';
+const T=k=>L[lang][k];
+
+function applyLang(animate){
+  const D=L[lang];
+  document.documentElement.lang=D.html;
+  $('#langcode').textContent=D.code;
+  $('#langlist').innerHTML=Object.entries(L).map(([k,v])=>`<li><button data-l="${k}" class="${k===lang?'on':''}">${v.label}<span>${k}</span></button></li>`).join('');
+  $$('[data-i]').forEach(el=>{
+    const v=D[el.dataset.i]; if(v==null) return;
+    if(el.hasAttribute('data-html')){
+      if(animate){el.classList.add('fade','o');setTimeout(()=>{el.innerHTML=v;el.classList.remove('o')},220)} else el.innerHTML=v;
+    } else if(animate && el.hasAttribute('data-s')) scramble(el,v);
+    else if(animate){el.classList.add('fade','o');setTimeout(()=>{el.textContent=v;el.classList.remove('o')},220)}
+    else el.textContent=v;
+  });
+  renderCards(animate);
+  $('#tin').placeholder=D.term_hint;
+  typer.reset();
+}
+
+/* cards */
+const arrow='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17L17 7M8 7h9v9"/></svg>';
+let filter='all', cardsShown=false;
+function renderCards(animate){
+  const g=$('#grid');
+  const build=()=>{
+    g.innerHTML=apps.map((a,k)=>`
+      <a class="card ${cardsShown?'reveal in':'reveal'} ${filter!=='all'&&!a.t.split(' ').includes(filter)?'hide':''}" href="${a.u}" data-t="${a.t}" style="--hue:${a.c}">
+        <div class="top"><div class="icon">${ico[a.i]}</div><div class="plat"><span>${a.p}</span></div></div>
+        <h3>${esc(a.n)}</h3><div class="zh">${a.s[lang]}</div>
+        <p>${a.d[lang]}</p>
+        <div class="foot"><span class="pkg">${a.pkg}</span><span class="pp">${T('pp')} ${arrow}</span></div>
+        <div class="num">${String(k+1).padStart(2,'0')}</div>
+      </a>`).join('');
+    bindCards();
+    if(!cardsShown) $$('.card').forEach(c=>io.observe(c));
+  };
+  if(animate){g.style.transition='opacity .2s';g.style.opacity=0;setTimeout(()=>{build();g.style.opacity=1},200)} else build();
+}
+function bindCards(){
+  $$('.card').forEach(c=>{
+    c.addEventListener('pointermove',e=>{
+      const r=c.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+      c.style.setProperty('--mx',x+'px');c.style.setProperty('--my',y+'px');
+      if(fine) c.style.transform=`perspective(900px) rotateX(${(y/r.height-.5)*-9}deg) rotateY(${(x/r.width-.5)*9}deg) translateY(-4px)`;
+    });
+    c.addEventListener('pointerleave',()=>c.style.transform='');
+    hoverable(c);
+  });
+}
+$('#filters').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  $$('.filters button').forEach(x=>x.classList.toggle('on',x===b));
+  filter=b.dataset.f;
+  $$('.card').forEach((c,i)=>{
+    const show=filter==='all'||c.dataset.t.split(' ').includes(filter);
+    c.classList.toggle('hide',!show);
+    if(show){c.animate([{opacity:0,transform:'translateY(16px) scale(.97)'},{opacity:1,transform:'none'}],{duration:450,delay:i*35,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'})}
+  });
+});
+
+/* reveal */
+const io=new IntersectionObserver(es=>es.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),i*70);io.unobserve(e.target);if(e.target.classList.contains('card'))cardsShown=true}}),{threshold:.1});
+$$('.reveal').forEach(el=>io.observe(el));
+
+/* lang menu */
+const langBox=$('#lang');
+langBox.querySelector('button').addEventListener('click',e=>{e.stopPropagation();langBox.classList.toggle('open')});
+document.addEventListener('click',()=>langBox.classList.remove('open'));
+$('#langlist').addEventListener('click',e=>{const b=e.target.closest('button[data-l]');if(!b)return;setLang(b.dataset.l)});
+function setLang(l){if(!L[l]||l===lang)return;lang=l;store.set('lang',l);applyLang(true);langBox.classList.remove('open')}
+
+/* typed */
+const typer=(()=>{const el=$('#typed');let wi=0,ci=0,del=false,tm;
+  function tick(){const w=T('words')[wi%T('words').length];el.textContent=w.slice(0,ci);
+    if(!del&&ci<w.length){ci++;tm=setTimeout(tick,100)}else if(!del){del=true;tm=setTimeout(tick,1600)}
+    else if(ci>0){ci--;tm=setTimeout(tick,45)}else{del=false;wi++;tm=setTimeout(tick,300)}}
+  return{reset(){clearTimeout(tm);ci=0;del=false;tick()}}})();
+
+/* counters */
+function counters(){$$('[data-count]').forEach(el=>{const to=+el.dataset.count,suf=el.dataset.suffix||'';let s=null;
+  const step=t=>{s??=t;const p=Math.min((t-s)/1300,1);el.textContent=Math.round(to*(1-Math.pow(1-p,3)))+suf;if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
+
+/* marquee */
+const mq=['Bluetooth Keyboard','FTP Server','GPS HUD','SlideShow','日本語','Bluetooth Mouse','FTP Client','0 trackers','Android','iOS','한국어','繁體中文'];
+$('#track').innerHTML=[...mq,...mq].map(x=>`<span>${x}</span><span><em>✦</em></span>`).join('');
+
+/* cursor + magnetic */
+const cd=$('#cd'),cr=$('#cr');let mx=-100,my=-100,rx=-100,ry=-100;
+addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;cd.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`});
+(function ring(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;cr.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(ring)})();
+function hoverable(el){el.addEventListener('pointerenter',()=>cr.classList.add('big'));el.addEventListener('pointerleave',()=>cr.classList.remove('big'))}
+$$('a,button').forEach(hoverable);
+if(fine) $$('.mag').forEach(el=>{
+  el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.3}px,${(e.clientY-r.top-r.height/2)*.4}px)`});
+  el.addEventListener('pointerleave',()=>{el.style.transition='transform .4s';el.style.transform='';setTimeout(()=>el.style.transition='',400)});
+});
+
+/* scroll progress + nav */
+addEventListener('scroll',()=>{const h=document.documentElement;$('#prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';$('#nav').classList.toggle('stuck',h.scrollTop>20)},{passive:true});
+
+/* ================= globe ================= */
+(function(){
+  const cv=$('#globe'),ctx=cv.getContext('2d');let S,dpr;
+  function size(){dpr=Math.min(devicePixelRatio,2);S=cv.clientWidth*dpr;cv.width=cv.height=S}
+  size();new ResizeObserver(size).observe(cv);
+  const N=720,P=[];const ga=Math.PI*(3-Math.sqrt(5));
+  const mix=(a,b,t)=>a.map((v,i)=>v+(b[i]-v)*t);const A=[255,45,85],B=[124,92,255],C=[0,224,255];
+  for(let i=0;i<N;i++){const y=1-(i/(N-1))*2,r=Math.sqrt(1-y*y),th=ga*i;const t=(y+1)/2;P.push({x:Math.cos(th)*r,y,z:Math.sin(th)*r,c:t<.5?mix(A,B,t*2):mix(B,C,(t-.5)*2)})}
+  const sats=apps.map((a,i)=>({c:a.c,inc:(i/apps.length)*Math.PI*.9-.45,rot:i*0.7,sp:.004+(i%3)*.0022,ph:i*1.3,r:1.28+(i%3)*.12,trail:[]}));
+  let ry=0,rx=-.35,vy=.004,drag=false,lx=0,tx=-.35;
+  cv.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;cv.setPointerCapture(e.pointerId)});
+  cv.addEventListener('pointermove',e=>{if(drag){vy=(e.clientX-lx)*.0009;lx=e.clientX}const r=cv.getBoundingClientRect();tx=-.35+((e.clientY-r.top)/r.height-.5)*.6});
+  cv.addEventListener('pointerup',()=>drag=false);
+  function proj(x,y,z){
+    let X=x*Math.cos(ry)-z*Math.sin(ry),Z=x*Math.sin(ry)+z*Math.cos(ry);
+    let Y=y*Math.cos(rx)-Z*Math.sin(rx);Z=y*Math.sin(rx)+Z*Math.cos(rx);
+    const f=3.2,s=f/(f-Z),R=S*.3;return{x:S/2+X*R*s,y:S/2+Y*R*s,z:Z,s}}
+  let t=0;
+  (function draw(){
+    t++;ctx.clearRect(0,0,S,S);
+    if(!drag) vy+=(.0035-vy)*.02; ry+=vy; rx+=(tx-rx)*.04;
+    // glow
+    const g=ctx.createRadialGradient(S/2,S/2,S*.05,S/2,S/2,S*.45);g.addColorStop(0,'rgba(124,92,255,.16)');g.addColorStop(1,'rgba(124,92,255,0)');ctx.fillStyle=g;ctx.fillRect(0,0,S,S);
+    // points
+    const pts=P.map(p=>({...proj(p.x,p.y,p.z),c:p.c})).sort((a,b)=>a.z-b.z);
+    for(const p of pts){const a=.12+(p.z+1)/2*.85;ctx.fillStyle=`rgba(${p.c[0]|0},${p.c[1]|0},${p.c[2]|0},${a})`;const r=(.7+(p.z+1)*.9)*dpr;ctx.fillRect(p.x-r/2,p.y-r/2,r,r)}
+    // orbits + satellites
+    for(const s of sats){
+      const ang=t*s.sp+s.ph;
+      const orb=(a)=>{let x=Math.cos(a)*s.r,y=0,z=Math.sin(a)*s.r;let y2=y*Math.cos(s.inc)-z*Math.sin(s.inc),z2=y*Math.sin(s.inc)+z*Math.cos(s.inc);let x3=x*Math.cos(s.rot)-y2*Math.sin(s.rot),y3=x*Math.sin(s.rot)+y2*Math.cos(s.rot);return proj(x3,y3,z2)};
+      ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=dpr;ctx.beginPath();
+      for(let k=0;k<=64;k++){const q=orb(k/64*Math.PI*2);k?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)}ctx.stroke();
+      const q=orb(ang);s.trail.push(q);if(s.trail.length>22)s.trail.shift();
+      for(let k=1;k<s.trail.length;k++){const a=s.trail[k-1],b=s.trail[k];ctx.strokeStyle=s.c+Math.floor(k/s.trail.length*160).toString(16).padStart(2,'0');ctx.lineWidth=2*dpr*b.s;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}
+      const r=(q.z>0?4.5:3)*dpr*q.s;ctx.shadowColor=s.c;ctx.shadowBlur=18*dpr;ctx.fillStyle=q.z>-.2?s.c:s.c+'77';ctx.beginPath();ctx.arc(q.x,q.y,r,0,7);ctx.fill();ctx.shadowBlur=0;
+    }
+    requestAnimationFrame(draw);
+  })();
+})();
+
+/* ================= terminal ================= */
+const tout=$('#tout'),tin=$('#tin'),tbody=$('#tbody');const hist=[];let hi=0;
+function tp(html,cls){const d=document.createElement('div');if(cls)d.className=cls;d.innerHTML=html;tout.appendChild(d);tbody.scrollTop=tbody.scrollHeight}
+const cmds={
+  help:()=>tp(`<span class="k">help</span>      this list\n<span class="k">whoami</span>    about me\n<span class="k">apps</span>      list apps\n<span class="k">open</span> &lt;n&gt;  open app n's privacy policy\n<span class="k">lang</span> &lt;x&gt;  zh | en | ja | ko\n<span class="k">privacy</span>   data report\n<span class="k">date</span>      current time\n<span class="k">clear</span>     clear screen`),
+  whoami:()=>tp(esc(T('whoami'))),
+  apps:()=>tp(apps.map((a,i)=>`<span class="d">${String(i+1).padStart(2,'0')}</span>  <span style="color:${a.c}">●</span> ${esc(a.n).padEnd(32)} <span class="d">${a.p}</span>`).join('\n')),
+  open:(n)=>{const a=apps[(+n||0)-1];if(!a)return tp('usage: open 1-9','d');tp(`opening ${esc(a.n)} ...`,'d');setTimeout(()=>location.href=a.u,500)},
+  lang:(l)=>{if(!L[l])return tp('usage: lang zh | en | ja | ko','d');setLang(l);tp(`language → ${L[l].label}`,'d')},
+  privacy:()=>tp('trackers ........ <span class="k">0</span>\naccounts ........ <span class="k">0</span>\nservers ......... <span class="k">0</span>\nyour data ....... <span class="p">stays on your device ✓</span>'),
+  date:()=>tp(new Date().toString(),'d'),
+  clear:()=>{tout.innerHTML=''},
+  sudo:()=>tp('nice try. 😏','k'),
+  ls:()=>tp(apps.map(a=>a.u.split('/')[0]+'/').join('  '),'d'),
+  hello:()=>tp('hi there 👋'),
+};
+tp('bittyferrari.os <span class="d">v2.6 — type</span> <span class="k">help</span>');
+tin.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){const v=tin.value.trim();tin.value='';tp(`<span class="p">~ $</span> ${esc(v)}`);if(!v)return;hist.push(v);hi=hist.length;
+    const [c,...a]=v.split(/\s+/);(cmds[c.toLowerCase()]||(()=>tp(`command not found: ${esc(c)}`,'d')))(...a)}
+  else if(e.key==='ArrowUp'){if(hi>0){hi--;tin.value=hist[hi]}e.preventDefault()}
+  else if(e.key==='ArrowDown'){if(hi<hist.length-1){hi++;tin.value=hist[hi]}else{hi=hist.length;tin.value=''}}
+});
+$('#termbox').addEventListener('click',()=>tin.focus({preventScroll:true}));
+
+/* ================= konami ================= */
+const kseq=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];let kp=0;
+addEventListener('keydown',e=>{if(e.target===tin)return;kp=(e.key.toLowerCase()===kseq[kp].toLowerCase()||e.key===kseq[kp])?kp+1:(e.key==='ArrowUp'?1:0);if(kp===kseq.length){kp=0;party()}});
+function party(){
+  document.body.classList.add('party');const t=$('#toast');t.textContent=T('toast');t.classList.add('show');
+  const cols=apps.map(a=>a.c);
+  for(let i=0;i<140;i++){const d=document.createElement('div');d.className='conf';d.style.left=Math.random()*100+'vw';d.style.background=cols[i%cols.length];
+    d.style.setProperty('--dx',(Math.random()-.5)*300+'px');d.style.setProperty('--r',Math.random()*1440+'deg');d.style.animationDuration=2+Math.random()*2.5+'s';d.style.animationDelay=Math.random()*.6+'s';
+    document.body.appendChild(d);setTimeout(()=>d.remove(),5500)}
+  setTimeout(()=>{t.classList.remove('show');document.body.classList.remove('party')},4000);
+}
+
+/* ================= boot ================= */
+$('#yr').textContent=new Date().getFullYear();
+applyLang(false);
+function start(){document.body.classList.add('ready');counters();$('#h1a').textContent='';$('#h1b').textContent='';scramble($('#h1a'),'Bitty',30);setTimeout(()=>scramble($('#h1b'),'Ferrari.',34),150)}
+(function boot(){
+  const b=$('#boot');let seen=false;try{seen=sessionStorage.getItem('booted')}catch(e){}
+  if(seen||reduce){b.remove();start();return}
+  const lines=['> init <b>bittyferrari.os</b> v2.6','> mounting /apps ............ <b>9 found</b>','> scanning trackers ......... <b>0 found</b>','> loading languages ........ <b>zh en ja ko</b>','> ready.'];
+  const box=$('#bootlines');let done=false;
+  const finish=()=>{if(done)return;done=true;try{sessionStorage.setItem('booted',1)}catch(e){}b.classList.add('out');setTimeout(()=>b.remove(),900);start()};
+  b.addEventListener('click',finish);
+  lines.forEach((l,i)=>setTimeout(()=>{if(!done){const d=document.createElement('div');d.className='l';d.innerHTML=l;box.appendChild(d)}},i*260));
+  let s=null;const step=t=>{s??=t;const p=Math.min((t-s)/1500,1),v=Math.round(p*100);$('#pct').textContent=v+'%';$('#bbar').style.width=v+'%';if(p<1&&!done)requestAnimationFrame(step);else setTimeout(finish,250)};requestAnimationFrame(step);
+})();
+</script>
 </body>
-
 </html>
