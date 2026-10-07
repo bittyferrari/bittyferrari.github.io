@@ -3,14 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2M6S2HHNHY"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-2M6S2HHNHY');
-</script>
 <title>Mochabar — 給 Mac 一條真正的工作列</title>
 <meta name="description" content="Mochabar：Windows 風格的工作列、單按 ⌘ 開始選單、系統匣、動畫場景與工作列小遊戲。A Windows-style taskbar for macOS.">
 <meta property="og:title" content="Mochabar">
@@ -143,7 +135,7 @@ h2{font-size:clamp(28px,4vw,42px);line-height:1.15;margin:8px 0 14px;letter-spac
 .rgbband .bars{position:absolute;inset:0;display:flex;align-items:flex-end;gap:3px;padding:0 10px}
 .rgbband .bars i{flex:1;background:rgba(255,255,255,.55);border-radius:2px 2px 0 0;animation:eq 1.2s ease-in-out infinite alternate}
 @keyframes eq{0%{height:15%}100%{height:85%}}
-@media (prefers-reduced-motion:reduce){.rgbband,.rgbband .bars i,.taskbar::before{animation:none}}
+@media (prefers-reduced-motion:reduce){.rgbband .bars i{animation:none}.rgbband,.taskbar::before{animation-duration:24s}}
 
 /* galleries */
 .strip{border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#cfe4f4}
@@ -237,7 +229,7 @@ footer a{color:var(--ink)}
       <a class="btn ghost" href="#pricing">✨ <span class="zh">Pro 免費試用 14 天</span><span class="en">Try Pro free for 14 days</span></a>
     </div>
     <div class="meta">
-      <span>macOS 13+</span>·<span>Apple silicon</span>·<span class="zh">已通過 Apple 公證</span><span class="en">Notarized by Apple</span>·<span class="ver">v0.2.0</span>
+      <span>macOS 13+</span>·<span>Apple silicon</span>·<span class="zh">已通過 Apple 公證</span><span class="en">Notarized by Apple</span>·<span class="ver">v0.1.0</span>
     </div>
 
     <div class="screen" aria-label="Mochabar preview" role="img">
@@ -458,7 +450,7 @@ footer a{color:var(--ink)}
     try{localStorage.setItem('tfm-lang',l);}catch(e){}
   });
   var bars=document.getElementById('bars');
-  for(var i=0;i<48;i++){var b=document.createElement('i');b.style.animationDelay=(-Math.random()*1.2).toFixed(2)+'s';b.style.animationDuration=(0.5+Math.random()*0.9).toFixed(2)+'s';bars.appendChild(b);}
+  for(var i=0;i<48;i++){var b=document.createElement('i');b.style.animationDelay=(-Math.random()*1.2).toFixed(2)+'s';b.style.animationDuration=(0.5+Math.random()*0.9).toFixed(2)+'s';b.style.height=(20+Math.random()*60).toFixed(0)+'%';bars.appendChild(b);}
 })();
 </script>
 </body>
