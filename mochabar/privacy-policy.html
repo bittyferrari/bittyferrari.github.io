@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy / 隱私權政策 — Mochabar</title>
+<meta name="description" content="Privacy Policy for Mochabar, a Windows-style taskbar for macOS. Mochabar does not collect any personal data.">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<style>
+  :root{
+    --bg:#f6f7fb; --card:#ffffff; --fg:#151a2d; --muted:#5b6380; --line:#e3e6ef; --accent:#5b4bff;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0c0f1c; --card:#151a2e; --fg:#eef0fa; --muted:#a2a9c4; --line:#262c45; --accent:#a69bff; }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang TC","Hiragino Sans","Noto Sans TC","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.75; font-size:16px;
+  }
+  .wrap{max-width:800px; margin:0 auto; padding:40px 16px 80px}
+  .brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; margin-bottom:28px}
+  .brand img{width:44px; height:44px; border-radius:10px}
+  .brand span{font-weight:700; font-size:1.1rem}
+  .langs{float:right; font-size:.92rem; margin-top:10px}
+  .langs a{color:var(--accent); text-decoration:none; margin-left:12px}
+  h1{font-size:1.75rem; line-height:1.3; margin:0 0 .25em}
+  h2{font-size:1.2rem; margin:2.2em 0 .6em; padding-top:.8em; border-top:1px solid var(--line)}
+  ul{padding-left:1.25em}
+  li{margin:.35em 0}
+  code{font-size:.9em; background:color-mix(in srgb, var(--accent) 10%, transparent); padding:1px 5px; border-radius:4px}
+  .meta{color:var(--muted); font-size:.92rem; margin:0 0 2em}
+  .lead{background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent); padding:14px 18px; border-radius:0 10px 10px 0}
+  table{width:100%; border-collapse:collapse; font-size:.95rem; margin:.8em 0; display:block; overflow-x:auto}
+  th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+  th{background:var(--card)}
+  a{color:var(--accent)}
+  hr.sep{border:0; border-top:2px solid var(--line); margin:4em 0 3em}
+  footer{color:var(--muted); font-size:.88rem; margin-top:3em; border-top:1px solid var(--line); padding-top:1.2em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="langs"><a href="#en">English</a><a href="#zh">繁體中文</a></nav>
+<a class="brand" href="./"><img src="img/icon-256.png" alt=""><span>Mochabar</span></a>
+
+<!-- ======================= ENGLISH ======================= -->
+<h1 id="en">Privacy Policy</h1>
+<p class="meta">App: Mochabar — a Windows-style taskbar for macOS<br>
+Bundle IDs: <code>com.bittyferrari.mochabar</code> (Mac App Store), <code>com.bitty.TaskbarForMac</code> (website &amp; Steam)<br>
+Effective date: October 9, 2026 · Last updated: October 9, 2026</p>
+
+<p class="lead"><strong>Short version:</strong> Mochabar does not collect, store, or share any personal data. It contains no analytics, advertising, or tracking. Everything it reads to show you your taskbar, calendar, or system status stays on your Mac. The Mac App Store version never connects to the internet at all.</p>
+
+<h2>1. What Mochabar does</h2>
+<p>Mochabar adds a Windows-style taskbar, Start menu, clock and calendar, system tray, animated scenes, and mini-games to macOS. All of this runs locally on your Mac.</p>
+
+<h2>2. Data we collect</h2>
+<p><strong>None.</strong> The developer does not collect, receive, or have access to any of your personal data, including names, email addresses, device identifiers, location, contacts, calendar events, keystrokes, audio, usage analytics, or crash reports. Mochabar contains no third-party SDKs for analytics, advertising, or tracking.</p>
+
+<h2>3. Permissions and how they are used</h2>
+<p>Some features need macOS permissions. Each is optional, requested only when you use the related feature, and processed entirely on your Mac:</p>
+<table>
+  <tr><th>Permission</th><th>Used for</th><th>Data leaves your Mac?</th></tr>
+  <tr><td>Input Monitoring</td><td>Detecting a single tap of the ⌘ key to open the Start menu. It is a listen-only check for that one key; no keystrokes are recorded or stored.</td><td>No</td></tr>
+  <tr><td>Calendars</td><td>Showing your events in the calendar that pops up from the clock.</td><td>No</td></tr>
+  <tr><td>Screen &amp; System Audio Recording</td><td>The optional "react to music" lighting effect, which computes sound levels (a frequency spectrum) from system audio in real time. Nothing is recorded, saved, or captured from the screen.</td><td>No</td></tr>
+  <tr><td>Bluetooth</td><td>Showing whether Bluetooth is on in the system tray.</td><td>No</td></tr>
+  <tr><td>Accessibility, Automation (website &amp; Steam versions only)</td><td>Listing and switching individual windows, and running Lock / Log Out / Restart / Shut Down from the Start menu.</td><td>No</td></tr>
+</table>
+<p>Mochabar also reads public system information such as running apps, battery level, volume, network status, CPU and memory usage, and installed applications, only to display them on the taskbar.</p>
+
+<h2>4. Data stored on your Mac</h2>
+<p>Your settings, pinned apps, game progress and scores, and any custom Start-button image are stored only in the app's local storage on your Mac (for the App Store version: <code>~/Library/Containers/com.bittyferrari.mochabar/</code>). The developer cannot read them. If you use "Export settings", the file is saved wherever you choose and is shared only if you share it yourself. Deleting the app and its data removes everything.</p>
+
+<h2>5. Network connections</h2>
+<ul>
+  <li><strong>Mac App Store version:</strong> makes no network connections. Purchases are handled by Apple under <a href="https://www.apple.com/legal/privacy/">Apple's Privacy Policy</a>.</li>
+  <li><strong>Steam version:</strong> makes no network connections of its own. Purchases are handled by Valve under the <a href="https://store.steampowered.com/privacy_agreement/">Steam Privacy Policy</a>.</li>
+  <li><strong>Website version:</strong> only when you activate, verify, or deactivate a Pro license, the app sends your license key and your Mac's computer name (so you can tell your devices apart when managing activations) to Lemon Squeezy, our payment provider, at <code>api.lemonsqueezy.com</code>. Purchases are handled under the <a href="https://www.lemonsqueezy.com/privacy">Lemon Squeezy Privacy Policy</a>. No other data is sent.</li>
+</ul>
+
+<h2>6. Sharing and third parties</h2>
+<p>We do not sell, share, or transfer any data to third parties. Apart from the license check described above for the website version, Mochabar does not communicate with any server.</p>
+
+<h2>7. Children's privacy</h2>
+<p>Mochabar is a general-purpose utility and does not knowingly collect personal information from anyone, including children under 13.</p>
+
+<h2>8. Your rights</h2>
+<p>Because we do not collect personal data, there is no data held by us to access, correct, or delete. You can revoke any permission at any time in <em>System Settings › Privacy &amp; Security</em>. For license records kept by Lemon Squeezy, you can manage your orders at <a href="https://app.lemonsqueezy.com/my-orders">app.lemonsqueezy.com/my-orders</a> or contact us.</p>
+
+<h2>9. Changes to this policy</h2>
+<p>If a future version changes how data is handled, this page will be updated and the "Last updated" date revised. Significant changes will also be mentioned in the release notes.</p>
+
+<h2>10. Contact</h2>
+<p>Questions about this policy: <a href="mailto:bittyferrari@gmail.com">bittyferrari@gmail.com</a></p>
+
+<hr class="sep">
+
+<!-- ======================= 繁體中文 ======================= -->
+<h1 id="zh">隱私權政策</h1>
+<p class="meta">應用程式：Mochabar — macOS 上的 Windows 風格工作列<br>
+Bundle ID：<code>com.bittyferrari.mochabar</code>（Mac App Store 版）、<code>com.bitty.TaskbarForMac</code>（官網版與 Steam 版）<br>
+生效日期：2026 年 10 月 9 日 · 最後更新：2026 年 10 月 9 日</p>
+
+<p class="lead"><strong>簡短版本：</strong>Mochabar 不收集、不儲存、不分享任何個人資料，也不含任何分析、廣告或追蹤功能。為了顯示工作列、月曆或系統狀態而讀取的資訊，全部只留在你的 Mac 上。Mac App Store 版完全不會連上網路。</p>
+
+<h2>1. 這個應用程式做什麼</h2>
+<p>Mochabar 在 macOS 上加入 Windows 風格的工作列、開始選單、時鐘與月曆、系統匣、動畫場景與小遊戲。所有功能都在你的 Mac 本機執行。</p>
+
+<h2>2. 我們收集哪些資料</h2>
+<p><strong>沒有。</strong>開發者不會收集、接收或存取你的任何個人資料，包括姓名、電子郵件、裝置識別碼、位置、聯絡人、行事曆內容、按鍵內容、聲音、使用統計或當機報告。Mochabar 不含任何第三方分析、廣告或追蹤 SDK。</p>
+
+<h2>3. 權限與用途</h2>
+<p>部分功能需要 macOS 權限。每一項都是選用的，只在你使用相關功能時才會詢問，而且全部在你的 Mac 本機處理：</p>
+<table>
+  <tr><th>權限</th><th>用途</th><th>資料會離開你的 Mac 嗎？</th></tr>
+  <tr><td>輸入監控</td><td>偵測「單獨按一下 ⌘」來開啟開始選單。只監聽這一個按鍵，不記錄、不儲存任何按鍵內容。</td><td>不會</td></tr>
+  <tr><td>行事曆</td><td>在點時鐘跳出的月曆中顯示你的行程。</td><td>不會</td></tr>
+  <tr><td>螢幕與系統錄音</td><td>選用的「跟著音樂律動」燈效，即時從系統聲音計算音量頻譜。不錄音、不存檔，也不擷取螢幕畫面。</td><td>不會</td></tr>
+  <tr><td>藍牙</td><td>在系統匣顯示藍牙是否開啟。</td><td>不會</td></tr>
+  <tr><td>輔助使用、自動化（僅官網版與 Steam 版）</td><td>列出與切換個別視窗，以及從開始選單執行鎖定、登出、重新開機、關機。</td><td>不會</td></tr>
+</table>
+<p>Mochabar 也會讀取執行中的 App、電量、音量、網路狀態、CPU 與記憶體使用量、已安裝的應用程式等系統資訊，僅用於在工作列上顯示。</p>
+
+<h2>4. 存在你 Mac 上的資料</h2>
+<p>你的設定、釘選的 App、遊戲進度與分數、自訂的開始按鈕圖片，只存在你 Mac 上的應用程式本機儲存空間（App Store 版位於 <code>~/Library/Containers/com.bittyferrari.mochabar/</code>），開發者無法讀取。使用「匯出設定」時，檔案會存到你選擇的位置，只有你自己分享才會給別人。刪除 App 及其資料即可完全移除。</p>
+
+<h2>5. 網路連線</h2>
+<ul>
+  <li><strong>Mac App Store 版：</strong>不會進行任何網路連線。購買由 Apple 處理，適用 <a href="https://www.apple.com/legal/privacy/">Apple 隱私權政策</a>。</li>
+  <li><strong>Steam 版：</strong>App 本身不會進行任何網路連線。購買由 Valve 處理，適用 <a href="https://store.steampowered.com/privacy_agreement/">Steam 隱私權政策</a>。</li>
+  <li><strong>官網版：</strong>只有在你啟用、驗證或停用 Pro 授權時，App 會把授權碼和這台 Mac 的電腦名稱（方便你管理啟用的裝置）傳送到我們的付款服務商 Lemon Squeezy（<code>api.lemonsqueezy.com</code>）。購買適用 <a href="https://www.lemonsqueezy.com/privacy">Lemon Squeezy 隱私權政策</a>。不會傳送其他任何資料。</li>
+</ul>
+
+<h2>6. 資料分享與第三方</h2>
+<p>我們不會販售、分享或傳送任何資料給第三方。除了上述官網版的授權驗證以外，Mochabar 不會與任何伺服器通訊。</p>
+
+<h2>7. 兒童隱私</h2>
+<p>Mochabar 是一般用途的工具程式，不會在知情的情況下收集任何人（包括 13 歲以下兒童）的個人資料。</p>
+
+<h2>8. 你的權利</h2>
+<p>由於我們不收集個人資料，因此沒有由我們保存、可供查詢、更正或刪除的資料。你可以隨時在「系統設定 › 隱私權與安全性」撤銷任何權限。Lemon Squeezy 保存的授權紀錄，可以到 <a href="https://app.lemonsqueezy.com/my-orders">app.lemonsqueezy.com/my-orders</a> 管理，或直接聯絡我們。</p>
+
+<h2>9. 本政策的變更</h2>
+<p>如果未來版本改變了資料的處理方式，我們會更新本頁面並修改「最後更新」日期，重大變更也會在更新說明中告知。</p>
+
+<h2>10. 聯絡方式</h2>
+<p>對本隱私權政策有任何疑問，請來信：<a href="mailto:bittyferrari@gmail.com">bittyferrari@gmail.com</a></p>
+
+<footer>
+  © 2026 Mochabar · <a href="./">mochabar</a><br>
+  This page is provided in English and Traditional Chinese with the same content; in case of discrepancy, the English version prevails.<br>
+  本頁面提供英文與繁體中文版本，兩者內容一致；如有歧異，以英文版為準。
+</footer>
+
+</div>
+</body>
+</html>
