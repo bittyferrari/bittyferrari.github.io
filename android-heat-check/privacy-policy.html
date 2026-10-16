@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HeatCheck Privacy Policy</title>
+<meta name="description" content="Privacy Policy for the HeatCheck Android app.">
+<style>
+  :root {
+    --bg: #fafaf9; --fg: #1c1917; --muted: #57534e; --card: #ffffff;
+    --border: #e7e5e4; --accent: #ea580c; --accent-soft: #fff7ed;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c0a09; --fg: #f5f5f4; --muted: #a8a29e; --card: #1c1917;
+      --border: #292524; --accent: #fb923c; --accent-soft: #2a1a0e;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.7 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+  header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+  h1 { font-size: 1.9rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+  h2 { font-size: 1.15rem; margin: 36px 0 8px; padding-top: 4px; border-top: 1px solid var(--border); padding-top: 24px; }
+  p, li { color: var(--fg); }
+  .meta { color: var(--muted); font-size: .9rem; margin: 0; }
+  .lang { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+  .lang button {
+    background: transparent; color: var(--muted); border: 0; padding: 6px 14px;
+    font: inherit; font-size: .9rem; cursor: pointer;
+  }
+  .lang button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+  .summary {
+    background: var(--accent-soft); border: 1px solid var(--border); border-left: 4px solid var(--accent);
+    border-radius: 10px; padding: 14px 18px; margin: 24px 0 8px;
+  }
+  .summary p { margin: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: .95rem; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  .table-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--border); border-radius: 10px; }
+  code { font-size: .88em; background: var(--card); border: 1px solid var(--border); padding: 1px 5px; border-radius: 5px; }
+  a { color: var(--accent); }
+  footer { margin-top: 48px; color: var(--muted); font-size: .85rem; }
+  [data-lang] { display: none; }
+  html[lang="en"] [data-lang="en"], html[lang="zh-Hant"] [data-lang="zh"] { display: block; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>HeatCheck</h1>
+      <p class="meta" data-lang="en">Privacy Policy · Effective October 16, 2026</p>
+      <p class="meta" data-lang="zh">隱私權政策 · 生效日期：2026 年 10 月 16 日</p>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-set="en" aria-pressed="true">English</button>
+      <button type="button" data-set="zh-Hant" aria-pressed="false">繁體中文</button>
+    </div>
+  </header>
+
+  <!-- ================= ENGLISH ================= -->
+  <section data-lang="en">
+    <div class="summary"><p><strong>In short:</strong> HeatCheck does not collect, store on any server, share, or sell any personal data. The app has no internet access, no accounts, no ads, and no analytics or crash-reporting tools. Everything it reads stays on your device.</p></div>
+
+    <h2>1. Who we are</h2>
+    <p>HeatCheck (package name <code>com.bittyferrari.heatcheck</code>) is an Android app developed by bittyferrari (“we”, “us”). This policy explains how the app handles information.</p>
+
+    <h2>2. Information the app reads</h2>
+    <p>To show temperatures and device details, HeatCheck reads the following information <strong>locally on your device</strong>:</p>
+    <ul>
+      <li>CPU, GPU and other thermal sensor readings (from system files such as <code>/sys/class/thermal</code>);</li>
+      <li>Battery temperature, voltage, current and health;</li>
+      <li>Memory and storage usage, CPU core frequencies;</li>
+      <li>Device information such as model, manufacturer, Android version, security patch level, kernel version, SoC, GPU name and display specs.</li>
+    </ul>
+    <p>This information is displayed in the app, widget, picture-in-picture window, floating overlay and notification. It is <strong>never transmitted off your device</strong>. The app does not request the Internet permission and therefore cannot send data anywhere.</p>
+    <p>HeatCheck does <strong>not</strong> access your contacts, photos, files, location, camera, microphone, phone number, advertising ID or any other personal identifiers.</p>
+
+    <h2>3. Information stored on your device</h2>
+    <p>The app saves only your preferences (for example language, picture-in-picture ratio, font size, overlay opacity and layout) in the app’s private storage on your device. These settings contain no personal information. If Android backup is enabled on your device, the system may include these settings in your own Google device backup, which is governed by Google’s privacy policy. Uninstalling the app removes them.</p>
+
+    <h2>4. Permissions</h2>
+    <div class="table-wrap"><table>
+      <tr><th>Permission</th><th>Why it is used</th></tr>
+      <tr><td>Display over other apps<br><code>SYSTEM_ALERT_WINDOW</code></td><td>Only for the optional floating overlay that shows temperatures on top of other apps. Requested only when you turn it on.</td></tr>
+      <tr><td>Notifications<br><code>POST_NOTIFICATIONS</code></td><td>Shows the ongoing notification for “Widget live update” and the floating overlay, with a Stop button.</td></tr>
+      <tr><td>Foreground service<br><code>FOREGROUND_SERVICE</code>, <code>FOREGROUND_SERVICE_SPECIAL_USE</code></td><td>Keeps the widget and overlay updated every few seconds while you have enabled those features.</td></tr>
+    </table></div>
+    <p>You can revoke these permissions at any time in Android Settings; the main screen continues to work without them.</p>
+
+    <h2>5. Clipboard</h2>
+    <p>The “Copy all” button in Advanced Info copies device details to your clipboard only when you tap it. The app does not read your clipboard.</p>
+
+    <h2>6. Third-party services and links</h2>
+    <p>HeatCheck contains no third-party SDKs for advertising, analytics, tracking or crash reporting. The app may include an optional donation link (PayPal). Tapping it opens your web browser; any information you provide there is handled by PayPal under its own privacy policy, not by us.</p>
+
+    <h2>7. Data sharing and sale</h2>
+    <p>We do not collect any data, so we do not share or sell data with anyone.</p>
+
+    <h2>8. Children’s privacy</h2>
+    <p>The app does not collect personal information from anyone, including children under 13 (or the equivalent minimum age in your region).</p>
+
+    <h2>9. Security</h2>
+    <p>Because no data leaves your device and the app has no network access, there is no data in transit or on servers to protect. Preferences are kept in app-private storage protected by Android’s app sandbox.</p>
+
+    <h2>10. Changes to this policy</h2>
+    <p>If this policy changes, we will update this page and the effective date above. Significant changes (for example, if a future version starts using the internet) will be reflected here before release.</p>
+
+    <h2>11. Contact</h2>
+    <p>Questions about this policy: <a href="mailto:bittyferrari@gmail.com">bittyferrari@gmail.com</a></p>
+  </section>
+
+  <!-- ================= 繁體中文 ================= -->
+  <section data-lang="zh">
+    <div class="summary"><p><strong>重點摘要：</strong>HeatCheck 不蒐集、不上傳、不分享也不販售任何個人資料。App 沒有網路權限、不需要帳號、沒有廣告，也沒有任何分析或錯誤回報工具。所有讀取到的資訊都只留在你的裝置上。</p></div>
+
+    <h2>1. 關於我們</h2>
+    <p>HeatCheck（套件名稱 <code>com.bittyferrari.heatcheck</code>）是由 bittyferrari（以下稱「我們」）開發的 Android App。本政策說明 App 如何處理資訊。</p>
+
+    <h2>2. App 讀取的資訊</h2>
+    <p>為了顯示溫度與裝置資訊，HeatCheck 會<strong>在你的裝置本機</strong>讀取以下資訊：</p>
+    <ul>
+      <li>CPU、GPU 及其他溫度感測器數值（來自 <code>/sys/class/thermal</code> 等系統檔案）；</li>
+      <li>電池溫度、電壓、電流與健康度；</li>
+      <li>記憶體與儲存空間使用量、CPU 各核心頻率；</li>
+      <li>裝置資訊，例如型號、製造商、Android 版本、安全性修補程式等級、核心版本、SoC、GPU 名稱與螢幕規格。</li>
+    </ul>
+    <p>這些資訊只會顯示在 App、桌面 Widget、子母畫面、懸浮視窗與通知中，<strong>絕不會傳送到裝置以外</strong>。App 沒有申請網路權限，因此無法將資料傳送到任何地方。</p>
+    <p>HeatCheck <strong>不會</strong>存取你的聯絡人、相片、檔案、位置、相機、麥克風、電話號碼、廣告 ID 或任何其他個人識別資訊。</p>
+
+    <h2>3. 儲存在裝置上的資訊</h2>
+    <p>App 只會把你的偏好設定（例如語言、子母畫面比例、字體大小、懸浮視窗不透明度與排列方式）存在裝置上的 App 私有儲存空間，這些設定不含任何個人資訊。若你的裝置開啟了 Android 備份，系統可能會把這些設定包含在你自己的 Google 裝置備份中，該備份適用 Google 的隱私權政策。解除安裝 App 即會刪除這些設定。</p>
+
+    <h2>4. 權限說明</h2>
+    <div class="table-wrap"><table>
+      <tr><th>權限</th><th>用途</th></tr>
+      <tr><td>顯示在其他應用程式上層<br><code>SYSTEM_ALERT_WINDOW</code></td><td>僅用於選用的懸浮視窗功能，在其他 App 上方顯示溫度。只有在你開啟該功能時才會要求。</td></tr>
+      <tr><td>通知<br><code>POST_NOTIFICATIONS</code></td><td>在「Widget 即時更新」與懸浮視窗運作時顯示常駐通知（附「停止」按鈕）。</td></tr>
+      <tr><td>前景服務<br><code>FOREGROUND_SERVICE</code>、<code>FOREGROUND_SERVICE_SPECIAL_USE</code></td><td>在你開啟相關功能時，每隔幾秒更新 Widget 與懸浮視窗。</td></tr>
+    </table></div>
+    <p>你可以隨時在 Android 設定中撤銷這些權限；主畫面在沒有這些權限時仍可正常使用。</p>
+
+    <h2>5. 剪貼簿</h2>
+    <p>「進階資訊」中的「複製全部」按鈕，只會在你點按時把裝置資訊複製到剪貼簿。App 不會讀取你的剪貼簿內容。</p>
+
+    <h2>6. 第三方服務與連結</h2>
+    <p>HeatCheck 不含任何廣告、分析、追蹤或錯誤回報的第三方 SDK。App 可能提供選用的贊助連結（PayPal），點按後會開啟瀏覽器；你在該網站提供的任何資訊由 PayPal 依其隱私權政策處理，與我們無關。</p>
+
+    <h2>7. 資料分享與販售</h2>
+    <p>我們不蒐集任何資料，因此也不會與任何人分享或販售資料。</p>
+
+    <h2>8. 兒童隱私</h2>
+    <p>App 不會向任何人（包括未滿 13 歲或你所在地區規定年齡以下的兒童）蒐集個人資訊。</p>
+
+    <h2>9. 安全性</h2>
+    <p>由於沒有任何資料離開你的裝置，且 App 沒有網路存取能力，因此不存在傳輸中或伺服器上需要保護的資料。偏好設定存放在受 Android App 沙箱保護的私有儲存空間中。</p>
+
+    <h2>10. 政策變更</h2>
+    <p>本政策如有變更，我們會更新本頁內容與上方的生效日期。若有重大變更（例如未來版本開始使用網路），會在該版本發布前更新於此。</p>
+
+    <h2>11. 聯絡方式</h2>
+    <p>如對本政策有任何疑問，請來信：<a href="mailto:bittyferrari@gmail.com">bittyferrari@gmail.com</a></p>
+  </section>
+
+  <footer>© 2026 bittyferrari · HeatCheck</footer>
+</main>
+<script>
+  (function () {
+    var buttons = document.querySelectorAll('.lang button');
+    function set(lang) {
+      document.documentElement.lang = lang;
+      buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === lang)); });
+      try { localStorage.setItem('hc-lang', lang); } catch (e) {}
+    }
+    buttons.forEach(function (b) { b.addEventListener('click', function () { set(b.dataset.set); }); });
+    var saved = null;
+    try { saved = localStorage.getItem('hc-lang'); } catch (e) {}
+    var q = new URLSearchParams(location.search).get('lang');
+    if (q === 'zh' || q === 'zh-Hant' || q === 'zh-TW') saved = 'zh-Hant';
+    else if (q === 'en') saved = 'en';
+    if (!saved) saved = /^zh/i.test(navigator.language || '') ? 'zh-Hant' : 'en';
+    set(saved);
+  })();
+</script>
+</body>
+</html>
