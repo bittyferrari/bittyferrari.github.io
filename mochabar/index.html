@@ -150,6 +150,10 @@ h2{font-size:clamp(28px,4vw,42px);line-height:1.15;margin:8px 0 14px;letter-spac
 .strip img{width:100%;height:auto}
 .scenegrid{display:grid;gap:18px;grid-template-columns:repeat(2,1fr)}
 .scenegrid figure{margin:0}
+.strip.parade{height:96px;display:flex;align-items:flex-end;padding:0 0 14px;background:linear-gradient(180deg,#bfe3ff,#eaf6ff);white-space:nowrap}
+.strip.parade span{font-size:34px;letter-spacing:2px;padding-left:12px;animation:parade 18s linear infinite}
+@keyframes parade{from{transform:translateX(0)}to{transform:translateX(-40%)}}
+@media (prefers-reduced-motion:reduce){.strip.parade span{animation:none}}
 .scenegrid figcaption{margin-top:8px;font-size:14px;color:var(--muted)}
 .scenegrid figcaption b{color:var(--ink)}
 @media (max-width:760px){.scenegrid{grid-template-columns:1fr}}
@@ -285,10 +289,12 @@ footer a{color:var(--ink)}
       <div class="card"><div class="em">⌘</div><h3><span class="zh">單按 ⌘ 開始</span><span class="en">Tap ⌘ for Start</span></h3><p><span class="zh">只有單獨按一下 ⌘ 才會觸發，⌘C、⌘Tab 等組合鍵完全不受影響。可選左 ⌘、右 ⌘ 或關閉。</span><span class="en">Only a lone tap triggers it — ⌘C, ⌘Tab and other shortcuts work as usual. Choose left, right or either ⌘.</span></p></div>
       <div class="card"><div class="em">🔍</div><h3><span class="zh">開始選單 + 搜尋</span><span class="en">Start menu with search</span></h3><p><span class="zh">打字就搜、Enter 開啟。釘選、所有應用程式、常用資料夾、電源選項，大小可拖曳調整。</span><span class="en">Just type and press Enter. Pinned apps, all apps, folders and power options — and you can resize it.</span></p></div>
       <div class="card"><div class="em">🪟</div><h3><span class="zh">每個視窗一顆按鈕</span><span class="en">One button per window</span></h3><p><span class="zh">像「永不合併」一樣列出每個視窗，可拖曳排序，滑鼠中鍵直接關閉視窗。也能切回合併模式。</span><span class="en">Like “never combine”: every window listed, drag to reorder, middle-click to close. Combined mode is one click away.</span></p></div>
-      <div class="card"><div class="em">🔋</div><h3><span class="zh">完整系統匣</span><span class="en">A full system tray</span></h3><p><span class="zh">電量、音量滑桿、Wi-Fi、藍牙、輸入法、CPU / 記憶體 / 網速迷你圖、專注模式，每個都能單獨開關。</span><span class="en">Battery, volume slider, Wi-Fi, Bluetooth, input source, CPU / memory / network sparklines and Focus — each one optional.</span></p></div>
+      <div class="card"><div class="em">🔋</div><h3><span class="zh">完整系統匣</span><span class="en">A full system tray</span></h3><p><span class="zh">電量、音量與亮度滑桿、Wi-Fi、藍牙、輸入法、小算盤、專注模式，還有 CPU / 記憶體 / 溫度 / 耗電 / 網速迷你圖（可設警示色），每個都能單獨開關。</span><span class="en">Battery, volume and brightness sliders, Wi-Fi, Bluetooth, input source, a calculator and Focus, plus CPU / memory / temperature / power / network sparklines with alert colors — each one optional.</span></p></div>
       <div class="card"><div class="em">📅</div><h3><span class="zh">點時鐘看月曆</span><span class="en">Click the clock for a calendar</span></h3><p><span class="zh">跳出月曆和當天行程；秒數、日期、24 小時制都能切換。最右下角一像素就是「顯示桌面」。</span><span class="en">A pop-up calendar with today’s events; seconds, date and 24-hour time are all toggles. The very last corner pixel is Show Desktop.</span></p></div>
       <div class="card"><div class="em">🎨</div><h3><span class="zh">外觀隨你調</span><span class="en">Make it yours</span></h3><p><span class="zh">毛玻璃、深淺色、漸層底色、高度、圖示置中或靠左；還有三款懷舊主題包（經典灰、藍天綠地、晶透玻璃），全部自己畫。</span><span class="en">Glass styles, gradients, height, centered or left icons — plus three retro theme packs, all hand-drawn from scratch.</span></p></div>
       <div class="card"><div class="em">🖥️</div><h3><span class="zh">每個螢幕都有</span><span class="en">Every display</span></h3><p><span class="zh">外接螢幕各有一條工作列，只顯示當前桌面空間的視窗。</span><span class="en">Each display gets its own taskbar, showing windows on the current Space.</span></p></div>
+      <div class="card"><div class="em">🪄</div><h3><span class="zh">快速風格</span><span class="en">Quick Styles</span></h3><p><span class="zh">懶得一個一個調？14 種風格（極簡、辦公、電競、懷舊…）一鍵套用外觀、系統匣和動畫，釘選和快捷鍵不會變。</span><span class="en">Don’t want to tweak everything? Pick one of 14 styles — Minimal, Office, Gamer, Retro and more — and the look, tray and animations are set in one click.</span></p></div>
+      <div class="card"><div class="em">✨</div><h3><span class="zh">會動的工作列</span><span class="en">Little animations</span></h3><p><span class="zh">開始選單開啟動畫、App 開啟動畫，切換視窗時按鈕還能跳一下、翻牌或搖一搖。</span><span class="en">Start menu and app launch animations, and the active button can jump, flip or wiggle when you switch windows.</span></p></div>
       <div class="card"><div class="em">🌏</div><h3><span class="zh">20 種語言</span><span class="en">20 languages</span></h3><p><span class="zh">預設跟隨系統語言，也能隨時切換，立即生效。設定可匯出成 JSON 分享給朋友。</span><span class="en">Follows your system language or switch anytime, instantly. Export your setup as JSON and share it.</span></p></div>
     </div>
   </div>
@@ -307,7 +313,7 @@ footer a{color:var(--ink)}
 <!-- scenes -->
 <section id="scenes">
   <div class="wrap">
-    <span class="eyebrow">Pro · <span class="zh">12 個動畫場景</span><span class="en">12 animated scenes</span></span>
+    <span class="eyebrow">Pro · <span class="zh">10 個動畫場景</span><span class="en">10 animated scenes</span></span>
     <h2><span class="zh">讓工作列上方熱鬧起來</span><span class="en">Bring the space above your taskbar to life</span></h2>
     <p class="sub"><span class="zh">場景都在透明視窗裡，滑鼠點擊會直接穿透，不影響工作。可以同時開好幾個，各自調整高度、寬度和速度。</span><span class="en">Scenes live in a click-through layer, so they never get in your way. Stack several at once and tune each one’s height, width and speed.</span></p>
 
@@ -329,11 +335,9 @@ footer a{color:var(--ink)}
       <figure><div class="strip"><img src="img/aquarium.webp" alt="Aquarium" loading="lazy" width="1600" height="426"></div><figcaption><b>🐠 <span class="zh">水族箱</span><span class="en">Aquarium</span></b> — <span class="zh">17 種生物、13 種造景，會自動餵食，也能手動餵魚。</span><span class="en">17 creatures and 13 decorations; auto-feeding or feed them yourself.</span></figcaption></figure>
       <figure><div class="strip"><img src="img/garden.webp" alt="Garden defense" loading="lazy" width="1200" height="379"></div><figcaption><b>🌻 <span class="zh">花園防線</span><span class="en">Garden defense</span></b> — <span class="zh">自己會打的塔防，守住一波又一波害蟲。</span><span class="en">A tower defense that plays itself, wave after wave.</span></figcaption></figure>
       <figure><div class="strip"><img src="img/builder.webp" alt="Construction site" loading="lazy" width="1600" height="427"></div><figcaption><b>🏗️ <span class="zh">工地</span><span class="en">Construction site</span></b> — <span class="zh">工人砌磚蓋房子，偶爾有幽浮來搬走。</span><span class="en">Workers build houses brick by brick — until a UFO drops by.</span></figcaption></figure>
-      <figure><div class="strip"><img src="img/spa.webp" alt="Spa" loading="lazy" width="1600" height="426"></div><figcaption><b>💆 SPA</b> — <span class="zh">按摩師和放鬆到睡著的客人。</span><span class="en">Massage therapists and guests relaxing until they doze off.</span></figcaption></figure>
       <figure><div class="strip"><img src="img/sushi.webp" alt="Sushi bar" loading="lazy" width="830" height="200"></div><figcaption><b>🍣 <span class="zh">迴轉壽司</span><span class="en">Sushi bar</span></b> — <span class="zh">師傅捏壽司、客人挑盤子、吃飽結帳。</span><span class="en">Chefs make sushi, guests pick plates, eat and pay.</span></figcaption></figure>
-      <figure><div class="strip"><img src="img/hair.webp" alt="Hair salon" loading="lazy" width="1600" height="349"></div><figcaption><b>💇 <span class="zh">理髮廳</span><span class="en">Hair salon</span></b> — <span class="zh">各種髮型，剪完開心離開。</span><span class="en">All kinds of hairstyles, and happy customers.</span></figcaption></figure>
+      <figure><div class="strip parade" aria-hidden="true"><span>🐶🐱🐭🐹🐰🦊🐻🐼🐨🐯🦁🐮🐷🐸🐵🐔🐧🐤🦆</span></div><figcaption><b>🐘 <span class="zh">Emoji 遊行</span><span class="en">Emoji Parade</span></b> — <span class="zh">任何文字或 emoji 排隊走過工作列，會跳、會翻、偶爾還會觸電。</span><span class="en">Any text or emoji marches across your taskbar — hopping, flipping, and now and then getting zapped.</span></figcaption></figure>
       <figure><div class="strip"><img src="img/zoo.webp" alt="Zoo" loading="lazy" width="1800" height="201"></div><figcaption><b>🦁 <span class="zh">動物園</span><span class="en">Zoo</span></b> — <span class="zh">獅子、長頸鹿、熊貓、企鵝，還有逛園區的遊客。</span><span class="en">Lions, giraffes, pandas, penguins and visitors strolling by.</span></figcaption></figure>
-      <figure><div class="strip"><img src="img/carwash.webp" alt="Car wash" loading="lazy" width="1800" height="239"></div><figcaption><b>🧽 <span class="zh">洗車場</span><span class="en">Car wash</span></b> — <span class="zh">髒車開進去、泡泡刷一刷、亮晶晶開出來。</span><span class="en">Dirty cars in, bubbles and brushes, shiny cars out.</span></figcaption></figure>
     </div>
     <p class="sub" style="margin:28px 0 0;font-size:15px"><span class="zh">另外還有：🏘️ 村民採集蓋城、🚀 橫向捲軸射擊、🐍 自己玩的貪食蛇。</span><span class="en">Also: 🏘️ villagers gathering resources, 🚀 a side-scrolling shooter, and 🐍 a self-playing snake.</span></p>
   </div>
@@ -342,7 +346,7 @@ footer a{color:var(--ink)}
 <!-- games -->
 <section class="alt" id="games">
   <div class="wrap">
-    <span class="eyebrow">Pro · <span class="zh">9 款互動小遊戲</span><span class="en">9 mini games</span></span>
+    <span class="eyebrow">Pro · <span class="zh">19 款互動小遊戲</span><span class="en">19 mini games</span></span>
     <h2><span class="zh">從系統匣打開，點外面就收起來</span><span class="en">Open from the tray, click away to hide</span></h2>
     <p class="sub"><span class="zh">遊戲進度會保留，關掉再開還停在原地。音效和音樂全部由程式即時合成。</span><span class="en">Progress is saved, so you pick up right where you left off. All sound effects and music are synthesized in code.</span></p>
     <div class="games">
@@ -355,6 +359,16 @@ footer a{color:var(--ink)}
       <div class="game"><div class="pic emoji">⚫⚪</div><div class="txt"><h3>⚫ <span class="zh">圍棋</span><span class="en">Go</span></h3><p><span class="zh">9 / 13 / 19 路，跟電腦或朋友下，打劫、悔棋、自動數地。</span><span class="en">9×9, 13×13 or 19×19 against the computer or a friend, with ko, undo and scoring.</span></p></div></div>
       <div class="game"><div class="pic emoji" style="background:linear-gradient(135deg,#5b6bff,#22d3ee)">🏰</div><div class="txt"><h3>🏰 <span class="zh">塔防</span><span class="en">Tower defense</span></h3><p><span class="zh">7 種塔、8 種敵人、類 roguelike 強化卡，用分享碼和朋友比同一張地圖。</span><span class="en">7 towers, 8 enemy types, roguelike upgrade cards — share a seed code to race friends on the same map.</span></p></div></div>
       <div class="game"><div class="pic emoji farm">🌱🥕🌽</div><div class="txt"><h3>🌾 <span class="zh">農場</span><span class="en">Farm</span></h3><p><span class="zh">開墾、播種、澆水、收成，作物照真實時間長，關掉也會繼續長。</span><span class="en">Till, plant, water, harvest. Crops grow in real time — even while it’s closed.</span></p></div></div>
+      <div class="game"><div class="pic emoji" style="background:linear-gradient(135deg,#7b2ff7,#f107a3)">💎🍓</div><div class="txt"><h3>💎 <span class="zh">消消樂</span><span class="en">Match 3</span></h3><p><span class="zh">寶石或水果三消，條紋、炸彈、彩虹球特效互相組合，一關一關往上挑戰。</span><span class="en">Gems or fruit: striped pieces, bombs and rainbow balls that combo together, level after level.</span></p></div></div>
+      <div class="game"><div class="pic emoji" style="background:linear-gradient(135deg,#1f7a3a,#0f4d24)">🂡🕷️</div><div class="txt"><h3>🃏 <span class="zh">接龍與蜘蛛接龍</span><span class="en">Solitaire &amp; Spider</span></h3><p><span class="zh">Windows 經典接龍，翻 1 張或 3 張；蜘蛛接龍可選 1 / 2 / 4 種花色。</span><span class="en">Classic Klondike with draw 1 or 3, plus Spider with 1, 2 or 4 suits.</span></p></div></div>
+      <div class="game"><div class="pic emoji" style="background:linear-gradient(135deg,#9aa3ad,#6b7480)">💣🚩</div><div class="txt"><h3>💣 <span class="zh">踩地雷</span><span class="en">Minesweeper</span></h3><p><span class="zh">經典灰色格子、紅色數字和笑臉按鈕，第一下保證不會踩雷。</span><span class="en">The classic look — grey tiles, red digits, smiley button. Your first click is always safe.</span></p></div></div>
+      <div class="game"><div class="pic emoji" style="background:linear-gradient(135deg,#edc22e,#f67c5f)">2048</div><div class="txt"><h3>🔢 2048</h3><p><span class="zh">方向鍵或滑鼠拖一下，同數字合併，湊到 2048 之後還能繼續玩。</span><span class="en">Slide with arrow keys or a drag, merge matching tiles, and keep going past 2048.</span></p></div></div>
+      <div class="game"><div class="pic emoji" style="background:linear-gradient(135deg,#4f6bed,#22b8cf)">🔢✏️</div><div class="txt"><h3>🧩 <span class="zh">數獨</span><span class="en">Sudoku</span></h3><p><span class="zh">四種難度，每題即時產生且只有一個解，可寫筆記、提示、悔棋。</span><span class="en">Four difficulty levels, freshly generated with a unique solution, with notes, hints and undo.</span></p></div></div>
+      <div class="game"><div class="pic emoji" style="background:linear-gradient(135deg,#334155,#64748b)">⬛⬜</div><div class="txt"><h3>🖼️ <span class="zh">數織</span><span class="en">Nonogram</span></h3><p><span class="zh">依提示數字塗黑格子拼出圖案，每題都能只靠推理解開，不用猜。</span><span class="en">Fill cells from the number clues to reveal a picture — every puzzle solvable by logic alone.</span></p></div></div>
+      <div class="game"><div class="pic emoji" style="background:linear-gradient(135deg,#e8b86d,#b5651d)">🔴⚫</div><div class="txt"><h3>🀄 <span class="zh">象棋</span><span class="en">Xiangqi</span></h3><p><span class="zh">中國象棋，跟三種難度的電腦對手下，或兩個人輪流下。</span><span class="en">Chinese chess against a computer at three levels, or with a friend.</span></p></div></div>
+      <div class="game"><div class="pic emoji">⚫⚪⚫</div><div class="txt"><h3>➕ <span class="zh">五子棋</span><span class="en">Gomoku</span></h3><p><span class="zh">15 × 15 棋盤，先連成五子就贏，電腦會攻也會守。</span><span class="en">Five in a row on a 15×15 board, against a computer that attacks and defends.</span></p></div></div>
+      <div class="game"><div class="pic emoji" style="background:linear-gradient(135deg,#16a34a,#065f46)">⚪⚫</div><div class="txt"><h3>🔄 <span class="zh">黑白棋</span><span class="en">Reversi</span></h3><p><span class="zh">夾住就翻面，子多的贏；電腦殘局會直接算到底。</span><span class="en">Flank to flip; most discs wins. The computer calculates the endgame to the last move.</span></p></div></div>
+      <div class="game"><div class="pic emoji" style="background:linear-gradient(135deg,#3f3f46,#78716c)">🎯🧱</div><div class="txt"><h3>🎯 <span class="zh">掩體突擊</span><span class="en">Cover shooter</span></h3><p><span class="zh">3D 第一人稱射擊，沿路躲掩體、探頭瞄準，鍵盤滑鼠都能玩。</span><span class="en">A 3D first-person shooter: duck behind cover, pop out and aim. Mouse or keyboard only.</span></p></div></div>
     </div>
   </div>
 </section>
@@ -373,7 +387,7 @@ footer a{color:var(--ink)}
         <ul>
           <li><span class="zh">工作列、單按 ⌘ 開始選單</span><span class="en">Taskbar and tap-⌘ Start menu</span></li>
           <li><span class="zh">完整系統匣與月曆</span><span class="en">Full system tray and calendar</span></li>
-          <li><span class="zh">外觀自訂與懷舊主題包</span><span class="en">Appearance options and retro themes</span></li>
+          <li><span class="zh">外觀自訂、懷舊主題包與快速風格</span><span class="en">Appearance options, retro themes and Quick Styles</span></li>
           <li><span class="zh">多螢幕、20 種語言、設定匯入匯出</span><span class="en">Multiple displays, 20 languages, settings import / export</span></li>
         </ul>
         <a class="btn dark" href="https://github.com/bittyferrari/mochabar/releases/latest/download/Mochabar.dmg">⬇ <span class="zh">免費下載</span><span class="en">Download free</span></a>
@@ -385,8 +399,8 @@ footer a{color:var(--ink)}
         <ul>
           <li><span class="zh">免費版的全部功能</span><span class="en">Everything in Free</span></li>
           <li><span class="zh">RGB 燈效（含跟著音樂律動）</span><span class="en">RGB lighting, including music mode</span></li>
-          <li><span class="zh">全部 12 個動畫場景</span><span class="en">All 12 animated scenes</span></li>
-          <li><span class="zh">全部 9 款互動小遊戲</span><span class="en">All 9 mini games</span></li>
+          <li><span class="zh">全部 10 個動畫場景</span><span class="en">All 10 animated scenes</span></li>
+          <li><span class="zh">全部 19 款互動小遊戲</span><span class="en">All 19 mini games</span></li>
           <li><span class="zh">之後新增的 Pro 內容</span><span class="en">Future Pro additions</span></li>
         </ul>
         <a class="btn grad" href="https://bittyferrari.lemonsqueezy.com/checkout/buy/5678601a-9ae7-4f4b-8167-6c24040014d6">✨ <span class="zh">購買 Pro · US$10</span><span class="en">Get Pro · US$10</span></a>
@@ -401,7 +415,7 @@ footer a{color:var(--ink)}
     <span class="eyebrow"><span class="zh">開始使用</span><span class="en">Getting started</span></span>
     <h2><span class="zh">四步驟，兩分鐘裝好</span><span class="en">Four steps, two minutes</span></h2>
     <div class="steps" style="margin-top:28px">
-      <div class="card"><h3><span class="zh">下載並解壓縮</span><span class="en">Download and unzip</span></h3><p><span class="zh">把 Mochabar 拖進「應用程式」資料夾，然後打開。</span><span class="en">Move Mochabar into Applications and open it.</span></p></div>
+      <div class="card"><h3><span class="zh">下載並打開 DMG</span><span class="en">Download and open the DMG</span></h3><p><span class="zh">把 Mochabar 拖進「應用程式」資料夾，然後打開。</span><span class="en">Move Mochabar into Applications and open it.</span></p></div>
       <div class="card"><h3><span class="zh">允許「輔助使用」</span><span class="en">Allow Accessibility</span></h3><p><span class="zh">用來列出、切換和關閉視窗。歡迎畫面會一步步帶你設定。</span><span class="en">Needed to list, switch and close windows. The welcome screen walks you through it.</span></p></div>
       <div class="card"><h3><span class="zh">允許「輸入監控」</span><span class="en">Allow Input Monitoring</span></h3><p><span class="zh">只用來偵測「單按 ⌘」，授權後約 2 秒自動生效。</span><span class="en">Only used to detect a lone ⌘ tap; it kicks in about 2 seconds after you allow it.</span></p></div>
       <div class="card"><h3><span class="zh">把 Dock 讓開</span><span class="en">Move the Dock aside</span></h3><p><span class="zh">歡迎畫面有「一鍵套用建議」：Dock 移到右邊並隱藏選單列。</span><span class="en">The welcome screen can do it in one click: Dock to the right, menu bar hidden.</span></p></div>
