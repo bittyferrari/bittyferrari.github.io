@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bitty Ferrari — Apps</title>
-<meta name="description" content="Bitty Ferrari — indie Android / iOS apps: Bluetooth keyboard & mouse, FTP, GPS HUD, slideshows. Privacy-first, zero data collection.">
+<meta name="description" content="Bitty Ferrari — indie macOS / Android / iOS apps: Mochabar (a Windows-style taskbar for Mac), Bluetooth keyboard & mouse, FTP, GPS HUD, slideshows. Privacy-first, zero data collection.">
 <meta name="theme-color" content="#07070c">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -155,6 +155,16 @@ section.blk{padding:110px 0 40px}
 .card .pp{display:inline-flex;align-items:center;gap:6px;color:var(--fg);flex:none}
 .card .pp svg{width:14px;height:14px;transition:transform .25s}
 .card:hover .pp svg{transform:translate(3px,-3px)}
+.icon.img{background:none;border:0;overflow:hidden}
+.icon.img img{width:100%;height:100%;display:block}
+.card.feat{grid-column:1/-1}
+.card .shot{position:absolute;inset:0 0 auto auto;width:52%;height:100%;pointer-events:none;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 45%);mask-image:linear-gradient(90deg,transparent,#000 45%);opacity:.8;transition:opacity .4s}
+.card .shot img{width:100%;height:100%;object-fit:cover;object-position:left bottom;display:block}
+.card.feat:hover .shot{opacity:1}
+.card.feat .top{position:relative}
+.card.feat h3,.card.feat .zh,.card.feat p{position:relative;max-width:58%}
+.card.feat .foot{position:relative}
 .card .num{position:absolute;right:18px;bottom:-26px;font-size:124px;font-weight:700;color:rgba(255,255,255,.028);letter-spacing:-.06em;pointer-events:none;font-family:"Space Grotesk",system-ui,sans-serif}
 
 .privacy{margin-top:40px;border:1px solid var(--line);border-radius:28px;padding:clamp(28px,5vw,64px);position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(124,92,255,.14),rgba(0,224,255,.05) 60%,transparent)}
@@ -212,6 +222,9 @@ body.party .gridbg{opacity:1;background-size:32px 32px;animation:gridmove .6s li
   .stats{gap:26px}
   .stat .n{font-size:34px}
   .grid{grid-template-columns:1fr}
+  .card.feat{grid-column:auto}
+  .card .shot{width:100%;height:150px;inset:0 0 auto 0;-webkit-mask-image:linear-gradient(#000 40%,transparent);mask-image:linear-gradient(#000 40%,transparent);opacity:.35}
+  .card.feat .top,.card.feat h3,.card.feat .zh,.card.feat p{max-width:none}
   .marquee .track{font-size:18px}
 }
 @media (prefers-reduced-motion:reduce){
@@ -248,8 +261,8 @@ body.party .gridbg{opacity:1;background-size:32px 32px;animation:gridmove .6s li
       <h1><span id="h1a">Bitty</span><span class="grad" id="h1b">Ferrari.</span></h1>
       <p class="sub"><span data-i="sub_a"></span><span class="typed" id="typed"></span><br><span data-i="sub_b" data-html></span></p>
       <div class="stats">
-        <div class="stat"><div class="n" data-count="9">0</div><div class="l" data-i="st_apps"></div></div>
-        <div class="stat"><div class="n" data-count="2">0</div><div class="l" data-i="st_plat"></div></div>
+        <div class="stat"><div class="n" data-count="10">0</div><div class="l" data-i="st_apps"></div></div>
+        <div class="stat"><div class="n" data-count="3">0</div><div class="l" data-i="st_plat"></div></div>
         <div class="stat"><div class="n" data-count="0" data-suffix=" bytes">0</div><div class="l" data-i="st_data"></div></div>
       </div>
       <a class="scroll" href="#apps" data-i="scroll"></a>
@@ -265,10 +278,11 @@ body.party .gridbg{opacity:1;background-size:32px 32px;animation:gridmove .6s li
     <div class="head reveal">
       <h2><span class="kick" data-i="work_k" data-s></span><span data-i="work_t" data-s></span></h2>
       <div class="filters" id="filters">
-        <button class="on" data-f="all"><span data-i="f_all"></span><sup>9</sup></button>
+        <button class="on" data-f="all"><span data-i="f_all"></span><sup>10</sup></button>
         <button data-f="bluetooth"><span data-i="f_bt"></span><sup>3</sup></button>
         <button data-f="files"><span data-i="f_files"></span><sup>2</sup></button>
         <button data-f="media"><span data-i="f_media"></span><sup>4</sup></button>
+        <button data-f="mac">macOS<sup>1</sup></button>
         <button data-f="ios">iOS<sup>1</sup></button>
       </div>
     </div>
@@ -308,10 +322,10 @@ body.party .gridbg{opacity:1;background-size:32px 32px;animation:gridmove .6s li
 const L = {
  zh:{label:'繁體中文',code:'中',html:'zh-Hant',
   nav_apps:'作品',nav_privacy:'隱私',nav_term:'終端機',tag:'// 獨立 App 開發者 · 台灣',
-  sub_a:'我做小而好用的 App —— ',sub_b:'<b>本機運作、不收集資料</b>，把你的手機變成更好用的工具。',
-  words:['藍牙鍵盤','藍牙滑鼠','FTP 伺服器','GPS HUD','日文幻燈片'],
+  sub_a:'我做小而好用的 App —— ',sub_b:'<b>本機運作、不收集資料</b>，讓你的手機和 Mac 更好用。',
+  words:['Mac 工作列','藍牙鍵盤','藍牙滑鼠','FTP 伺服器','GPS HUD','日文幻燈片'],
   st_apps:'款 App 已上架',st_plat:'個平台',st_data:'個人資料收集量',scroll:'往下捲動探索',drag:'拖曳旋轉 ↻',
-  work_k:'01 — 作品',work_t:'我的作品',f_all:'全部',f_bt:'藍牙',f_files:'檔案',f_media:'影像',pp:'隱私權政策',
+  work_k:'01 — 作品',work_t:'我的作品',f_all:'全部',f_bt:'藍牙',f_files:'檔案',f_media:'影像',pp:'隱私權政策',more:'看介紹',
   priv_k:'02 — 隱私',priv_h:'隱私優先。<br><span>資料只留在你的裝置。</span>',
   priv_p:'每個 App 都在你的裝置上本機運作：沒有帳號、沒有追蹤、沒有我自己的伺服器。每個 App 都有公開的隱私權政策，歡迎檢閱。',
   c1:'不需註冊帳號',c2:'無分析追蹤工具',c3:'檔案只留在本機',c4:'公開隱私權政策',
@@ -319,10 +333,10 @@ const L = {
   whoami:'Bitty Ferrari — 台灣的獨立 App 開發者，專做隱私優先的小工具。',toast:'隱藏模式解鎖！'},
  en:{label:'English',code:'EN',html:'en',
   nav_apps:'Apps',nav_privacy:'Privacy',nav_term:'Terminal',tag:'// indie app developer · Taiwan',
-  sub_a:'I build small, useful apps — ',sub_b:'<b>Local-first, zero data collection</b> — tools that make your phone do more.',
-  words:['Bluetooth keyboards','Bluetooth mice','FTP servers','GPS HUDs','Japanese slideshows'],
+  sub_a:'I build small, useful apps — ',sub_b:'<b>Local-first, zero data collection</b> — tools that make your phone and Mac do more.',
+  words:['Mac taskbars','Bluetooth keyboards','Bluetooth mice','FTP servers','GPS HUDs','Japanese slideshows'],
   st_apps:'apps shipped',st_plat:'platforms',st_data:'personal data collected',scroll:'scroll to explore',drag:'drag to spin ↻',
-  work_k:'01 — WORK',work_t:'Selected apps',f_all:'All',f_bt:'Bluetooth',f_files:'Files',f_media:'Media',pp:'Privacy policy',
+  work_k:'01 — WORK',work_t:'Selected apps',f_all:'All',f_bt:'Bluetooth',f_files:'Files',f_media:'Media',pp:'Privacy policy',more:'Learn more',
   priv_k:'02 — PRIVACY',priv_h:'Privacy first.<br><span>Your data stays on your device.</span>',
   priv_p:'Every app runs locally on your device. No accounts, no tracking, no servers of mine. Each one has a public privacy policy — take a look.',
   c1:'No sign-up',c2:'No analytics or trackers',c3:'Files stay on-device',c4:'Public privacy policies',
@@ -330,10 +344,10 @@ const L = {
   whoami:'Bitty Ferrari — indie app developer from Taiwan, building small privacy-first tools.',toast:'Cheat mode unlocked!'},
  ja:{label:'日本語',code:'日',html:'ja',
   nav_apps:'アプリ',nav_privacy:'プライバシー',nav_term:'ターミナル',tag:'// インディーアプリ開発者 · 台湾',
-  sub_a:'小さくて便利なアプリを作っています —— ',sub_b:'<b>端末内で完結、データ収集ゼロ</b>。スマホをもっと便利な道具に。',
-  words:['Bluetooth キーボード','Bluetooth マウス','FTP サーバー','GPS HUD','日本語スライドショー'],
+  sub_a:'小さくて便利なアプリを作っています —— ',sub_b:'<b>端末内で完結、データ収集ゼロ</b>。スマホと Mac をもっと便利に。',
+  words:['Mac のタスクバー','Bluetooth キーボード','Bluetooth マウス','FTP サーバー','GPS HUD','日本語スライドショー'],
   st_apps:'リリース済みアプリ',st_plat:'プラットフォーム',st_data:'収集する個人データ',scroll:'スクロールして見る',drag:'ドラッグで回転 ↻',
-  work_k:'01 — 作品',work_t:'アプリ一覧',f_all:'すべて',f_bt:'Bluetooth',f_files:'ファイル',f_media:'メディア',pp:'プライバシーポリシー',
+  work_k:'01 — 作品',work_t:'アプリ一覧',f_all:'すべて',f_bt:'Bluetooth',f_files:'ファイル',f_media:'メディア',pp:'プライバシーポリシー',more:'詳しく見る',
   priv_k:'02 — プライバシー',priv_h:'プライバシー最優先。<br><span>データはあなたの端末の中だけに。</span>',
   priv_p:'すべてのアプリは端末内で動作します。アカウント不要、トラッキングなし、開発者のサーバーもありません。各アプリのプライバシーポリシーを公開しています。',
   c1:'アカウント登録不要',c2:'解析・トラッキングなし',c3:'ファイルは端末内のみ',c4:'ポリシーを公開',
@@ -341,10 +355,10 @@ const L = {
   whoami:'Bitty Ferrari — 台湾のインディーアプリ開発者。プライバシー重視の小さなツールを作っています。',toast:'隠しモード解放！'},
  ko:{label:'한국어',code:'한',html:'ko',
   nav_apps:'앱',nav_privacy:'개인정보',nav_term:'터미널',tag:'// 인디 앱 개발자 · 대만',
-  sub_a:'작고 유용한 앱을 만듭니다 — ',sub_b:'<b>기기 안에서만 동작, 데이터 수집 제로</b>. 휴대폰을 더 쓸모 있는 도구로.',
-  words:['블루투스 키보드','블루투스 마우스','FTP 서버','GPS HUD','일본어 슬라이드쇼'],
+  sub_a:'작고 유용한 앱을 만듭니다 — ',sub_b:'<b>기기 안에서만 동작, 데이터 수집 제로</b>. 휴대폰과 Mac을 더 쓸모 있게.',
+  words:['Mac 작업 표시줄','블루투스 키보드','블루투스 마우스','FTP 서버','GPS HUD','일본어 슬라이드쇼'],
   st_apps:'출시한 앱',st_plat:'플랫폼',st_data:'수집하는 개인정보',scroll:'스크롤해서 둘러보기',drag:'드래그해서 회전 ↻',
-  work_k:'01 — 작업',work_t:'내 앱',f_all:'전체',f_bt:'블루투스',f_files:'파일',f_media:'미디어',pp:'개인정보처리방침',
+  work_k:'01 — 작업',work_t:'내 앱',f_all:'전체',f_bt:'블루투스',f_files:'파일',f_media:'미디어',pp:'개인정보처리방침',more:'자세히 보기',
   priv_k:'02 — 개인정보',priv_h:'프라이버시 우선.<br><span>데이터는 당신의 기기에만.</span>',
   priv_p:'모든 앱은 기기에서 로컬로 동작합니다. 계정도, 추적도, 개발자 서버도 없습니다. 각 앱의 개인정보처리방침을 공개하고 있습니다.',
   c1:'회원가입 불필요',c2:'분석·추적 도구 없음',c3:'파일은 기기에만 저장',c4:'공개된 개인정보처리방침',
@@ -363,6 +377,9 @@ const ico = {
   ja:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>',
 };
 const apps = [
+ {n:'Mochabar',img:'mochabar/img/icon-256.png',shot:'mochabar/img/car-night.webp',feat:1,c:'#c08552',p:'macOS',t:'mac',pkg:'macOS 13+ · Free · Pro US$10',u:'mochabar/',link:'more',
+  s:{zh:'給 Mac 一條真正的工作列',en:'A real taskbar for your Mac',ja:'Mac に本物のタスクバーを',ko:'Mac에 진짜 작업 표시줄을'},
+  d:{zh:'Windows 風格工作列：每個視窗一顆按鈕、單按 ⌘ 開始選單、完整系統匣與月曆。還有 RGB 燈效、10 種動畫場景和 19 款系統匣小遊戲。',en:'A Windows-style taskbar: one button per window, tap ⌘ for Start, a full system tray and calendar. Plus RGB lighting, 10 animated scenes and 19 mini games in the tray.',ja:'Windows 風タスクバー。ウィンドウごとのボタン、⌘ 単押しでスタート、システムトレイとカレンダー。RGB ライティング、10 種のアニメーション、19 本のミニゲームも。',ko:'Windows 스타일 작업 표시줄. 창마다 버튼, ⌘ 한 번으로 시작 메뉴, 시스템 트레이와 달력. RGB 조명, 10가지 애니메이션 장면, 19개 미니 게임까지.'}},
  {n:'Bluetooth Keyboard & Mouse',i:'combo',c:'#7c5cff',p:'Android',t:'bluetooth',pkg:'com.bittyferrari.bluetooth_combo',u:'android-bluetooth-combo/privacy-policy.html',
   s:{zh:'藍牙鍵盤＋滑鼠',en:'Keyboard + touchpad in one',ja:'Bluetooth キーボード＋マウス',ko:'블루투스 키보드＋마우스'},
   d:{zh:'把手機變成二合一藍牙鍵盤與觸控板，一台就能控制電腦、平板或電視。',en:'Turn your phone into a 2-in-1 Bluetooth keyboard and touchpad for your PC, tablet or TV.',ja:'スマホを Bluetooth キーボードとタッチパッドの 2in1 に。PC・タブレット・テレビを操作。',ko:'휴대폰을 블루투스 키보드와 터치패드 2in1으로. PC, 태블릿, TV를 한 번에 제어하세요.'}},
@@ -449,11 +466,12 @@ function renderCards(animate){
   const g=$('#grid');
   const build=()=>{
     g.innerHTML=apps.map((a,k)=>`
-      <a class="card ${cardsShown?'reveal in':'reveal'} ${filter!=='all'&&!a.t.split(' ').includes(filter)?'hide':''}" href="${a.u}" data-t="${a.t}" style="--hue:${a.c}">
-        <div class="top"><div class="icon">${ico[a.i]}</div><div class="plat"><span>${a.p}</span></div></div>
+      <a class="card ${a.feat?'feat':''} ${cardsShown?'reveal in':'reveal'} ${filter!=='all'&&!a.t.split(' ').includes(filter)?'hide':''}" href="${a.u}" data-t="${a.t}" style="--hue:${a.c}">
+        ${a.shot?`<div class="shot"><img src="${a.shot}" alt="" loading="lazy"></div>`:''}
+        <div class="top"><div class="icon ${a.img?'img':''}">${a.img?`<img src="${a.img}" alt="">`:ico[a.i]}</div><div class="plat"><span>${a.p}</span></div></div>
         <h3>${esc(a.n)}</h3><div class="zh">${a.s[lang]}</div>
         <p>${a.d[lang]}</p>
-        <div class="foot"><span class="pkg">${a.pkg}</span><span class="pp">${T('pp')} ${arrow}</span></div>
+        <div class="foot"><span class="pkg">${a.pkg}</span><span class="pp">${T(a.link||'pp')} ${arrow}</span></div>
         <div class="num">${String(k+1).padStart(2,'0')}</div>
       </a>`).join('');
     bindCards();
@@ -506,7 +524,7 @@ function counters(){$$('[data-count]').forEach(el=>{const to=+el.dataset.count,s
   const step=t=>{s??=t;const p=Math.min((t-s)/1300,1);el.textContent=Math.round(to*(1-Math.pow(1-p,3)))+suf;if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
 
 /* marquee */
-const mq=['Bluetooth Keyboard','FTP Server','GPS HUD','SlideShow','日本語','Bluetooth Mouse','FTP Client','0 trackers','Android','iOS','한국어','繁體中文'];
+const mq=['Mochabar','macOS','Bluetooth Keyboard','FTP Server','GPS HUD','SlideShow','日本語','Bluetooth Mouse','FTP Client','0 trackers','Android','iOS','한국어','繁體中文'];
 $('#track').innerHTML=[...mq,...mq].map(x=>`<span>${x}</span><span><em>✦</em></span>`).join('');
 
 /* cursor + magnetic */
@@ -570,7 +588,7 @@ const cmds={
   help:()=>tp(`<span class="k">help</span>      this list\n<span class="k">whoami</span>    about me\n<span class="k">apps</span>      list apps\n<span class="k">open</span> &lt;n&gt;  open app n's privacy policy\n<span class="k">lang</span> &lt;x&gt;  zh | en | ja | ko\n<span class="k">privacy</span>   data report\n<span class="k">date</span>      current time\n<span class="k">clear</span>     clear screen`),
   whoami:()=>tp(esc(T('whoami'))),
   apps:()=>tp(apps.map((a,i)=>`<span class="d">${String(i+1).padStart(2,'0')}</span>  <span style="color:${a.c}">●</span> ${esc(a.n).padEnd(32)} <span class="d">${a.p}</span>`).join('\n')),
-  open:(n)=>{const a=apps[(+n||0)-1];if(!a)return tp('usage: open 1-9','d');tp(`opening ${esc(a.n)} ...`,'d');setTimeout(()=>location.href=a.u,500)},
+  open:(n)=>{const a=apps[(+n||0)-1];if(!a)return tp('usage: open 1-'+apps.length,'d');tp(`opening ${esc(a.n)} ...`,'d');setTimeout(()=>location.href=a.u,500)},
   lang:(l)=>{if(!L[l])return tp('usage: lang zh | en | ja | ko','d');setLang(l);tp(`language → ${L[l].label}`,'d')},
   privacy:()=>tp('trackers ........ <span class="k">0</span>\naccounts ........ <span class="k">0</span>\nservers ......... <span class="k">0</span>\nyour data ....... <span class="p">stays on your device ✓</span>'),
   date:()=>tp(new Date().toString(),'d'),
@@ -629,7 +647,7 @@ function start(){document.body.classList.add('ready');counters();$('#h1a').textC
 (function boot(){
   const b=$('#boot');let seen=false;try{seen=sessionStorage.getItem('booted')}catch(e){}
   if(seen||reduce){b.remove();start();return}
-  const lines=['> init <b>bittyferrari.os</b> v2.6','> mounting /apps ............ <b>9 found</b>','> scanning trackers ......... <b>0 found</b>','> loading languages ........ <b>zh en ja ko</b>','> ready.'];
+  const lines=['> init <b>bittyferrari.os</b> v2.6','> mounting /apps ............ <b>'+apps.length+' found</b>','> scanning trackers ......... <b>0 found</b>','> loading languages ........ <b>zh en ja ko</b>','> ready.'];
   const box=$('#bootlines');let done=false;
   const finish=()=>{if(done)return;done=true;try{sessionStorage.setItem('booted',1)}catch(e){}b.classList.add('out');setTimeout(()=>b.remove(),900);start()};
   b.addEventListener('click',finish);
