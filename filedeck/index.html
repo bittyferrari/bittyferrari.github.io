@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FileDeck — Mac 上的檔案總管</title>
-<meta name="description" content="FileDeck：Windows 檔案總管手感的 macOS 檔案管理員。Enter 開啟、Backspace 上一頁、F2 改名、⌘X 剪下貼上、內容視窗、22 套主題。A Windows Explorer-style file manager for macOS.">
+<meta name="description" content="FileDeck：Windows 檔案總管手感的 macOS 檔案管理員。Enter 開啟、Backspace 上一頁、⌘R / F2 改名、⌘X 剪下貼上、內容視窗、22 套主題。A Windows Explorer-style file manager for macOS.">
 <meta property="og:title" content="FileDeck">
-<meta property="og:description" content="A file manager for macOS that feels like Windows Explorer — Enter to open, Backspace to go back, F2 to rename, real cut & paste, a Properties window and 22 themes. Free.">
+<meta property="og:description" content="A file manager for macOS that feels like Windows Explorer — Enter to open, Backspace to go back, ⌘R or F2 to rename, real cut & paste, a Properties window and 22 themes. Free.">
 <meta property="og:image" content="https://bittyferrari.github.io/filedeck/img/icon-512.png">
 <meta property="og:type" content="website">
 <link rel="icon" href="img/favicon.png">
@@ -213,8 +213,8 @@ footer a{color:var(--ink)}
       <span class="en">The file manager<br><span class="grad">your fingers remember</span></span>
     </h1>
     <p class="lead">
-      <span class="zh">Enter 打開、Backspace 上一頁、F2 改名、⌘X 剪下再貼上。<br>位址列能直接打路徑，⌥ 雙擊就有「內容」視窗。原生 AppKit，又輕又快。</span>
-      <span class="en">Enter opens, Backspace goes back, F2 renames, and ⌘X really cuts. Type a path straight into the address bar, ⌥-double-click for a Properties window. Native AppKit — small and fast.</span>
+      <span class="zh">Enter 打開、Backspace 上一頁、⌘R 改名、⌘X 剪下再貼上。<br>位址列能直接打路徑，⌥ 雙擊就有「內容」視窗。原生 AppKit，又輕又快。</span>
+      <span class="en">Enter opens, Backspace goes back, ⌘R renames, and ⌘X really cuts. Type a path straight into the address bar, ⌥-double-click for a Properties window. Native AppKit — small and fast.</span>
     </p>
     <div class="cta">
       <a class="btn primary" href="https://github.com/bittyferrari/filedeck/releases/latest/download/FileDeck.dmg">⬇ <span class="zh">免費下載</span><span class="en">Download free</span></a>
@@ -262,7 +262,7 @@ footer a{color:var(--ink)}
         </div>
       </div>
       <div class="keyhint">
-        <span><kbd>F2</kbd><span class="zh">重新命名，只選主檔名</span><span class="en">Rename — just the name, not the extension</span></span>
+        <span><kbd>⌘R</kbd><span class="zh">重新命名，只選主檔名</span><span class="en">Rename — just the name, not the extension</span></span>
         <span><kbd>⌫</kbd><span class="zh">上一頁</span><span class="en">Back</span></span>
       </div>
     </div>
@@ -278,7 +278,7 @@ footer a{color:var(--ink)}
     <div class="grid">
       <div class="card"><div class="em">↵</div><h3><span class="zh">Enter 就是打開</span><span class="en">Enter means open</span></h3><p><span class="zh">進入檔案夾、開啟檔案、啟動 App 都是 Enter；Backspace 回上一頁，沒有上一頁就到上層。</span><span class="en">Enter opens folders, files and apps. Backspace goes back — or up a level when there’s nowhere back to go.</span></p></div>
       <div class="card"><div class="em">✂️</div><h3><span class="zh">真正的剪下貼上</span><span class="en">Real cut &amp; paste</span></h3><p><span class="zh">⌘X 剪下、⌘V 貼上就是搬移；名稱衝突自動保留兩者，絕不覆蓋。大量複製有進度視窗。</span><span class="en">⌘X then ⌘V moves files. Name clashes keep both copies — nothing is ever overwritten. Big copies show progress.</span></p></div>
-      <div class="card"><div class="em">🏷️</div><h3><span class="zh">F2 改名</span><span class="en">F2 to rename</span></h3><p><span class="zh">只選主檔名、不動副檔名，Enter 確定、Esc 取消，⌘Z 可還原。直接打字會跳到該名稱的檔案。</span><span class="en">Selects just the name, not the extension. Enter to confirm, Esc to cancel, ⌘Z to undo. Type to jump to a file.</span></p></div>
+      <div class="card"><div class="em">🏷️</div><h3><span class="zh">⌘R 或 F2 改名</span><span class="en">⌘R or F2 to rename</span></h3><p><span class="zh">只選主檔名、不動副檔名，Enter 確定、Esc 取消，⌘Z 可還原。直接打字會跳到該名稱的檔案。</span><span class="en">Selects just the name, not the extension. Enter to confirm, Esc to cancel, ⌘Z to undo. Type to jump to a file.</span></p></div>
       <div class="card"><div class="em">🗂️</div><h3><span class="zh">分頁與多視窗</span><span class="en">Tabs and windows</span></h3><p><span class="zh">⌘T 開新分頁、⌘N 開新視窗，拖放在視窗、分頁和側邊欄之間都能用。</span><span class="en">⌘T for a new tab, ⌘N for a new window. Drag and drop works between windows, tabs and the sidebar.</span></p></div>
       <div class="card"><div class="em">🖼️</div><h3><span class="zh">詳細資料 / 縮圖</span><span class="en">Details or thumbnails</span></h3><p><span class="zh">⌘1 清單、⌘2 縮圖；圖片、PDF、影片用 Quick Look 產生實際縮圖，7 段大小，⌘＋捲動縮放。</span><span class="en">⌘1 for a list, ⌘2 for thumbnails with real Quick Look previews of images, PDFs and videos. 7 sizes, ⌘-scroll to zoom.</span></p></div>
       <div class="card"><div class="em">📄</div><h3><span class="zh">右鍵新增檔案</span><span class="en">New file from the menu</span></h3><p><span class="zh">空白處右鍵 › 新增：文字文件、Markdown、RTF、HTML、空白檔案，建立完直接改名。</span><span class="en">Right-click › New: text document, Markdown, RTF, HTML or an empty file — ready to rename.</span></p></div>
@@ -352,7 +352,7 @@ footer a{color:var(--ink)}
     <div class="keys">
       <div><span><kbd>Enter</kbd></span><span><span class="zh">打開</span><span class="en">Open</span></span></div>
       <div><span><kbd>⌫</kbd></span><span><span class="zh">上一頁</span><span class="en">Back</span></span></div>
-      <div><span><kbd>F2</kbd></span><span><span class="zh">重新命名</span><span class="en">Rename</span></span></div>
+      <div><span><kbd>⌘R</kbd> <kbd>F2</kbd></span><span><span class="zh">重新命名（MacBook 鍵盤 F2 要按 fn）</span><span class="en">Rename (fn+F2 on MacBook keyboards)</span></span></div>
       <div><span><kbd>Space</kbd></span><span><span class="zh">快速查看</span><span class="en">Quick Look</span></span></div>
       <div><span><kbd>⌘X</kbd> <kbd>⌘C</kbd> <kbd>⌘V</kbd></span><span><span class="zh">剪下／拷貝／貼上檔案</span><span class="en">Cut / copy / paste files</span></span></div>
       <div><span><kbd>⌘⌫</kbd> <kbd>Delete</kbd></span><span><span class="zh">丟到垃圾桶（可還原）</span><span class="en">Move to Trash (undoable)</span></span></div>
