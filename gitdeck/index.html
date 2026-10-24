@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="zh-Hant" data-l="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GitDeck — 一個視窗搞定所有 repo 的 Mac Git 客戶端</title>
+<meta name="description" content="GitDeck：SourceTree 版面的 macOS Git 客戶端。單一視窗、Bookmarks 側邊欄、每個 repo 一個分頁、commit graph、逐 hunk stage、interactive rebase、22 套主題。A single-window Git client for macOS.">
+<meta property="og:title" content="GitDeck">
+<meta property="og:description" content="A single-window Git client for macOS, laid out like SourceTree for Windows — bookmarks, one tab per repo, commit graph, hunk staging, interactive rebase and 22 themes.">
+<meta property="og:image" content="https://bittyferrari.github.io/gitdeck/img/icon-512.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/icon-256.png">
+<style>
+:root{
+  --bg:#f5f7fb; --card:#ffffff; --ink:#121a2e; --muted:#5a6480; --line:#e2e7f0;
+  --brand:#3b6cf0; --brand2:#7845db; --ok:#16a34a;
+  --hero1:#0b1130; --hero2:#1c1652;
+  --radius:18px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b0f1d; --card:#141a2d; --ink:#edf0fa; --muted:#a0a9c4; --line:#252c45;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang TC","Hiragino Sans","Noto Sans TC","Segoe UI",Roboto,sans-serif;
+  line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+html[data-l="zh"] .en{display:none!important}
+html[data-l="en"] .zh{display:none!important}
+
+/* nav */
+header.nav{position:sticky;top:0;z-index:50;backdrop-filter:saturate(1.6) blur(14px);-webkit-backdrop-filter:saturate(1.6) blur(14px);
+  background:rgba(10,12,36,.74);color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;text-decoration:none;white-space:nowrap}
+.brand img{width:32px;height:32px}
+.nav nav{display:flex;gap:18px;margin-left:auto;font-size:14px}
+.nav nav a{text-decoration:none;opacity:.8}
+.nav nav a:hover{opacity:1}
+.lang{white-space:nowrap;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+.nav .dl{background:#fff;color:#1a1856;border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px;text-decoration:none;white-space:nowrap}
+@media (max-width:820px){.nav nav{display:none}.nav .lang{margin-left:auto}}
+
+/* hero */
+.hero{color:#fff;background:
+  radial-gradient(900px 500px at 12% 8%,rgba(64,140,255,.36),transparent 60%),
+  radial-gradient(800px 500px at 92% 18%,rgba(140,90,240,.34),transparent 60%),
+  radial-gradient(600px 300px at 50% 100%,rgba(52,199,89,.18),transparent 70%),
+  linear-gradient(160deg,var(--hero1),var(--hero2));overflow:hidden}
+.hero .wrap{padding-top:72px;padding-bottom:0;text-align:center}
+.hero .appicon{width:96px;height:96px;margin:0 auto 18px;filter:drop-shadow(0 12px 30px rgba(0,0,0,.45))}
+.hero h1{font-size:clamp(34px,6vw,62px);line-height:1.1;margin:0 0 18px;letter-spacing:-.02em}
+.hero h1 .grad{background:linear-gradient(90deg,#7fb4ff,#b69bff,#6ee7a0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:clamp(16px,2.2vw,20px);max-width:740px;margin:0 auto 28px;opacity:.88}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:13px 24px;font-weight:700;text-decoration:none;font-size:16px;transition:transform .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:#fff;color:#1a1856;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.btn.ghost{border:1px solid rgba(255,255,255,.35);color:#fff;background:rgba(255,255,255,.06)}
+.meta{margin-top:16px;font-size:13px;opacity:.7;display:flex;flex-wrap:wrap;justify-content:center;row-gap:2px}
+.meta span{margin:0 6px;white-space:nowrap}
+
+/* mock GitDeck window (dark "Default" theme) */
+.screen{--w:#2c2c2e;--s:#252527;--c:#1e1e1e;--t:#ededed;--m:#9a9aa2;--l:#3a3a3d;--acc:#0a84ff;
+  position:relative;margin:48px auto 0;max-width:1040px;border-radius:14px 14px 0 0;overflow:hidden;text-align:left;
+  background:var(--c);color:var(--t);box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.12);font-size:12.5px;line-height:1.4}
+.screen .titlebar{display:flex;align-items:flex-end;gap:2px;height:38px;padding:0 10px;background:var(--w);border-bottom:1px solid var(--l)}
+.screen .lights{display:flex;gap:7px;margin:0 12px 13px 2px}
+.screen .lights i{width:12px;height:12px;border-radius:50%;background:#ff5f57}.screen .lights i:nth-child(2){background:#febc2e}.screen .lights i:nth-child(3){background:#28c840}
+.screen .tab{height:28px;padding:0 12px;display:flex;align-items:center;gap:8px;border-radius:7px 7px 0 0;color:var(--m);white-space:nowrap}
+.screen .tab.on{background:var(--c);color:var(--t)}
+.screen .tab small{opacity:.55}
+.screen .tab.plus{padding:0 8px}
+.screen .grid3{display:grid;grid-template-columns:168px 158px 1fr;min-height:430px}
+.screen .bm{background:#1f1f21;border-right:1px solid var(--l);padding:10px 6px;display:flex;flex-direction:column}
+.screen .bm h6,.screen .rs h6{margin:10px 8px 4px;font-size:10.5px;letter-spacing:.06em;color:var(--m);font-weight:600}
+.screen .bm h6:first-child,.screen .rs h6:first-child{margin-top:2px}
+.screen .bm .r{display:flex;align-items:center;gap:7px;padding:4px 8px;border-radius:6px}
+.screen .bm .r.on{background:rgba(10,132,255,.32)}
+.screen .bm .r i{font-style:normal;color:var(--acc);font-size:11px}
+.screen .bm .r span{display:block;line-height:1.2}
+.screen .bm .r em{display:block;font-style:normal;font-size:10.5px;color:var(--m)}
+.screen .bm .filter{margin-top:auto;border:1px solid var(--l);border-radius:6px;padding:4px 8px;color:var(--m)}
+.screen .rs{background:var(--s);border-right:1px solid var(--l);padding:10px 6px}
+.screen .rs .r{display:flex;align-items:center;gap:7px;padding:3px 8px;border-radius:6px;white-space:nowrap;overflow:hidden}
+.screen .rs .r.on{background:rgba(255,255,255,.08)}
+.screen .rs .r b{font-weight:600}
+.screen .rs .dot{width:7px;height:7px;border-radius:50%;flex:none}
+.screen .rs .cnt{margin-left:auto;background:#ff9500;color:#000;border-radius:999px;padding:0 6px;font-size:10px;font-weight:700}
+.screen .main{display:flex;flex-direction:column;min-width:0}
+.screen .toolbar{display:flex;align-items:center;gap:2px;padding:6px 10px;background:var(--w);border-bottom:1px solid var(--l);overflow:hidden;white-space:nowrap}
+.screen .tb{display:flex;flex-direction:column;align-items:center;gap:1px;padding:3px 9px;border-radius:6px;font-size:10.5px;color:var(--m)}
+.screen .tb i{font-style:normal;font-size:15px;color:var(--t);line-height:1.1}
+.screen .tb.on{background:rgba(255,255,255,.07)}
+.screen .tb .badge{position:relative}
+.screen .tb .badge::after{content:attr(data-n);position:absolute;top:-4px;right:-10px;background:#ff3b30;color:#fff;border-radius:999px;font-size:9px;padding:0 4px;font-weight:700}
+.screen .sep{width:1px;height:28px;background:var(--l);margin:0 6px}
+.screen .hist{display:grid;grid-template-columns:76px 1fr 110px 92px;border-bottom:1px solid var(--l)}
+.screen .hist .h{font-size:11px;color:var(--m);padding:5px 10px;border-bottom:1px solid var(--l);background:var(--c)}
+.screen .graphcol{grid-row:2 / span 7;position:relative}
+.screen .graphcol svg{position:absolute;left:0;top:0}
+.screen .cell{height:26px;display:flex;align-items:center;padding:0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .cell.m{color:var(--m)}
+.screen .row-sel{background:rgba(10,132,255,.28)}
+.screen .ref{font-size:10.5px;font-weight:600;border-radius:4px;padding:0 5px;margin-right:6px;border:1px solid;line-height:16px}
+.screen .ref.head{color:#ff6961;border-color:rgba(255,59,48,.6);background:rgba(255,59,48,.12)}
+.screen .ref.br{color:#4da3ff;border-color:rgba(10,132,255,.6);background:rgba(10,132,255,.12)}
+.screen .ref.rm{color:#c88cf0;border-color:rgba(175,82,222,.6);background:rgba(175,82,222,.12)}
+.screen .ref.tag{color:#ffb340;border-color:rgba(255,149,0,.6);background:rgba(255,149,0,.12)}
+.screen .detail{display:grid;grid-template-columns:200px 1fr;flex:1;min-height:150px}
+.screen .files{border-right:1px solid var(--l);padding:6px 0}
+.screen .files .f{display:flex;align-items:center;gap:7px;padding:3px 10px;white-space:nowrap;overflow:hidden}
+.screen .files .f.on{background:rgba(255,255,255,.08)}
+.screen .st{width:16px;height:16px;border-radius:4px;display:grid;place-items:center;font-size:10px;font-weight:800;color:#000;flex:none}
+.screen .diff{font:11.5px/1.55 var(--mono);padding:6px 0;overflow:hidden}
+.screen .diff div{padding:0 10px;white-space:pre}
+.screen .diff .hh{color:#7fb4ff;background:rgba(10,132,255,.08);display:flex;justify-content:space-between;font-family:var(--mono)}
+.screen .diff .hh span.bt{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:10.5px;border:1px solid rgba(127,180,255,.45);border-radius:4px;padding:0 6px}
+.screen .diff .a{background:rgba(52,199,89,.16);color:#9ff0b4}
+.screen .diff .d{background:rgba(255,59,48,.16);color:#ffb0aa}
+.screen .diff .n{color:var(--m)}
+.screen .menu{position:absolute;right:46px;top:150px;width:220px;background:rgba(44,44,48,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:9px;padding:5px;box-shadow:0 18px 40px rgba(0,0,0,.5);z-index:3}
+.screen .menu div{padding:3px 10px;border-radius:5px;display:flex;justify-content:space-between}
+.screen .menu div.on{background:var(--acc);color:#fff}
+.screen .menu hr{border:0;border-top:1px solid rgba(255,255,255,.12);margin:4px 6px}
+.screen .menu small{opacity:.55}
+@media (max-width:980px){.screen .bm{display:none}.screen .grid3{grid-template-columns:150px 1fr}.screen .menu{display:none}}
+@media (max-width:700px){
+  .screen .grid3{grid-template-columns:1fr}.screen .rs{display:none}
+  .screen .hist{grid-template-columns:62px 1fr}.screen .hist .h.x,.screen .hist .cell.x{display:none}
+  .screen .detail{grid-template-columns:1fr}.screen .files{display:none}
+  .screen .tab:not(.on):not(.plus){display:none}
+  .screen .tb.x,.screen .sep.x{display:none}
+}
+
+/* sections */
+section{padding:84px 0}
+.eyebrow{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--brand)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .eyebrow{color:#93b0ff}}
+h2{font-size:clamp(28px,4vw,42px);line-height:1.15;margin:8px 0 14px;letter-spacing:-.01em}
+.sub{color:var(--muted);max-width:740px;font-size:17px;margin:0 0 36px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.card .em{font-size:26px;line-height:1;margin-bottom:12px}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--muted);font-size:14.5px}
+.alt{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.alt .card{background:var(--bg)}
+
+/* feature rows */
+.feature-row{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-bottom:64px}
+.feature-row:last-child{margin-bottom:0}
+.feature-row h3{font-size:24px;margin:0 0 10px}
+.feature-row p{color:var(--muted);margin:0 0 12px}
+.feature-row ul{margin:0;padding-left:20px;color:var(--muted)}
+.feature-row li{margin:6px 0}
+.feature-row > *{min-width:0}
+@media (max-width:860px){.feature-row{grid-template-columns:1fr}.feature-row .mock-first{order:-1}}
+
+/* small mocks */
+.panel{background:#1e1e1e;color:#ededed;border-radius:12px;box-shadow:0 18px 40px rgba(0,0,0,.22);overflow:hidden;font-size:13px;border:1px solid rgba(0,0,0,.2)}
+.panel .ph{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:#2c2c2e;border-bottom:1px solid #3a3a3d;font-size:12px;color:#9a9aa2;font-weight:600;letter-spacing:.04em}
+.panel .ph b{color:#ededed;font-weight:600;letter-spacing:0}
+.panel .fr{display:flex;align-items:center;gap:8px;padding:5px 12px}
+.panel .fr .pm{margin-left:auto;width:18px;height:18px;border-radius:5px;display:grid;place-items:center;border:1px solid #4a4a4e;color:#9a9aa2;font-weight:700;font-size:12px}
+.panel .st{width:16px;height:16px;border-radius:4px;display:grid;place-items:center;font-size:10px;font-weight:800;color:#000;flex:none}
+.panel .msg{margin:10px 12px 12px;border:1px solid #3a3a3d;border-radius:8px;padding:10px;color:#ededed;min-height:64px}
+.panel .msg .cur{display:inline-block;width:1px;height:14px;background:#0a84ff;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.panel .msg .cur{animation:none}}
+.panel .actions{display:flex;align-items:center;gap:12px;padding:0 12px 12px;font-size:12px;color:#9a9aa2;flex-wrap:wrap}
+.panel .actions .cb::before{content:"";display:inline-block;width:12px;height:12px;border:1px solid #6a6a70;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.panel .actions .cb.on::before{background:#0a84ff;border-color:#0a84ff;box-shadow:inset 0 0 0 2px #1e1e1e}
+.panel .actions .go{margin-left:auto;background:#0a84ff;color:#fff;border-radius:6px;padding:3px 14px;font-weight:600}
+.panel .actions kbd{font:inherit;opacity:.75}
+.rebase .rr{display:grid;grid-template-columns:76px 64px 1fr;gap:8px;align-items:center;padding:6px 12px;border-bottom:1px solid #2c2c2e;font-size:12.5px}
+.rebase .rr:last-child{border-bottom:0}
+.rebase .act{border:1px solid #4a4a4e;border-radius:5px;padding:1px 6px;font-size:11.5px;display:flex;justify-content:space-between}
+.rebase .act::after{content:"⌄";opacity:.6}
+.rebase .sha{font-family:var(--mono);color:#9a9aa2;font-size:11.5px}
+.rebase .rr.drag{background:rgba(10,132,255,.18);box-shadow:inset 3px 0 0 #0a84ff}
+.rebase .p{color:#4da3ff}.rebase .s{color:#ffb340}.rebase .f{color:#c88cf0}.rebase .dr{color:#ff6961}.rebase .rw{color:#6ee7a0}
+.banner{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(255,149,0,.16);color:#ffcf80;font-size:12.5px;border-bottom:1px solid rgba(255,149,0,.3);flex-wrap:wrap}
+.banner span.b{margin-left:auto;display:flex;gap:6px}
+.banner i{font-style:normal;border:1px solid rgba(255,207,128,.5);border-radius:5px;padding:0 8px}
+
+/* keys */
+.keys{display:grid;grid-template-columns:repeat(2,1fr);gap:0 36px}
+@media (max-width:760px){.keys{grid-template-columns:1fr}}
+.keys div{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
+.keys div span:last-child{color:var(--muted);text-align:right}
+.keys kbd{font:600 13px/1.4 var(--mono);background:var(--bg);border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:2px 8px;margin-right:4px;white-space:nowrap;display:inline-block}
+
+/* themes */
+.themes{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.theme{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--card);font-size:13px}
+.alt .theme{background:var(--bg)}
+.theme .sw{height:68px;display:grid;grid-template-columns:30% 1fr;position:relative}
+.theme .sw svg{position:absolute;left:30%;top:0;height:100%;width:70%}
+.theme .nm{padding:8px 10px;font-weight:600}
+
+/* steps / faq */
+.steps{counter-reset:s;display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.steps .card{position:relative;padding-top:52px}
+.steps .card::before{counter-increment:s;content:counter(s);position:absolute;top:18px;left:22px;width:26px;height:26px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+.steps code,details code{font:13px var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:1px 6px;white-space:nowrap}
+.alt .steps code{background:var(--card)}
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:10px}
+details summary{cursor:pointer;font-weight:700;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";float:right;color:var(--muted);font-weight:400}
+details[open] summary::after{content:"–"}
+details p{color:var(--muted);margin:10px 0 0}
+
+.final{text-align:center}
+.final .btn.primary{background:linear-gradient(90deg,var(--brand),var(--brand2));color:#fff}
+
+footer{padding:40px 0 60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+footer .links{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px}
+footer a{color:var(--ink)}
+.ver{font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="img/icon-256.png" alt="">GitDeck</a>
+    <nav>
+      <a href="#features"><span class="zh">功能</span><span class="en">Features</span></a>
+      <a href="#keys"><span class="zh">快捷鍵</span><span class="en">Shortcuts</span></a>
+      <a href="#themes"><span class="zh">主題</span><span class="en">Themes</span></a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/bittyferrari/gitdeck">GitHub</a>
+    </nav>
+    <button class="lang" id="langBtn" type="button" aria-label="Switch language"><span class="zh">English</span><span class="en">中文</span></button>
+    <a class="dl" href="https://github.com/bittyferrari/gitdeck/releases/latest/download/GitDeck.dmg"><span class="zh">免費下載</span><span class="en">Download</span></a>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero" style="padding:0">
+  <div class="wrap">
+    <img class="appicon" src="img/icon-256.png" alt="GitDeck icon" width="96" height="96">
+    <h1>
+      <span class="zh">所有 repo<br><span class="grad">都在同一個視窗</span></span>
+      <span class="en">Every repo,<br><span class="grad">one window</span></span>
+    </h1>
+    <p class="lead">
+      <span class="zh">照 Windows 版 SourceTree 的版面做的 Mac Git 客戶端：左邊是 Bookmarks，上面是分頁，每個 repo 開成一個分頁，不會跳出一堆視窗。原生 SwiftUI，又輕又快。</span>
+      <span class="en">A Git client for Mac laid out like SourceTree for Windows: bookmarks on the left, tabs on top, one tab per repository — no pile of windows. Native SwiftUI, light and fast.</span>
+    </p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/bittyferrari/gitdeck/releases/latest/download/GitDeck.dmg">⬇ <span class="zh">免費下載</span><span class="en">Download free</span></a>
+      <a class="btn ghost" href="#features">✨ <span class="zh">看功能</span><span class="en">See features</span></a>
+    </div>
+    <div class="meta">
+      <span>macOS 13+</span>·<span>Apple silicon &amp; Intel</span>·<span class="zh">已通過 Apple 公證</span><span class="en">Notarized by Apple</span>·<span class="ver">v1.0.0</span>
+    </div>
+
+    <div class="screen" role="img" aria-label="GitDeck window preview">
+      <div class="titlebar">
+        <div class="lights"><i></i><i></i><i></i></div>
+        <div class="tab on">gitdeck <small>×</small></div><div class="tab">mochabar <small>×</small></div><div class="tab">website <small>×</small></div><div class="tab plus">+</div>
+      </div>
+      <div class="grid3">
+        <div class="bm">
+          <h6>REPOSITORIES</h6>
+          <div class="r on"><i>■</i><div><span>gitdeck</span><em>~/works/mac-gitdeck</em></div></div>
+          <div class="r"><i>■</i><div><span>mochabar</span><em>~/works/mac-taskbar</em></div></div>
+          <h6>WORK</h6>
+          <div class="r"><i>■</i><div><span>website</span><em>~/works/bittyferrari…</em></div></div>
+          <div class="r"><i>■</i><div><span>api-server</span><em>~/works/api</em></div></div>
+          <div class="r"><i>■</i><div><span>design-tokens</span><em>~/works/tokens</em></div></div>
+          <div class="filter">🔍 Filter</div>
+        </div>
+        <div class="rs">
+          <h6>WORKSPACE</h6>
+          <div class="r">File Status <span class="cnt">3</span></div>
+          <div class="r on"><b>History</b></div>
+          <div class="r">Search</div>
+          <h6>BRANCHES</h6>
+          <div class="r"><span class="dot" style="background:#0a84ff"></span><b>main</b></div>
+          <div class="r"><span class="dot" style="background:#ff9500"></span>feature/hunks</div>
+          <div class="r"><span class="dot" style="background:#34c759"></span>fix/graph</div>
+          <h6>REMOTES</h6>
+          <div class="r">▸ origin</div>
+          <h6>TAGS</h6>
+          <div class="r">v0.9.0</div>
+          <h6>STASHES</h6>
+          <div class="r">WIP on main</div>
+        </div>
+        <div class="main">
+          <div class="toolbar">
+            <span class="tb"><i>✓</i>Commit</span><span class="tb"><i class="badge" data-n="2">↓</i>Pull</span><span class="tb"><i class="badge" data-n="1">↑</i>Push</span><span class="tb x"><i>⟳</i>Fetch</span>
+            <span class="sep x"></span>
+            <span class="tb x"><i>⑂</i>Branch</span><span class="tb x"><i>⤨</i>Merge</span><span class="tb x"><i>▤</i>Stash</span><span class="tb x"><i>⌗</i>Tag</span>
+            <span class="sep x"></span>
+            <span class="tb x"><i>⌨</i>Terminal</span><span class="tb x"><i>≡</i>Console</span>
+          </div>
+          <div class="hist">
+            <div class="h">Graph</div><div class="h">Description</div><div class="h x">Date</div><div class="h x">Author</div>
+            <div class="graphcol">
+              <svg width="76" height="182" viewBox="0 0 76 182" aria-hidden="true">
+                <g fill="none" stroke-width="2.2" stroke-linecap="round">
+                  <path d="M14 13 V169" stroke="#0a84ff"/>
+                  <path d="M28 39 V60 C28 72 14 72 14 85" stroke="#ff9500"/>
+                  <path d="M14 65 C14 80 42 80 42 95 V117 C42 130 14 130 14 143" stroke="#34c759"/>
+                </g>
+                <g stroke="#1e1e1e" stroke-width="2">
+                  <circle cx="14" cy="13" r="5.5" fill="#0a84ff"/>
+                  <circle cx="28" cy="39" r="5.5" fill="#ff9500"/>
+                  <circle cx="14" cy="65" r="5.5" fill="#0a84ff"/>
+                  <circle cx="14" cy="91" r="5.5" fill="#0a84ff"/>
+                  <circle cx="42" cy="117" r="5.5" fill="#34c759"/>
+                  <circle cx="14" cy="143" r="5.5" fill="#0a84ff"/>
+                  <circle cx="14" cy="169" r="5.5" fill="#0a84ff"/>
+                </g>
+              </svg>
+            </div>
+            <div class="cell row-sel"><span class="ref head">HEAD</span><span class="ref br">main</span><span class="ref rm">origin/main</span>Add theme JSON import</div><div class="cell m x row-sel">10/24 21:12</div><div class="cell m x row-sel">bitty</div>
+            <div class="cell"><span class="ref br">feature/hunks</span>Stage and discard single hunks</div><div class="cell m x">10/24 18:40</div><div class="cell m x">bitty</div>
+            <div class="cell">Merge branch 'fix/graph'</div><div class="cell m x">10/23 23:05</div><div class="cell m x">bitty</div>
+            <div class="cell">Restore open tabs on launch</div><div class="cell m x">10/23 16:27</div><div class="cell m x">bitty</div>
+            <div class="cell"><span class="ref br">fix/graph</span>Fix lane colors after merge</div><div class="cell m x">10/22 20:11</div><div class="cell m x">bitty</div>
+            <div class="cell"><span class="ref tag">v0.9.0</span>Interactive rebase sheet</div><div class="cell m x">10/21 14:52</div><div class="cell m x">bitty</div>
+            <div class="cell">Bookmark groups with drag &amp; drop</div><div class="cell m x">10/20 11:03</div><div class="cell m x">bitty</div>
+          </div>
+          <div class="detail">
+            <div class="files">
+              <div class="f on"><span class="st" style="background:#ff9500">M</span>Sources/Theme.swift</div>
+              <div class="f"><span class="st" style="background:#ff9500">M</span>Sources/Sheets.swift</div>
+              <div class="f"><span class="st" style="background:#34c759">A</span>Sources/ThemeIO.swift</div>
+            </div>
+            <div class="diff">
+<div class="hh"><span>@@ -812,6 +812,11 @@ struct AppearanceView</span></div>
+<div class="n">     Button("Copy as JSON") { copyTheme() }</div>
+<div class="d">-    Spacer()</div>
+<div class="a">+    Button("Import JSON…") {</div>
+<div class="a">+        importTheme(from: pasteboard)</div>
+<div class="a">+    }</div>
+<div class="a">+    .keyboardShortcut("i", modifiers: [.command, .shift])</div>
+<div class="n">     Button("Revert") { revertTheme() }</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="menu" aria-hidden="true">
+        <div>Checkout…</div>
+        <div>Merge into current</div>
+        <div class="on">Rebase current onto this</div>
+        <div>Interactive rebase…</div>
+        <hr>
+        <div>New branch… <small>⇧⌘B</small></div>
+        <div>New tag…</div>
+        <div>Cherry-pick</div>
+        <div>Revert commit</div>
+        <div>Reset main to here ›</div>
+        <hr>
+        <div>Copy SHA</div>
+        <div>Save as patch…</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- features -->
+<section id="features">
+  <div class="wrap">
+    <span class="eyebrow"><span class="zh">完全免費 · 沒有廣告 · 不收集資料</span><span class="en">Free · No ads · No tracking</span></span>
+    <h2><span class="zh">十幾個 repo 同時開，也不會亂</span><span class="en">Juggle a dozen repos without the chaos</span></h2>
+    <p class="sub"><span class="zh">GitDeck 用的就是你電腦裡的 git，看到的指令和終端機打的一模一樣；所有操作都在同一個視窗、同一排分頁裡完成。</span><span class="en">GitDeck drives the git already on your Mac — the same commands you would type in Terminal — and everything happens in one window and one row of tabs.</span></p>
+    <div class="grid">
+      <div class="card"><div class="em">🗂️</div><h3><span class="zh">Bookmarks + 分頁</span><span class="en">Bookmarks + tabs</span></h3><p><span class="zh">點 bookmark 開成分頁，已經開過的直接切過去。下次打開 App 會恢復上次的分頁。</span><span class="en">Click a bookmark to open it as a tab, or jump to it if it’s already open. Your tabs come back next launch.</span></p></div>
+      <div class="card"><div class="em">📁</div><h3><span class="zh">群組與掃描</span><span class="en">Groups &amp; folder scan</span></h3><p><span class="zh">用群組整理 bookmarks、拖曳排序；掃描資料夾自動找出所有 repo，也能直接從 Finder 拖進來。</span><span class="en">Organize bookmarks into groups and drag to reorder. Scan a folder to find every repo, or drop folders in from Finder.</span></p></div>
+      <div class="card"><div class="em">🌿</div><h3><span class="zh">Commit graph</span><span class="en">Commit graph</span></h3><p><span class="zh">分支線、merge 一目了然，branch、remote、tag、HEAD 直接標在 commit 上，可切換全部分支或目前分支。</span><span class="en">Branch lanes and merges at a glance, with branch, remote, tag and HEAD labels on each commit. Show all branches or just the current one.</span></p></div>
+      <div class="card"><div class="em">✂️</div><h3><span class="zh">逐 hunk stage</span><span class="en">Stage by hunk</span></h3><p><span class="zh">Staged／Unstaged 兩個列表，一個檔案裡也能只 stage、unstage 或 discard 其中一段。</span><span class="en">Separate staged and unstaged lists — stage, unstage or discard a single hunk inside a file.</span></p></div>
+      <div class="card"><div class="em">🔀</div><h3><span class="zh">Interactive rebase</span><span class="en">Interactive rebase</span></h3><p><span class="zh">pick、reword、squash、fixup、drop，拖曳調整順序，不用再編輯 todo 檔。</span><span class="en">Pick, reword, squash, fixup or drop, and drag to reorder — no todo file to edit.</span></p></div>
+      <div class="card"><div class="em">⚔️</div><h3><span class="zh">衝突處理</span><span class="en">Conflict handling</span></h3><p><span class="zh">ours／theirs、Mark resolved、開外部 merge tool；merge 或 rebase 進行中，上方會出現 Continue／Skip／Abort。</span><span class="en">Take ours or theirs, mark resolved, or open your merge tool. A banner offers Continue, Skip or Abort mid-merge or rebase.</span></p></div>
+      <div class="card"><div class="em">🔍</div><h3><span class="zh">搜尋、Blame、File log</span><span class="en">Search, blame, file log</span></h3><p><span class="zh">依 message、作者、內容（-S）、路徑或 SHA 搜尋；單一檔案的歷史和逐行 blame。</span><span class="en">Search by message, author, content (-S), path or SHA. Per-file history and line-by-line blame.</span></p></div>
+      <div class="card"><div class="em">🖥️</div><h3><span class="zh">Console 看得到指令</span><span class="en">See every command</span></h3><p><span class="zh">GitDeck 實際執行的每一行 git 指令和輸出都在 Console（⇧⌘K），想學 git 或除錯都很方便。</span><span class="en">Every git command GitDeck runs, and its output, appears in the Console (⇧⌘K) — great for learning or debugging.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- detail rows -->
+<section class="alt">
+  <div class="wrap">
+    <div class="feature-row">
+      <div class="panel mock-first" role="img" aria-label="File status and commit box">
+        <div class="ph">STAGED <b>2</b></div>
+        <div class="fr"><span class="st" style="background:#ff9500">M</span>Sources/Diff.swift<span class="pm">−</span></div>
+        <div class="fr"><span class="st" style="background:#34c759">A</span>Sources/HunkActions.swift<span class="pm">−</span></div>
+        <div class="ph">UNSTAGED <b>3</b></div>
+        <div class="fr"><span class="st" style="background:#ff9500">M</span>Sources/RepoStore.swift<span class="pm">+</span></div>
+        <div class="fr"><span class="st" style="background:#ff3b30">D</span>Sources/OldDiff.swift<span class="pm">+</span></div>
+        <div class="fr"><span class="st" style="background:#8e8e93">?</span>notes.md<span class="pm">+</span></div>
+        <div class="msg">Stage and discard single hunks<span class="cur"></span></div>
+        <div class="actions"><span class="cb">Amend</span><span class="cb on">Push after commit</span><span class="go">Commit <kbd>⌘↩</kbd></span></div>
+      </div>
+      <div>
+        <span class="eyebrow">File Status</span>
+        <h3><span class="zh">想 commit 哪一段，就 commit 哪一段</span><span class="en">Commit exactly the lines you mean</span></h3>
+        <p><span class="zh">點 +／− 或雙擊就能 stage／unstage，也有 Stage All／Unstage All。打完訊息按 ⌘↩ 送出。</span><span class="en">Click + / − or double-click to stage and unstage, or do it all at once. Type a message and hit ⌘↩.</span></p>
+        <ul>
+          <li><span class="zh">diff 裡的每個 hunk 都能單獨 stage、unstage、discard</span><span class="en">Stage, unstage or discard any hunk in the diff</span></li>
+          <li><span class="zh">Amend 上一個 commit，或 commit 完馬上 push</span><span class="en">Amend the last commit, or push right after committing</span></li>
+          <li><span class="zh">Ignore 這個檔案、*.副檔名或整個資料夾，一鍵寫進 .gitignore</span><span class="en">Ignore a file, an *.extension or a whole folder in one click</span></li>
+          <li><span class="zh">Diff 可以忽略空白、調整 context 行數</span><span class="en">Diffs can ignore whitespace and change context lines</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="feature-row">
+      <div>
+        <span class="eyebrow">History</span>
+        <h3><span class="zh">右鍵就能改寫歷史</span><span class="en">Rewrite history from a right-click</span></h3>
+        <p><span class="zh">在 commit 上按右鍵：Checkout、Merge、Rebase、Cherry-pick、Revert、Reset（soft／mixed／hard）、建 branch 或 tag、複製 SHA、存成 patch。</span><span class="en">Right-click any commit to checkout, merge, rebase, cherry-pick, revert, reset (soft / mixed / hard), branch or tag from it, copy its SHA or save a patch.</span></p>
+        <ul>
+          <li><span class="zh">Interactive rebase 用拖曳排順序，下拉選 pick／squash／fixup</span><span class="en">Interactive rebase: drag to reorder, pick / squash / fixup from a menu</span></li>
+          <li><span class="zh">Branch 雙擊 checkout；remote branch 一鍵建立 tracking branch</span><span class="en">Double-click a branch to check it out; turn a remote branch into a tracking branch in one click</span></li>
+          <li><span class="zh">Push 多個 branch、-u、force-with-lease、tags；Pull 可選 merge 或 rebase</span><span class="en">Push several branches, -u, force-with-lease and tags; pull with merge or rebase</span></li>
+          <li><span class="zh">Stash（含 untracked、keep index）、Submodule 開成新分頁</span><span class="en">Stashes (with untracked or keep index) and submodules that open in their own tab</span></li>
+        </ul>
+      </div>
+      <div class="panel rebase" role="img" aria-label="Interactive rebase">
+        <div class="banner">⚠︎ <span class="zh">Rebase 進行中（2/5）</span><span class="en">Rebase in progress (2/5)</span><span class="b"><i>Continue</i><i>Skip</i><i>Abort</i></span></div>
+        <div class="ph">INTERACTIVE REBASE <b>main ← 5 commits</b></div>
+        <div class="rr"><span class="act p">pick</span><span class="sha">a1c93f2</span>Bookmark groups</div>
+        <div class="rr drag"><span class="act s">squash</span><span class="sha">7d04be1</span>fix typo in group rename</div>
+        <div class="rr"><span class="act rw">reword</span><span class="sha">e58a0c3</span>graph lanes</div>
+        <div class="rr"><span class="act f">fixup</span><span class="sha">3b9f7aa</span>wip</div>
+        <div class="rr"><span class="act dr">drop</span><span class="sha">c2e6d10</span>debug logging</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- keys -->
+<section id="keys">
+  <div class="wrap">
+    <span class="eyebrow"><span class="zh">快捷鍵</span><span class="en">Shortcuts</span></span>
+    <h2><span class="zh">手不用離開鍵盤</span><span class="en">Keep your hands on the keyboard</span></h2>
+    <p class="sub"><span class="zh">常用的 Git 動作都有快捷鍵，分頁切換跟瀏覽器一樣。</span><span class="en">Every common Git action has a shortcut, and tabs work just like your browser.</span></p>
+    <div class="keys">
+      <div><span><kbd>⌘T</kbd> <kbd>⌘W</kbd></span><span><span class="zh">新分頁／關閉分頁</span><span class="en">New / close tab</span></span></div>
+      <div><span><kbd>⌘1…9</kbd> <kbd>⌃Tab</kbd></span><span><span class="zh">切換分頁</span><span class="en">Switch tabs</span></span></div>
+      <div><span><kbd>⌘O</kbd></span><span><span class="zh">加入 repo</span><span class="en">Add repository</span></span></div>
+      <div><span><kbd>⇧⌘N</kbd></span><span>Clone</span></div>
+      <div><span><kbd>⌘R</kbd></span><span>Refresh</span></div>
+      <div><span><kbd>⌥⌘1</kbd> <kbd>⌥⌘2</kbd> <kbd>⌥⌘F</kbd></span><span>File Status / History / Search</span></div>
+      <div><span><kbd>⇧⌘F</kbd> <kbd>⇧⌘L</kbd> <kbd>⇧⌘P</kbd></span><span>Fetch / Pull / Push</span></div>
+      <div><span><kbd>⇧⌘C</kbd> <kbd>⌘↩</kbd></span><span><span class="zh">進入 Commit／送出 commit</span><span class="en">Go to commit / commit</span></span></div>
+      <div><span><kbd>⇧⌘S</kbd> <kbd>⇧⌘B</kbd> <kbd>⇧⌘M</kbd></span><span>Stash / New Branch / Merge</span></div>
+      <div><span><kbd>⇧⌘K</kbd></span><span>Console</span></div>
+      <div><span><kbd>⌘,</kbd></span><span>Settings</span></div>
+      <div><span><kbd>⌘↩</kbd></span><span><span class="zh">在訊息框裡直接 commit</span><span class="en">Commit from the message box</span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- themes -->
+<section class="alt" id="themes">
+  <div class="wrap">
+    <span class="eyebrow"><span class="zh">22 套主題 · 淺色與深色</span><span class="en">22 themes · light &amp; dark</span></span>
+    <h2><span class="zh">連 commit graph 都換成你的配色</span><span class="en">Even the commit graph matches your colors</span></h2>
+    <p class="sub"><span class="zh">每套主題都有淺色和深色版，跟著系統切換。背景、文字、強調色、graph 每條線、diff 顏色、檔案狀態、branch／tag 標籤都能自訂，還能拷貝成 JSON 分享。文字對背景自動維持至少 7:1 對比。</span><span class="en">Every theme comes in light and dark and follows your system. Customize backgrounds, text, accent, each graph lane, diff colors, file-status and branch / tag label colors, then share it as JSON. Text always keeps at least 7:1 contrast.</span></p>
+    <div class="themes" id="themeGrid"></div>
+  </div>
+</section>
+
+<!-- setup -->
+<section id="setup">
+  <div class="wrap">
+    <span class="eyebrow"><span class="zh">開始使用</span><span class="en">Get started</span></span>
+    <h2><span class="zh">三步驟裝好</span><span class="en">Up and running in three steps</span></h2>
+    <div class="steps" style="margin-top:28px">
+      <div class="card"><h3><span class="zh">下載 dmg</span><span class="en">Download the dmg</span></h3><p><span class="zh">打開後把 GitDeck 拖進「應用程式」資料夾。</span><span class="en">Open it and drag GitDeck into Applications.</span></p></div>
+      <div class="card"><h3><span class="zh">確認有 git</span><span class="en">Make sure git is installed</span></h3><p><span class="zh">沒裝過的話在終端機執行 <code>xcode-select --install</code>；有 Homebrew 的 git 會優先使用。</span><span class="en">If you’ve never installed it, run <code>xcode-select --install</code> in Terminal. Homebrew’s git is used first if present.</span></p></div>
+      <div class="card"><h3><span class="zh">加入 repo</span><span class="en">Add your repos</span></h3><p><span class="zh">⌘O 加入、⇧⌘N Clone，或把整個工作資料夾拖進來掃描。</span><span class="en">⌘O to add, ⇧⌘N to clone, or drop your work folder in and scan it.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- faq -->
+<section class="alt" id="faq">
+  <div class="wrap" style="max-width:820px">
+    <span class="eyebrow">FAQ</span>
+    <h2><span class="zh">常見問題</span><span class="en">Questions</span></h2>
+    <details><summary><span class="zh">真的免費嗎？</span><span class="en">Is it really free?</span></summary><p><span class="zh">是的，沒有試用期、沒有廣告，也不會收集任何資料。</span><span class="en">Yes. No trial, no ads, and no data collection.</span></p></details>
+    <details><summary><span class="zh">需要另外裝 git 嗎？</span><span class="en">Do I need git installed?</span></summary><p><span class="zh">需要。GitDeck 會依序找 Homebrew 的 git（/opt/homebrew、/usr/local），沒有就用系統的 /usr/bin/git；也可以在 Settings 指定路徑。</span><span class="en">Yes. GitDeck looks for Homebrew’s git first (/opt/homebrew, /usr/local) and falls back to /usr/bin/git. You can also set a path in Settings.</span></p></details>
+    <details><summary><span class="zh">帳號密碼、SSH key 怎麼處理？</span><span class="en">How are passwords and SSH keys handled?</span></summary><p><span class="zh">跟終端機一樣：HTTPS 走 macOS Keychain（osxkeychain），SSH 用你的 ~/.ssh 設定。需要輸入帳密或 passphrase 時會跳出原生對話框，GitDeck 本身不保存任何密碼。</span><span class="en">Just like Terminal: HTTPS uses the macOS Keychain (osxkeychain) and SSH uses your ~/.ssh config. When git needs a password or passphrase, a native dialog asks for it — GitDeck itself stores nothing.</span></p></details>
+    <details><summary><span class="zh">跟 SourceTree 有什麼關係？</span><span class="en">Is this related to SourceTree?</span></summary><p><span class="zh">沒有關係。GitDeck 是獨立開發的，只是版面參考了 Windows 版 SourceTree 的單一視窗設計。</span><span class="en">No. GitDeck is independent; its single-window layout is simply inspired by SourceTree for Windows.</span></p></details>
+    <details><summary><span class="zh">支援哪些 Mac？</span><span class="en">Which Macs are supported?</span></summary><p><span class="zh">macOS 13 Ventura 以上，Apple silicon 和 Intel 都可以。</span><span class="en">macOS 13 Ventura or later, on Apple silicon and Intel.</span></p></details>
+    <details><summary><span class="zh">發現問題或有建議？</span><span class="en">Found a bug or have an idea?</span></summary><p><span class="zh">歡迎到 <a href="https://github.com/bittyferrari/gitdeck/issues">GitHub Issues</a> 告訴我。</span><span class="en">Please open an issue on <a href="https://github.com/bittyferrari/gitdeck/issues">GitHub</a>.</span></p></details>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <img src="img/icon-256.png" alt="" width="80" height="80" style="margin:0 auto 14px">
+    <h2><span class="zh">把所有 repo 收進一個視窗</span><span class="en">Put every repo in one window</span></h2>
+    <p class="sub" style="margin:0 auto 28px"><span class="zh">免費、原生、不到幾 MB。</span><span class="en">Free, native and just a few MB.</span></p>
+    <a class="btn primary" href="https://github.com/bittyferrari/gitdeck/releases/latest/download/GitDeck.dmg">⬇ <span class="zh">下載 GitDeck</span><span class="en">Download GitDeck</span> <span class="ver">v1.0.0</span></a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="links">
+      <a href="https://github.com/bittyferrari/gitdeck/releases"><span class="zh">版本紀錄</span><span class="en">Release notes</span></a>
+      <a href="https://github.com/bittyferrari/gitdeck/issues"><span class="zh">回報問題</span><span class="en">Report a problem</span></a>
+      <a href="../">bittyferrari.github.io</a>
+    </div>
+    <p>© 2026 Bitty Ferrari</p>
+    <p class="zh">GitDeck 是獨立開發的第三方軟體，與 Apple Inc.、Atlassian 或 Git 專案沒有任何關聯，也未經其贊助或認可。Mac 與 macOS 是 Apple Inc. 的商標；Sourcetree 是 Atlassian 的商標；Git 是 Software Freedom Conservancy 的商標。</p>
+    <p class="en">GitDeck is an independent product and is not affiliated with, endorsed by, or sponsored by Apple Inc., Atlassian or the Git project. Mac and macOS are trademarks of Apple Inc., registered in the U.S. and other countries. Sourcetree is a trademark of Atlassian. Git is a trademark of Software Freedom Conservancy.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  function pick(){
+    try{var q=new URLSearchParams(location.search).get('lang');if(q==='zh'||q==='en')return q;}catch(e){}
+    try{var s=localStorage.getItem('gitdeck-lang');if(s==='zh'||s==='en')return s;}catch(e){}
+    var n=(navigator.languages&&navigator.languages[0])||navigator.language||'en';
+    return /^zh/i.test(n)?'zh':'en';
+  }
+  function set(l){
+    root.setAttribute('data-l',l);
+    root.setAttribute('lang',l==='zh'?'zh-Hant':'en');
+    document.title=l==='zh'?'GitDeck — 一個視窗搞定所有 repo 的 Mac Git 客戶端':'GitDeck — A single-window Git client for Mac';
+  }
+  set(pick());
+  document.getElementById('langBtn').addEventListener('click',function(){
+    var l=root.getAttribute('data-l')==='zh'?'en':'zh';set(l);
+    try{localStorage.setItem('gitdeck-lang',l);}catch(e){}
+  });
+
+  // 主題色票：[名稱, 側邊欄, 內容, 文字, graph 前三條線]（取自 Sources/Theme.swift 的深色版）
+  var themes=[
+    ['Default','#252527','#1E1E1E','#EDEDED',['#007AFF','#FF9500','#34C759']],
+    ['SourceTree','#232428','#1E1F22','#E6E6E6',['#3B8EEA','#E0533D','#5BB75B']],
+    ['GitHub','#010409','#0D1117','#E6EDF3',['#0969DA','#1A7F37','#CF222E']],
+    ['Solarized','#06303B','#002B36','#EEE8D5',['#268BD2','#CB4B16','#859900']],
+    ['Gruvbox','#282828','#1D2021','#EBDBB2',['#458588','#D65D0E','#98971A']],
+    ['Dracula','#21222C','#282A36','#F8F8F2',['#BD93F9','#FF79C6','#50FA7B']],
+    ['Nord','#353B49','#2E3440','#ECEFF4',['#5E81AC','#88C0D0','#A3BE8C']],
+    ['Monokai','#1E1F1C','#272822','#F8F8F2',['#66D9EF','#F92672','#A6E22E']],
+    ['One Dark','#1B1F24','#282C34','#DCDFE4',['#61AFEF','#E06C75','#98C379']],
+    ['Tokyo Night','#16161E','#1A1B26','#C0CAF5',['#7AA2F7','#BB9AF7','#9ECE6A']],
+    ['Catppuccin','#11111B','#1E1E2E','#CDD6F4',['#89B4FA','#F38BA8','#A6E3A1']],
+    ['Rosé Pine','#1A1826','#191724','#E0DEF4',['#9CCFD8','#EB6F92','#31748F']],
+    ['Everforest','#232A2E','#2D353B','#D3C6AA',['#7FBBB3','#E69875','#A7C080']],
+    ['Kanagawa','#16161D','#1F1F28','#DCD7BA',['#7E9CD8','#FFA066','#98BB6C']],
+    ['Ayu','#1C212B','#1F2430','#CCCAC2',['#73D0FF','#FFA659','#87D96C']],
+    ['Night Owl','#01111D','#011627','#D6DEEB',['#82AAFF','#F78C6C','#ADDB67']],
+    ['Palenight','#202331','#292D3E','#A6ACCD',['#82AAFF','#F78C6C','#C3E88D']],
+    ["Synthwave '84",'#1E1A2B','#262335','#F4EEE4',['#36F9F6','#FF7EDB','#72F1B8']],
+    ['Cobalt2','#15232D','#193549','#FFFFFF',['#0088FF','#FF9D00','#3AD900']],
+    ['Horizon','#16161C','#1C1E26','#D5D8DA',['#26BBD9','#FAB795','#29D398']],
+    ['Xcode','#25262B','#292A30','#DFDFE0',['#4EB0CC','#FC5FA3','#67B7A4']],
+    ['High Contrast','#0A0A0A','#000000','#FFFFFF',['#0040DD','#D70015','#008A2E']]
+  ];
+  var g=document.getElementById('themeGrid');
+  themes.forEach(function(t){
+    var L=t[4];
+    var svg='<svg viewBox="0 0 100 68" preserveAspectRatio="none" aria-hidden="true">'+
+      '<g fill="none" stroke-width="2.4" stroke-linecap="round" vector-effect="non-scaling-stroke">'+
+      '<path d="M14 6 V62" stroke="'+L[0]+'"/>'+
+      '<path d="M26 18 V26 C26 34 14 34 14 40" stroke="'+L[1]+'"/>'+
+      '<path d="M14 24 C14 32 38 30 38 40 V44 C38 52 14 52 14 58" stroke="'+L[2]+'"/></g>'+
+      '<g stroke="'+t[2]+'" stroke-width="1.5"><circle cx="14" cy="8" r="3.6" fill="'+L[0]+'"/><circle cx="26" cy="18" r="3.6" fill="'+L[1]+'"/><circle cx="38" cy="42" r="3.6" fill="'+L[2]+'"/><circle cx="14" cy="58" r="3.6" fill="'+L[0]+'"/></g>'+
+      '<g fill="'+t[3]+'" opacity=".38"><rect x="50" y="5" width="40" height="5" rx="2.5"/><rect x="50" y="17" width="30" height="5" rx="2.5"/><rect x="50" y="29" width="36" height="5" rx="2.5"/><rect x="50" y="41" width="24" height="5" rx="2.5"/><rect x="50" y="53" width="34" height="5" rx="2.5"/></g></svg>';
+    var d=document.createElement('div');d.className='theme';
+    d.innerHTML='<div class="sw"><i style="background:'+t[1]+'"></i><i style="background:'+t[2]+'"></i>'+svg+'</div><div class="nm"></div>';
+    d.querySelector('.nm').textContent=t[0];
+    g.appendChild(d);
+  });
+})();
+</script>
+</body>
+</html>
