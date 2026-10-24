@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SlideShow Support</title>
+<meta name="description" content="Support for SlideShow, the iPhone and iPad photo slideshow app.">
+<link rel="icon" href="img/icon-256.png">
+<link rel="apple-touch-icon" href="img/icon-256.png">
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f5f5f7; --card: #ffffff; --text: #1c1c1e; --muted: #6e6e73;
+    --line: #e2e2e7; --accent: #0a66d8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111113; --card: #1c1c1f; --text: #ececf0; --muted: #9a9aa2; --line: #2e2e33; --accent: #6ea8ff; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Noto Sans TC", Roboto, sans-serif;
+    line-height: 1.7;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 40px 16px 80px; }
+  header { display: flex; align-items: center; gap: 18px; margin-bottom: 8px; }
+  header img { width: 76px; height: 76px; border-radius: 18px; box-shadow: 0 2px 10px rgba(0,0,0,.15); }
+  h1 { font-size: 1.9rem; margin: 0; line-height: 1.2; }
+  .sub { color: var(--muted); margin: 2px 0 0; }
+  nav.lang { margin: 20px 0 28px; display: flex; gap: 10px; flex-wrap: wrap; }
+  nav.lang a {
+    text-decoration: none; color: var(--accent); border: 1px solid var(--line);
+    background: var(--card); padding: 6px 14px; border-radius: 999px; font-size: .95rem;
+  }
+  section.lang-block { margin-bottom: 56px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; margin: 16px 0; }
+  .contact { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+  .btn {
+    display: inline-block; background: var(--accent); color: #fff; text-decoration: none;
+    padding: 10px 18px; border-radius: 10px; font-weight: 600; word-break: break-all;
+  }
+  h2 { font-size: 1.3rem; margin: 2em 0 .4em; }
+  h3 { font-size: 1.05rem; margin: 0 0 .3em; }
+  details { border-top: 1px solid var(--line); padding: 12px 0; }
+  details:first-of-type { border-top: 0; }
+  summary { cursor: pointer; font-weight: 600; }
+  details p, details ul { margin: .5em 0 0; }
+  ul { padding-left: 1.3em; }
+  a { color: var(--accent); }
+  .muted { color: var(--muted); font-size: .9rem; }
+  footer { border-top: 1px solid var(--line); padding-top: 20px; color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <img src="img/icon-256.png" alt="SlideShow app icon">
+  <div>
+    <h1>SlideShow</h1>
+    <p class="sub">Support · 技術支援 — iPhone &amp; iPad</p>
+  </div>
+</header>
+
+<nav class="lang">
+  <a href="#en">English</a>
+  <a href="#zh-hant">繁體中文</a>
+</nav>
+
+<!-- ================= ENGLISH ================= -->
+<section class="lang-block" id="en" lang="en">
+  <div class="card contact">
+    <div>
+      <h3>Contact us</h3>
+      <div class="muted">Questions, bug reports or feature ideas — we usually reply within a few days.</div>
+    </div>
+    <a class="btn" href="mailto:bittyferrari@gmail.com?subject=SlideShow%20iOS%20Support">bittyferrari@gmail.com</a>
+  </div>
+  <p class="muted">When reporting a problem, please include your device model, iOS version, the app version
+    (shown in the App Store), the play mode you were using, and where your photos come from (Photo Library, Files, USB, SMB…).</p>
+
+  <h2>Frequently Asked Questions</h2>
+  <div class="card">
+    <details>
+      <summary>How do I start a slideshow?</summary>
+      <p>Choose a photo source (your Photo Library, or a folder in the Files app), pick one of the 13 play modes, then tap Play.
+        Your last folder is remembered, so next time you can start right away.</p>
+    </details>
+    <details>
+      <summary>Can I play photos from a USB drive, SD card, iCloud Drive or a NAS?</summary>
+      <p>Yes. Any folder you can open in Apple's Files app works — On My iPhone / iPad, iCloud Drive, USB drives,
+        SD card readers and SMB file servers. Connect the drive or server in Files first, then choose that folder in SlideShow.
+        Subfolders are scanned automatically.</p>
+    </details>
+    <details>
+      <summary>Some photos are missing.</summary>
+      <ul>
+        <li>For the Photo Library: check that you granted access to <em>all</em> photos, not only selected ones —
+          <em>Settings › Privacy &amp; Security › Photos › SlideShow</em>.</li>
+        <li>For folders: hidden folders (names starting with “.”) are skipped when “Exclude hidden folders” is on.</li>
+        <li>For iCloud Drive: files that are not downloaded yet may take time to load. Open the folder in Files to download them first.</li>
+        <li>Try rescanning the folder after adding new files.</li>
+      </ul>
+    </details>
+    <details>
+      <summary>How do I go to the previous / next photo?</summary>
+      <p>Swipe left or right. With a hardware keyboard, use the arrow keys, Space to pause and Esc to exit.
+        (iOS does not allow apps to use the volume buttons for this.)</p>
+    </details>
+    <details>
+      <summary>Why doesn’t “Sort by size” work?</summary>
+      <p>The Photo Library does not provide file sizes to apps, so sorting by size only works for folder sources.
+        Name, date and random sorting work everywhere.</p>
+    </details>
+    <details>
+      <summary>Are animated GIFs supported?</summary>
+      <p>GIFs are shown as a still image (the first frame).</p>
+    </details>
+    <details>
+      <summary>How do I change the app language?</summary>
+      <p>Open the settings inside the app and pick a language. The change takes effect immediately and does not affect your system language.</p>
+    </details>
+    <details>
+      <summary>Can I use my iPad as a digital photo frame?</summary>
+      <p>Yes. Start any mode and leave it running. For long sessions, keep the iPad connected to power.
+        You can also use <em>Guided Access</em> (Settings › Accessibility) to lock the iPad to SlideShow.</p>
+    </details>
+    <details>
+      <summary>Does SlideShow upload my photos?</summary>
+      <p>No. There is no account, no ads and no tracking. Your photos are read only on your device and are never uploaded.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ================= 繁體中文 ================= -->
+<section class="lang-block" id="zh-hant" lang="zh-Hant">
+  <div class="card contact">
+    <div>
+      <h3>聯絡我們</h3>
+      <div class="muted">任何問題、錯誤回報或功能建議，都歡迎來信，通常會在幾天內回覆。</div>
+    </div>
+    <a class="btn" href="mailto:bittyferrari@gmail.com?subject=SlideShow%20iOS%20Support">bittyferrari@gmail.com</a>
+  </div>
+  <p class="muted">回報問題時，請一併提供裝置型號、iOS 版本、App 版本（可在 App Store 查看）、使用的播放模式，
+    以及照片來源（照片圖庫、檔案 App、USB、SMB…）。</p>
+
+  <h2>常見問題</h2>
+  <div class="card">
+    <details>
+      <summary>如何開始播放？</summary>
+      <p>選擇照片來源（照片圖庫，或「檔案」App 中的資料夾），挑一種播放模式（共 13 種），按下播放即可。
+        App 會記住上次的資料夾，下次開啟可以直接播放。</p>
+    </details>
+    <details>
+      <summary>可以播放 USB 隨身碟、SD 卡、iCloud 雲碟或 NAS 裡的照片嗎？</summary>
+      <p>可以。只要能在 Apple「檔案」App 中開啟的資料夾都能用 —— 我的 iPhone / iPad、iCloud 雲碟、USB 隨身碟、
+        SD 讀卡機與 SMB 檔案伺服器。請先在「檔案」App 中接上裝置或連線伺服器，再到 SlideShow 選擇該資料夾。子資料夾會自動掃描。</p>
+    </details>
+    <details>
+      <summary>有些照片沒有出現？</summary>
+      <ul>
+        <li>照片圖庫：請確認已允許存取「所有照片」而不是「限制存取」——
+          <em>設定 › 隱私權與安全性 › 照片 › SlideShow</em>。</li>
+        <li>資料夾：開啟「排除隱藏資料夾」時，名稱以「.」開頭的資料夾會被略過。</li>
+        <li>iCloud 雲碟：尚未下載到裝置的檔案可能需要時間載入，可先在「檔案」App 中開啟資料夾讓它下載。</li>
+        <li>新增檔案後，請重新掃描資料夾。</li>
+      </ul>
+    </details>
+    <details>
+      <summary>怎麼切換上一張 / 下一張？</summary>
+      <p>左右滑動即可。接上實體鍵盤時可用方向鍵切換、空白鍵暫停、Esc 離開。
+        （iOS 不允許 App 使用音量鍵來切換。）</p>
+    </details>
+    <details>
+      <summary>為什麼「依大小排序」沒有作用？</summary>
+      <p>照片圖庫不提供檔案大小給 App，因此「依大小排序」只對資料夾來源有效；依名稱、日期與隨機排序則都可使用。</p>
+    </details>
+    <details>
+      <summary>支援 GIF 動畫嗎？</summary>
+      <p>GIF 會以靜態圖片顯示（第一格）。</p>
+    </details>
+    <details>
+      <summary>如何切換 App 語言？</summary>
+      <p>在 App 內的設定中選擇語言即可，立即生效，不會影響系統語言。</p>
+    </details>
+    <details>
+      <summary>可以把 iPad 當成數位相框嗎？</summary>
+      <p>可以。開始任一播放模式並讓它持續播放即可，長時間播放建議接上電源。
+        也可以使用「引導使用模式」（設定 › 輔助使用）把 iPad 鎖定在 SlideShow。</p>
+    </details>
+    <details>
+      <summary>SlideShow 會上傳我的照片嗎？</summary>
+      <p>不會。不需註冊、沒有廣告、不追蹤。照片只在你的裝置上讀取，絕不會上傳。</p>
+    </details>
+  </div>
+</section>
+
+<footer>
+  © 2026 bittyferrari · <a href="mailto:bittyferrari@gmail.com">bittyferrari@gmail.com</a>
+</footer>
+
+</div>
+</body>
+</html>
