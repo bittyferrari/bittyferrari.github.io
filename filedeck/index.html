@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="zh-Hant" data-l="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FileDeck — Mac 上的檔案總管</title>
+<meta name="description" content="FileDeck：Windows 檔案總管手感的 macOS 檔案管理員。Enter 開啟、Backspace 上一頁、F2 改名、⌘X 剪下貼上、內容視窗、22 套主題。A Windows Explorer-style file manager for macOS.">
+<meta property="og:title" content="FileDeck">
+<meta property="og:description" content="A file manager for macOS that feels like Windows Explorer — Enter to open, Backspace to go back, F2 to rename, real cut & paste, a Properties window and 22 themes. Free.">
+<meta property="og:image" content="https://bittyferrari.github.io/filedeck/img/icon-512.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/icon-256.png">
+<style>
+:root{
+  --bg:#f5f7fb; --card:#ffffff; --ink:#121a2e; --muted:#5a6480; --line:#e2e7f0;
+  --brand:#3b6cf6; --brand2:#7c5cff; --ok:#16a34a;
+  --hero1:#0d1530; --hero2:#1a1f55;
+  --radius:18px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b0f1d; --card:#141a2d; --ink:#edf0fa; --muted:#a0a9c4; --line:#252c45;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang TC","Hiragino Sans","Noto Sans TC","Segoe UI",Roboto,sans-serif;
+  line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+html[data-l="zh"] .en{display:none!important}
+html[data-l="en"] .zh{display:none!important}
+
+/* nav */
+header.nav{position:sticky;top:0;z-index:50;backdrop-filter:saturate(1.6) blur(14px);-webkit-backdrop-filter:saturate(1.6) blur(14px);
+  background:rgba(10,14,34,.74);color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;text-decoration:none;white-space:nowrap}
+.brand img{width:32px;height:32px}
+.nav nav{display:flex;gap:18px;margin-left:auto;font-size:14px}
+.nav nav a{text-decoration:none;opacity:.8}
+.nav nav a:hover{opacity:1}
+.lang{white-space:nowrap;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+.nav .dl{background:#fff;color:#14205a;border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px;text-decoration:none;white-space:nowrap}
+@media (max-width:820px){.nav nav{display:none}.nav .lang{margin-left:auto}}
+
+/* hero */
+.hero{color:#fff;background:
+  radial-gradient(900px 500px at 12% 8%,rgba(89,162,249,.35),transparent 60%),
+  radial-gradient(800px 500px at 92% 18%,rgba(124,92,255,.32),transparent 60%),
+  linear-gradient(160deg,var(--hero1),var(--hero2));overflow:hidden}
+.hero .wrap{padding-top:72px;padding-bottom:0;text-align:center}
+.hero .appicon{width:96px;height:96px;margin:0 auto 18px;filter:drop-shadow(0 12px 30px rgba(0,0,0,.45))}
+.hero h1{font-size:clamp(34px,6vw,62px);line-height:1.1;margin:0 0 18px;letter-spacing:-.02em}
+.hero h1 .grad{background:linear-gradient(90deg,#8ec5ff,#a89bff,#5fe1ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:clamp(16px,2.2vw,20px);max-width:720px;margin:0 auto 28px;opacity:.88}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:13px 24px;font-weight:700;text-decoration:none;font-size:16px;transition:transform .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:#fff;color:#14205a;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.btn.ghost{border:1px solid rgba(255,255,255,.35);color:#fff;background:rgba(255,255,255,.06)}
+.meta{margin-top:16px;font-size:13px;opacity:.7}
+.meta span{margin:0 6px;white-space:nowrap}
+
+/* mock window */
+.screen{position:relative;margin:48px auto 0;max-width:1000px;border-radius:14px 14px 0 0;overflow:hidden;text-align:left;
+  background:#fff;color:#1b1b1b;box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.12);font-size:13px}
+.screen .titlebar{display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;background:#eef3f8;border-bottom:1px solid #dfe5ee}
+.screen .lights{display:flex;gap:7px;margin-right:6px}
+.screen .lights i{width:12px;height:12px;border-radius:50%;background:#ff5f57}.screen .lights i:nth-child(2){background:#febc2e}.screen .lights i:nth-child(3){background:#28c840}
+.screen .tab{height:30px;align-self:flex-end;padding:0 14px;display:flex;align-items:center;gap:6px;border-radius:8px 8px 0 0;color:#555;white-space:nowrap}
+.screen .tab.on{background:#fff;color:#111;box-shadow:0 -1px 0 #dfe5ee inset}
+.screen .toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border-bottom:1px solid #e8ecf2}
+.screen .navb{width:28px;height:28px;border-radius:6px;display:grid;place-items:center;color:#666}
+.screen .addr{flex:1;display:flex;align-items:center;gap:2px;height:30px;border:1px solid #d9dfe8;border-radius:7px;padding:0 8px;overflow:hidden;white-space:nowrap}
+.screen .addr b{font-weight:500;padding:2px 6px;border-radius:5px}
+.screen .addr b:hover{background:#eef3fb}
+.screen .addr s{text-decoration:none;color:#999;padding:0 2px}
+.screen .search{width:180px;height:30px;border:1px solid #d9dfe8;border-radius:7px;padding:0 10px;display:flex;align-items:center;color:#999}
+.screen .body{display:grid;grid-template-columns:190px 1fr;min-height:360px}
+.screen .side{background:#f6f8fb;border-right:1px solid #e8ecf2;padding:12px 8px}
+.screen .side h6{margin:10px 8px 4px;font-size:11px;color:#8a93a6;font-weight:600}
+.screen .side div{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:6px}
+.screen .side div.on{background:#dbe8fb}
+.screen .side .ic{color:#0067c0;width:16px;text-align:center}
+.screen .list{padding:0}
+.screen table{width:100%;border-collapse:collapse}
+.screen th{font-weight:500;color:#6b7280;text-align:left;padding:7px 12px;border-bottom:1px solid #eef0f4;font-size:12px}
+.screen td{padding:6px 12px;white-space:nowrap}
+.screen tr:nth-child(even) td{background:#fafbfd}
+.screen tr.sel td{background:#cfe1fb!important}
+.screen td.n{display:flex;align-items:center;gap:8px}
+.screen .fi{width:18px;height:18px;border-radius:4px;display:inline-grid;place-items:center;font-size:12px}
+.screen .fold{background:#ffd666}
+.screen td.m{color:#6b7280}
+.screen .rename{border:1.5px solid #0067c0;border-radius:3px;padding:0 3px;background:#fff}
+.screen .rename u{text-decoration:none;background:#b3d4fc}
+.screen .keyhint{position:absolute;right:18px;bottom:18px;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.screen .keyhint span{background:rgba(15,20,45,.82);color:#fff;border-radius:10px;padding:6px 12px;font-size:12.5px;backdrop-filter:blur(8px)}
+.screen kbd,.k{font:inherit;font-weight:700;background:#fff;color:#111;border-radius:5px;padding:0 6px;margin-right:4px;box-shadow:0 1px 0 rgba(0,0,0,.25)}
+@media (max-width:760px){.screen .body{grid-template-columns:1fr}.screen .side,.screen .search,.screen .tab:not(.on),.screen th.h,.screen td.h{display:none}.screen .keyhint{display:none}}
+
+/* sections */
+section{padding:84px 0}
+.eyebrow{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--brand)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .eyebrow{color:#8fb0ff}}
+h2{font-size:clamp(28px,4vw,42px);line-height:1.15;margin:8px 0 14px;letter-spacing:-.01em}
+.sub{color:var(--muted);max-width:720px;font-size:17px;margin:0 0 36px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.card .em{font-size:26px;line-height:1;margin-bottom:12px}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--muted);font-size:14.5px}
+.alt{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.alt .card{background:var(--bg)}
+
+/* keys */
+.keys{display:grid;grid-template-columns:repeat(2,1fr);gap:0 36px}
+@media (max-width:760px){.keys{grid-template-columns:1fr}}
+.keys div{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
+.keys div span:last-child{color:var(--muted);text-align:right}
+.keys kbd{font:600 13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--bg);border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:2px 8px;margin-right:4px;white-space:nowrap;display:inline-block}
+
+/* feature rows */
+.feature-row{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-bottom:64px}
+.feature-row:last-child{margin-bottom:0}
+.feature-row h3{font-size:24px;margin:0 0 10px}
+.feature-row p{color:var(--muted);margin:0 0 12px}
+.feature-row ul{margin:0;padding-left:20px;color:var(--muted)}
+.feature-row li{margin:6px 0}
+@media (max-width:860px){.feature-row{grid-template-columns:1fr}}
+
+/* properties mock */
+.props{background:#ececec;color:#1b1b1b;border-radius:12px;box-shadow:0 18px 40px rgba(0,0,0,.2);overflow:hidden;font-size:13px;max-width:420px;margin:0 auto;width:100%}
+.props .pt{height:30px;display:flex;align-items:center;justify-content:center;position:relative;background:#e3e3e3;font-weight:600;font-size:12.5px}
+.props .pt .lights{position:absolute;left:10px;display:flex;gap:6px}
+.props .pt .lights i{width:11px;height:11px;border-radius:50%;background:#ff5f57}.props .pt .lights i:nth-child(2){background:#febc2e}.props .pt .lights i:nth-child(3){background:#28c840}
+.props .pb{padding:16px 18px}
+.props .head{display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid #d4d4d4;margin-bottom:10px}
+.props .head .big{width:40px;height:34px;border-radius:5px;background:#ffd666;display:grid;place-items:center}
+.props .head .inp{flex:1;background:#fff;border:1px solid #c9c9c9;border-radius:4px;padding:3px 8px}
+.props dl{display:grid;grid-template-columns:110px 1fr;gap:5px 10px;margin:0 0 10px;padding-bottom:10px;border-bottom:1px solid #d4d4d4}
+.props dt{color:#555}.props dd{margin:0}
+.props .cb{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.props .cb span::before{content:"";display:inline-block;width:12px;height:12px;border:1px solid #999;border-radius:3px;background:#fff;margin-right:5px;vertical-align:-1px}
+.props .cb span.on::before{background:#0067c0;border-color:#0067c0;box-shadow:inset 0 0 0 2px #fff}
+.props .btns{display:flex;justify-content:flex-end;gap:8px}
+.props .btns i{font-style:normal;background:#fff;border:1px solid #c4c4c4;border-radius:5px;padding:2px 14px}
+.props .btns i.p{background:#0a7cff;color:#fff;border-color:#0a7cff}
+
+/* address mock */
+.addrdemo{display:flex;flex-direction:column;gap:10px}
+.addrdemo .bar{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font:14px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.addrdemo .bar em{font-style:normal;font-family:inherit;color:var(--muted);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif;font-size:13px}
+.alt .addrdemo .bar{background:var(--bg)}
+
+/* themes */
+.themes{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.theme{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--card);font-size:13px}
+.theme .sw{height:64px;display:grid;grid-template-columns:30% 1fr;position:relative}
+.theme .sw i:last-child{display:flex;flex-direction:column;gap:5px;padding:12px 10px}
+.theme .sw i:last-child::before,.theme .sw i:last-child::after{content:"";height:6px;border-radius:3px;background:currentColor;opacity:.35}
+.theme .sw i:last-child::after{width:60%}
+.theme .sw b{position:absolute;left:30%;right:0;top:30px;height:12px;margin:0 8px;border-radius:3px}
+.theme .nm{padding:8px 10px;font-weight:600}
+
+/* steps / faq */
+.steps{counter-reset:s;display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.steps .card{position:relative;padding-top:52px}
+.steps .card::before{counter-increment:s;content:counter(s);position:absolute;top:18px;left:22px;width:26px;height:26px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:10px}
+details summary{cursor:pointer;font-weight:700;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";float:right;color:var(--muted);font-weight:400}
+details[open] summary::after{content:"–"}
+details p{color:var(--muted);margin:10px 0 0}
+
+.final{text-align:center}
+.final .btn.primary{background:var(--brand);color:#fff}
+
+footer{padding:40px 0 60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+footer .links{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px}
+footer a{color:var(--ink)}
+.ver{font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="img/icon-256.png" alt="">FileDeck</a>
+    <nav>
+      <a href="#features"><span class="zh">功能</span><span class="en">Features</span></a>
+      <a href="#keys"><span class="zh">快捷鍵</span><span class="en">Shortcuts</span></a>
+      <a href="#themes"><span class="zh">主題</span><span class="en">Themes</span></a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/bittyferrari/filedeck">GitHub</a>
+    </nav>
+    <button class="lang" id="langBtn" type="button" aria-label="Switch language"><span class="zh">English</span><span class="en">中文</span></button>
+    <a class="dl" href="https://github.com/bittyferrari/filedeck/releases/latest/download/FileDeck.dmg"><span class="zh">免費下載</span><span class="en">Download</span></a>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero" style="padding:0">
+  <div class="wrap">
+    <img class="appicon" src="img/icon-256.png" alt="FileDeck icon" width="96" height="96">
+    <h1>
+      <span class="zh">Mac 上終於有<br><span class="grad">順手的檔案總管</span></span>
+      <span class="en">The file manager<br><span class="grad">your fingers remember</span></span>
+    </h1>
+    <p class="lead">
+      <span class="zh">Enter 打開、Backspace 上一頁、F2 改名、⌘X 剪下再貼上。<br>位址列能直接打路徑，⌥ 雙擊就有「內容」視窗。原生 AppKit，又輕又快。</span>
+      <span class="en">Enter opens, Backspace goes back, F2 renames, and ⌘X really cuts. Type a path straight into the address bar, ⌥-double-click for a Properties window. Native AppKit — small and fast.</span>
+    </p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/bittyferrari/filedeck/releases/latest/download/FileDeck.dmg">⬇ <span class="zh">免費下載</span><span class="en">Download free</span></a>
+      <a class="btn ghost" href="#keys">⌨️ <span class="zh">看快捷鍵</span><span class="en">See the shortcuts</span></a>
+    </div>
+    <div class="meta">
+      <span>macOS 13+</span>·<span>Apple silicon &amp; Intel</span>·<span class="zh">已通過 Apple 公證</span><span class="en">Notarized by Apple</span>·<span class="ver">v1.0.0</span>
+    </div>
+
+    <div class="screen" role="img" aria-label="FileDeck window preview">
+      <div class="titlebar">
+        <div class="lights"><i></i><i></i><i></i></div>
+        <div class="tab on">📁 Projects</div><div class="tab">⬇ Downloads</div><div class="tab">🏠 bitty</div>
+      </div>
+      <div class="toolbar">
+        <span class="navb">‹</span><span class="navb">›</span><span class="navb">↑</span>
+        <div class="addr"><b>💻 Macintosh HD</b><s>›</s><b>Users</b><s>›</s><b>bitty</b><s>›</s><b>Documents</b><s>›</s><b>Projects</b><s>›</s></div>
+        <div class="search">🔍 <span class="zh">&nbsp;篩選</span><span class="en">&nbsp;Filter</span></div>
+      </div>
+      <div class="body">
+        <div class="side">
+          <h6><span class="zh">喜好項目</span><span class="en">Favorites</span></h6>
+          <div><span class="ic">🅰</span><span class="zh">應用程式</span><span class="en">Applications</span></div>
+          <div><span class="ic">🖥</span><span class="zh">桌面</span><span class="en">Desktop</span></div>
+          <div class="on"><span class="ic">📄</span><span class="zh">文件</span><span class="en">Documents</span></div>
+          <div><span class="ic">⬇</span><span class="zh">下載項目</span><span class="en">Downloads</span></div>
+          <div><span class="ic">🧭</span>Safari</div>
+          <h6><span class="zh">位置</span><span class="en">Locations</span></h6>
+          <div><span class="ic">💻</span>Macintosh HD</div>
+          <div><span class="ic">💾</span>Backup ⏏</div>
+          <div><span class="ic">🌐</span>\\NAS\share</div>
+        </div>
+        <div class="list">
+          <table>
+            <tr><th><span class="zh">名稱</span><span class="en">Name</span></th><th class="h"><span class="zh">修改日期</span><span class="en">Date Modified</span></th><th><span class="zh">大小</span><span class="en">Size</span></th><th class="h"><span class="zh">種類</span><span class="en">Kind</span></th></tr>
+            <tr><td class="n"><span class="fi fold"></span>design</td><td class="m h">2026/10/22 14:03</td><td class="m">—</td><td class="m h"><span class="zh">檔案夾</span><span class="en">Folder</span></td></tr>
+            <tr><td class="n"><span class="fi fold"></span>invoices</td><td class="m h">2026/10/20 09:41</td><td class="m">—</td><td class="m h"><span class="zh">檔案夾</span><span class="en">Folder</span></td></tr>
+            <tr class="sel"><td class="n"><span class="fi" style="background:#4dabf7">📝</span><span class="rename"><u>notes 2026</u>.md</span></td><td class="m h">2026/10/24 21:12</td><td class="m">4 KB</td><td class="m h">Markdown</td></tr>
+            <tr><td class="n"><span class="fi" style="background:#ff8787">📕</span>proposal.pdf</td><td class="m h">2026/10/18 17:30</td><td class="m">1.2 MB</td><td class="m h">PDF</td></tr>
+            <tr><td class="n"><span class="fi" style="background:#69db7c">📊</span>budget.xlsx</td><td class="m h">2026/10/15 11:02</td><td class="m">86 KB</td><td class="m h">Excel</td></tr>
+            <tr><td class="n"><span class="fi" style="background:#b197fc">🖼</span>cover.png</td><td class="m h">2026/10/12 22:47</td><td class="m">2.4 MB</td><td class="m h">PNG</td></tr>
+            <tr><td class="n"><span class="fi" style="background:#ffa94d">🎬</span>demo.mov</td><td class="m h">2026/10/09 08:15</td><td class="m">48 MB</td><td class="m h">QuickTime</td></tr>
+            <tr><td class="n"><span class="fi" style="background:#ced4da">🔗</span><span class="zh">Projects - 捷徑</span><span class="en">Projects - Shortcut</span></td><td class="m h">2026/10/01 10:00</td><td class="m">1 KB</td><td class="m h"><span class="zh">替身</span><span class="en">Alias</span></td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="keyhint">
+        <span><kbd>F2</kbd><span class="zh">重新命名，只選主檔名</span><span class="en">Rename — just the name, not the extension</span></span>
+        <span><kbd>⌫</kbd><span class="zh">上一頁</span><span class="en">Back</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- features -->
+<section id="features">
+  <div class="wrap">
+    <span class="eyebrow"><span class="zh">完全免費 · 沒有廣告 · 不收集資料</span><span class="en">Free · no ads · no tracking</span></span>
+    <h2><span class="zh">從 Windows 換到 Mac，不用重新學怎麼管檔案</span><span class="en">Switched from Windows? Keep how you manage files.</span></h2>
+    <p class="sub"><span class="zh">Finder 很好，但手指記得的是另一套。FileDeck 把檔案總管的習慣原封不動搬過來，又跟 macOS 的垃圾桶、快速查看、替身完全相容。</span><span class="en">Finder is fine — your fingers just learned a different set of moves. FileDeck brings those habits over while working with macOS Trash, Quick Look and aliases.</span></p>
+    <div class="grid">
+      <div class="card"><div class="em">↵</div><h3><span class="zh">Enter 就是打開</span><span class="en">Enter means open</span></h3><p><span class="zh">進入檔案夾、開啟檔案、啟動 App 都是 Enter；Backspace 回上一頁，沒有上一頁就到上層。</span><span class="en">Enter opens folders, files and apps. Backspace goes back — or up a level when there’s nowhere back to go.</span></p></div>
+      <div class="card"><div class="em">✂️</div><h3><span class="zh">真正的剪下貼上</span><span class="en">Real cut &amp; paste</span></h3><p><span class="zh">⌘X 剪下、⌘V 貼上就是搬移；名稱衝突自動保留兩者，絕不覆蓋。大量複製有進度視窗。</span><span class="en">⌘X then ⌘V moves files. Name clashes keep both copies — nothing is ever overwritten. Big copies show progress.</span></p></div>
+      <div class="card"><div class="em">🏷️</div><h3><span class="zh">F2 改名</span><span class="en">F2 to rename</span></h3><p><span class="zh">只選主檔名、不動副檔名，Enter 確定、Esc 取消，⌘Z 可還原。直接打字會跳到該名稱的檔案。</span><span class="en">Selects just the name, not the extension. Enter to confirm, Esc to cancel, ⌘Z to undo. Type to jump to a file.</span></p></div>
+      <div class="card"><div class="em">🗂️</div><h3><span class="zh">分頁與多視窗</span><span class="en">Tabs and windows</span></h3><p><span class="zh">⌘T 開新分頁、⌘N 開新視窗，拖放在視窗、分頁和側邊欄之間都能用。</span><span class="en">⌘T for a new tab, ⌘N for a new window. Drag and drop works between windows, tabs and the sidebar.</span></p></div>
+      <div class="card"><div class="em">🖼️</div><h3><span class="zh">詳細資料 / 縮圖</span><span class="en">Details or thumbnails</span></h3><p><span class="zh">⌘1 清單、⌘2 縮圖；圖片、PDF、影片用 Quick Look 產生實際縮圖，7 段大小，⌘＋捲動縮放。</span><span class="en">⌘1 for a list, ⌘2 for thumbnails with real Quick Look previews of images, PDFs and videos. 7 sizes, ⌘-scroll to zoom.</span></p></div>
+      <div class="card"><div class="em">📄</div><h3><span class="zh">右鍵新增檔案</span><span class="en">New file from the menu</span></h3><p><span class="zh">空白處右鍵 › 新增：文字文件、Markdown、RTF、HTML、空白檔案，建立完直接改名。</span><span class="en">Right-click › New: text document, Markdown, RTF, HTML or an empty file — ready to rename.</span></p></div>
+      <div class="card"><div class="em">🔗</div><h3><span class="zh">建立捷徑</span><span class="en">Create shortcut</span></h3><p><span class="zh">右鍵「建立捷徑」或「在桌面建立捷徑」，產生的是 macOS 替身，原檔搬走也找得到。</span><span class="en">Right-click › Create Shortcut, or put one on the Desktop. They’re real macOS aliases that follow the original.</span></p></div>
+      <div class="card"><div class="em">🌏</div><h3><span class="zh">8 種語言</span><span class="en">8 languages</span></h3><p><span class="zh">English、繁體中文、简体中文、日本語、한국어、Deutsch、Français、Español，預設跟隨系統。</span><span class="en">English, Traditional &amp; Simplified Chinese, Japanese, Korean, German, French and Spanish — follows your system.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- details rows -->
+<section class="alt">
+  <div class="wrap">
+    <div class="feature-row">
+      <div class="props" role="img" aria-label="Properties window">
+        <div class="pt"><span class="lights"><i></i><i></i><i></i></span><span class="zh">「design」的內容</span><span class="en">design Properties</span></div>
+        <div class="pb">
+          <div class="head"><span class="big">📁</span><span class="inp">design</span></div>
+          <dl>
+            <dt><span class="zh">類型</span><span class="en">Type</span></dt><dd><span class="zh">檔案夾</span><span class="en">Folder</span></dd>
+            <dt><span class="zh">位置</span><span class="en">Location</span></dt><dd>~/Documents/Projects</dd>
+            <dt><span class="zh">大小</span><span class="en">Size</span></dt><dd>1.84 GB (1,975,612,416 bytes)</dd>
+            <dt><span class="zh">內含</span><span class="en">Contains</span></dt><dd><span class="zh">1,204 個檔案，87 個檔案夾</span><span class="en">1,204 files, 87 folders</span></dd>
+            <dt><span class="zh">建立日期</span><span class="en">Created</span></dt><dd>2026/03/02 10:18</dd>
+            <dt><span class="zh">修改日期</span><span class="en">Modified</span></dt><dd>2026/10/22 14:03</dd>
+          </dl>
+          <div class="cb"><span><span class="zh">唯讀（鎖定）</span><span class="en">Read-only (locked)</span></span><span class="on"><span class="zh">隱藏</span><span class="en">Hidden</span></span><span><span class="zh">隱藏副檔名</span><span class="en">Hide extension</span></span></div>
+          <div class="btns"><i><span class="zh">取消</span><span class="en">Cancel</span></i><i><span class="zh">套用</span><span class="en">Apply</span></i><i class="p"><span class="zh">確定</span><span class="en">OK</span></i></div>
+        </div>
+      </div>
+      <div>
+        <span class="eyebrow"><span class="zh">內容視窗</span><span class="en">Properties</span></span>
+        <h3><span class="zh">⌥ 雙擊，看到所有資訊</span><span class="en">⌥-double-click for everything</span></h3>
+        <p><span class="zh">跟 Windows 的「內容」一樣，⌥ 雙擊、⌥Enter 或 ⌘I 就打開。</span><span class="en">Just like Properties on Windows: ⌥-double-click, ⌥Enter or ⌘I.</span></p>
+        <ul>
+          <li><span class="zh">大小、磁碟大小、內含幾個檔案和檔案夾（背景計算）</span><span class="en">Size, size on disk, and how many files and folders inside (counted in the background)</span></li>
+          <li><span class="zh">直接改名、勾選唯讀、隱藏、隱藏副檔名，按套用生效</span><span class="en">Rename, toggle read-only, hidden and hide-extension, then Apply</span></li>
+          <li><span class="zh">「變更…」設定這種檔案預設用哪個 App 打開</span><span class="en">Change… which app opens this kind of file</span></li>
+          <li><span class="zh">多選看總大小；磁碟顯示容量、已使用與可用空間</span><span class="en">Totals for multiple items; capacity, used and free space for drives</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="feature-row">
+      <div>
+        <span class="eyebrow"><span class="zh">位址列</span><span class="en">Address bar</span></span>
+        <h3><span class="zh">打什麼，就去哪裡</span><span class="en">Type it, go there</span></h3>
+        <p><span class="zh">平常是可以點的路徑按鈕，每段後面的 › 會列出子檔案夾。點空白處或 ⌘L 就能輸入，Tab 自動補完。</span><span class="en">Normally a row of clickable path buttons — each › lists the subfolders. Click the empty space or press ⌘L to type, with Tab completion.</span></p>
+        <ul>
+          <li><span class="zh">側邊欄自動讀入 Finder 的喜好項目，可拖曳排序</span><span class="en">The sidebar imports your Finder favorites; drag to reorder</span></li>
+          <li><span class="zh">檔案和 App 也能釘在側邊欄，把檔案拖到 App 上就用它打開</span><span class="en">Pin files and apps too — drop a file on an app to open it with that app</span></li>
+          <li><span class="zh">外接磁碟有退出按鈕，網路磁碟機直接掛載</span><span class="en">Eject buttons for external drives, and network shares mount right in</span></li>
+        </ul>
+      </div>
+      <div class="addrdemo">
+        <div class="bar"><span>~/Downloads</span><em><span class="zh">跳到資料夾</span><span class="en">go to a folder</span></em></div>
+        <div class="bar"><span>src/app</span><em><span class="zh">相對路徑</span><span class="en">relative path</span></em></div>
+        <div class="bar"><span>Safari</span><em><span class="zh">啟動 App</span><span class="en">launch an app</span></em></div>
+        <div class="bar"><span>\\NAS\photos</span><em><span class="zh">連到 SMB 分享</span><span class="en">open an SMB share</span></em></div>
+        <div class="bar"><span>https://github.com</span><em><span class="zh">用瀏覽器開</span><span class="en">open in your browser</span></em></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- keys -->
+<section id="keys">
+  <div class="wrap">
+    <span class="eyebrow"><span class="zh">快捷鍵</span><span class="en">Shortcuts</span></span>
+    <h2><span class="zh">手指不用重新學</span><span class="en">Nothing new to learn</span></h2>
+    <p class="sub"><span class="zh">Mac 鍵盤沒有 Delete 鍵也沒關係，每個動作都有 ⌘ 的版本。</span><span class="en">No Delete key on your Mac keyboard? Every action has a ⌘ version too.</span></p>
+    <div class="keys">
+      <div><span><kbd>Enter</kbd></span><span><span class="zh">打開</span><span class="en">Open</span></span></div>
+      <div><span><kbd>⌫</kbd></span><span><span class="zh">上一頁</span><span class="en">Back</span></span></div>
+      <div><span><kbd>F2</kbd></span><span><span class="zh">重新命名</span><span class="en">Rename</span></span></div>
+      <div><span><kbd>Space</kbd></span><span><span class="zh">快速查看</span><span class="en">Quick Look</span></span></div>
+      <div><span><kbd>⌘X</kbd> <kbd>⌘C</kbd> <kbd>⌘V</kbd></span><span><span class="zh">剪下／拷貝／貼上檔案</span><span class="en">Cut / copy / paste files</span></span></div>
+      <div><span><kbd>⌘⌫</kbd> <kbd>Delete</kbd></span><span><span class="zh">丟到垃圾桶（可還原）</span><span class="en">Move to Trash (undoable)</span></span></div>
+      <div><span><kbd>⇧Delete</kbd></span><span><span class="zh">立即刪除（會先確認）</span><span class="en">Delete now (asks first)</span></span></div>
+      <div><span><kbd>⌥Enter</kbd> <kbd>⌘I</kbd></span><span><span class="zh">內容</span><span class="en">Properties</span></span></div>
+      <div><span><kbd>⌘L</kbd></span><span><span class="zh">編輯位址列</span><span class="en">Edit the address bar</span></span></div>
+      <div><span><kbd>⌘T</kbd> <kbd>⌘N</kbd></span><span><span class="zh">新分頁／新視窗</span><span class="en">New tab / window</span></span></div>
+      <div><span><kbd>⇧⌘N</kbd></span><span><span class="zh">新增檔案夾</span><span class="en">New folder</span></span></div>
+      <div><span><kbd>⌥⌘N</kbd></span><span><span class="zh">新增文字文件</span><span class="en">New text document</span></span></div>
+      <div><span><kbd>⌘1</kbd> <kbd>⌘2</kbd></span><span><span class="zh">詳細資料／縮圖</span><span class="en">Details / thumbnails</span></span></div>
+      <div><span><kbd>⌘F</kbd></span><span><span class="zh">篩選目前檔案夾</span><span class="en">Filter this folder</span></span></div>
+      <div><span><kbd>⇧⌘.</kbd></span><span><span class="zh">顯示隱藏檔案</span><span class="en">Show hidden files</span></span></div>
+      <div><span><kbd>⌥⌘C</kbd></span><span><span class="zh">拷貝路徑</span><span class="en">Copy path</span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- themes -->
+<section class="alt" id="themes">
+  <div class="wrap">
+    <span class="eyebrow"><span class="zh">22 套主題 · 淺色與深色</span><span class="en">22 themes · light &amp; dark</span></span>
+    <h2><span class="zh">換成你習慣的配色</span><span class="en">Colors you already like</span></h2>
+    <p class="sub"><span class="zh">每套主題都有淺色和深色版，跟著系統切換。還能開毛玻璃讓桌面透出來、自訂每一塊顏色，或把主題拷貝成 JSON 分享給朋友。文字和背景太接近時會自動調整，維持至少 7:1 對比。</span><span class="en">Every theme has a light and dark version that follows the system. Turn on frosted glass, recolor any part of the window, or share a theme as JSON. Text is auto-adjusted to keep at least 7:1 contrast.</span></p>
+    <div class="themes" id="themeGrid"></div>
+  </div>
+</section>
+
+<!-- setup -->
+<section id="setup">
+  <div class="wrap">
+    <span class="eyebrow"><span class="zh">開始使用</span><span class="en">Getting started</span></span>
+    <h2><span class="zh">三步驟裝好</span><span class="en">Three steps</span></h2>
+    <div class="steps" style="margin-top:28px">
+      <div class="card"><h3><span class="zh">下載 dmg</span><span class="en">Download the dmg</span></h3><p><span class="zh">打開後把 FileDeck 拖進「應用程式」資料夾。</span><span class="en">Open it and drag FileDeck into Applications.</span></p></div>
+      <div class="card"><h3><span class="zh">打開 FileDeck</span><span class="en">Open FileDeck</span></h3><p><span class="zh">已通過 Apple 公證，不會跳出「無法驗證開發者」。</span><span class="en">It’s notarized by Apple, so there’s no “unidentified developer” warning.</span></p></div>
+      <div class="card"><h3><span class="zh">允許檔案夾存取</span><span class="en">Allow folder access</span></h3><p><span class="zh">第一次看桌面、文件、下載項目時 macOS 會詢問。想一次搞定可以加到「完整磁碟取用權限」。</span><span class="en">macOS asks the first time you open Desktop, Documents or Downloads. Add it to Full Disk Access to allow everything at once.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- faq -->
+<section class="alt" id="faq">
+  <div class="wrap" style="max-width:820px">
+    <span class="eyebrow">FAQ</span>
+    <h2><span class="zh">常見問題</span><span class="en">Questions</span></h2>
+    <details><summary><span class="zh">真的免費嗎？</span><span class="en">Is it really free?</span></summary><p><span class="zh">是的，沒有試用期、沒有廣告，也不會收集任何資料。</span><span class="en">Yes — no trial, no ads, and no data collection.</span></p></details>
+    <details><summary><span class="zh">會取代 Finder 嗎？</span><span class="en">Does it replace Finder?</span></summary><p><span class="zh">不會，兩者可以同時使用。FileDeck 用的就是 macOS 自己的垃圾桶、替身、標籤和 Quick Look，在哪邊操作另一邊都看得到。</span><span class="en">No, they work side by side. FileDeck uses macOS’s own Trash, aliases and Quick Look, so changes show up in both.</span></p></details>
+    <details><summary><span class="zh">丟到垃圾桶可以救回來嗎？</span><span class="en">Can I get files back from the Trash?</span></summary><p><span class="zh">可以。⌘⌫ 是丟到 macOS 的垃圾桶，⌘Z 可以還原；只有 ⇧Delete 會直接刪除，而且會先確認。</span><span class="en">Yes. ⌘⌫ moves to the macOS Trash and ⌘Z undoes it. Only ⇧Delete deletes immediately — and it asks first.</span></p></details>
+    <details><summary><span class="zh">為什麼一直問我要不要允許存取資料夾？</span><span class="en">Why does macOS keep asking for folder access?</span></summary><p><span class="zh">這是 macOS 對桌面、文件、下載項目和外接磁碟的保護。每個位置允許一次就好；或在「系統設定 › 隱私權與安全性 › 完整磁碟取用權限」加入 FileDeck。</span><span class="en">That’s macOS protecting Desktop, Documents, Downloads and external drives. Allow each once, or add FileDeck under System Settings › Privacy &amp; Security › Full Disk Access.</span></p></details>
+    <details><summary><span class="zh">支援哪些 Mac？</span><span class="en">Which Macs are supported?</span></summary><p><span class="zh">macOS 13 Ventura 以上，Apple silicon 和 Intel 都可以。</span><span class="en">macOS 13 Ventura or later, on Apple silicon and Intel.</span></p></details>
+    <details><summary><span class="zh">發現問題或有建議？</span><span class="en">Found a bug or have an idea?</span></summary><p><span class="zh">歡迎到 <a href="https://github.com/bittyferrari/filedeck/issues">GitHub Issues</a> 告訴我。</span><span class="en">Please open an issue on <a href="https://github.com/bittyferrari/filedeck/issues">GitHub</a>.</span></p></details>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <img src="img/icon-256.png" alt="" width="80" height="80" style="margin:0 auto 14px">
+    <h2><span class="zh">把檔案總管帶到 Mac</span><span class="en">Bring Explorer habits to your Mac</span></h2>
+    <p class="sub" style="margin:0 auto 28px"><span class="zh">免費、原生、不到幾 MB。</span><span class="en">Free, native, and just a few MB.</span></p>
+    <a class="btn primary" href="https://github.com/bittyferrari/filedeck/releases/latest/download/FileDeck.dmg">⬇ <span class="zh">下載 FileDeck</span><span class="en">Download FileDeck</span> <span class="ver">v1.0.0</span></a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="links">
+      <a href="https://github.com/bittyferrari/filedeck/releases"><span class="zh">版本紀錄</span><span class="en">Release notes</span></a>
+      <a href="https://github.com/bittyferrari/filedeck/issues"><span class="zh">回報問題</span><span class="en">Report a problem</span></a>
+      <a href="../">bittyferrari.github.io</a>
+    </div>
+    <p>© 2026 Bitty Ferrari</p>
+    <p class="zh">FileDeck 是獨立開發的第三方軟體，與 Apple Inc. 或 Microsoft Corporation 沒有任何關聯，也未經其贊助或認可。Mac、macOS 與 Finder 是 Apple Inc. 的商標；Windows 是 Microsoft Corporation 的商標。</p>
+    <p class="en">FileDeck is an independent product and is not affiliated with, endorsed by, or sponsored by Apple Inc. or Microsoft Corporation. Mac, macOS and Finder are trademarks of Apple Inc., registered in the U.S. and other countries. Windows is a trademark of Microsoft Corporation.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  function pick(){
+    try{var q=new URLSearchParams(location.search).get('lang');if(q==='zh'||q==='en')return q;}catch(e){}
+    try{var s=localStorage.getItem('filedeck-lang');if(s==='zh'||s==='en')return s;}catch(e){}
+    var n=(navigator.languages&&navigator.languages[0])||navigator.language||'en';
+    return /^zh/i.test(n)?'zh':'en';
+  }
+  function set(l){
+    root.setAttribute('data-l',l);
+    root.setAttribute('lang',l==='zh'?'zh-Hant':'en');
+    document.title=l==='zh'?'FileDeck — Mac 上的檔案總管':'FileDeck — An Explorer-style file manager for Mac';
+  }
+  set(pick());
+  document.getElementById('langBtn').addEventListener('click',function(){
+    var l=root.getAttribute('data-l')==='zh'?'en':'zh';set(l);
+    try{localStorage.setItem('filedeck-lang',l);}catch(e){}
+  });
+
+  // 主題色票：[名稱, 強調色, 側邊欄, 內容, 文字]（取自 Sources/Theme.swift 的深色版）
+  var themes=[
+    ['Default','#0A84FF','#232325','#1E1E1E','#ECECEC'],
+    ['Explorer','#0067C0','#1C1C1C','#191919','#F3F3F3'],
+    ['GitHub','#0969DA','#010409','#0D1117','#E6EDF3'],
+    ['Solarized','#268BD2','#06303B','#002B36','#EEE8D5'],
+    ['Gruvbox','#D79921','#282828','#1D2021','#EBDBB2'],
+    ['Dracula','#BD93F9','#21222C','#282A36','#F8F8F2'],
+    ['Nord','#88C0D0','#353B49','#2E3440','#ECEFF4'],
+    ['Monokai','#F92672','#1E1F1C','#272822','#F8F8F2'],
+    ['One Dark','#61AFEF','#1B1F24','#282C34','#DCDFE4'],
+    ['Tokyo Night','#7AA2F7','#16161E','#1A1B26','#C0CAF5'],
+    ['Catppuccin','#CBA6F7','#11111B','#1E1E2E','#CDD6F4'],
+    ['Rosé Pine','#C4A7E7','#1A1826','#191724','#E0DEF4'],
+    ['Everforest','#A7C080','#232A2E','#2D353B','#D3C6AA'],
+    ['Kanagawa','#7E9CD8','#16161D','#1F1F28','#DCD7BA'],
+    ['Ayu','#FFCC66','#1C212B','#1F2430','#CCCAC2'],
+    ['Night Owl','#82AAFF','#01111D','#011627','#D6DEEB'],
+    ['Palenight','#C792EA','#202331','#292D3E','#A6ACCD'],
+    ["Synthwave '84",'#FF7EDB','#1E1A2B','#262335','#F4EEE4'],
+    ['Cobalt2','#FFC600','#15232D','#193549','#FFFFFF'],
+    ['Horizon','#E95678','#16161C','#1C1E26','#D5D8DA'],
+    ['Xcode','#0B63CE','#25262B','#292A30','#DFDFE0'],
+    ['High Contrast','#0040DD','#0A0A0A','#000000','#FFFFFF']
+  ];
+  var g=document.getElementById('themeGrid');
+  themes.forEach(function(t){
+    var d=document.createElement('div');d.className='theme';
+    d.innerHTML='<div class="sw"><i style="background:'+t[2]+'"></i><i style="background:'+t[3]+';color:'+t[4]+'"></i><b style="background:'+t[1]+'"></b></div><div class="nm"></div>';
+    d.querySelector('.nm').textContent=t[0];
+    g.appendChild(d);
+  });
+})();
+</script>
+</body>
+</html>
