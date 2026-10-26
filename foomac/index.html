@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="zh-Hant" data-l="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Foomac — Mac 上的 foobar2000 風格播放器</title>
+<meta name="description" content="Foomac：foobar2000 風格的 macOS 音樂播放器。選資料夾遞迴掃描、zip 直接播、資料夾樹狀圖、表格式播放清單、RGB 電競燈效與即時頻譜。A foobar2000-style music player for macOS.">
+<meta property="og:title" content="Foomac">
+<meta property="og:description" content="A foobar2000-style music player for macOS — add a folder, play zips without unzipping, browse a folder tree, and light it all up with RGB effects and a live spectrum. Free.">
+<meta property="og:image" content="https://bittyferrari.github.io/foomac/img/icon-512.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/icon-256.png">
+<style>
+:root{
+  --bg:#f7f5f2; --card:#ffffff; --ink:#1a1612; --muted:#6b625a; --line:#e8e2da;
+  --brand:#f0641e; --brand2:#ff9e33;
+  --hero1:#0c0b10; --hero2:#1d1420;
+  --radius:18px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e0d11; --card:#17151c; --ink:#f1ede8; --muted:#a8a0a6; --line:#29252f;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang TC","Hiragino Sans","Noto Sans TC","Segoe UI",Roboto,sans-serif;
+  line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+html[data-l="zh"] .en{display:none!important}
+html[data-l="en"] .zh{display:none!important}
+
+/* nav */
+header.nav{position:sticky;top:0;z-index:50;backdrop-filter:saturate(1.6) blur(14px);-webkit-backdrop-filter:saturate(1.6) blur(14px);
+  background:rgba(12,11,16,.76);color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;text-decoration:none;white-space:nowrap}
+.brand img{width:32px;height:32px}
+.nav nav{display:flex;gap:18px;margin-left:auto;font-size:14px}
+.nav nav a{text-decoration:none;opacity:.8}
+.nav nav a:hover{opacity:1}
+.lang{white-space:nowrap;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+.nav .dl{background:#fff;color:#2a160a;border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px;text-decoration:none;white-space:nowrap}
+@media (max-width:820px){.nav nav{display:none}.nav .lang{margin-left:auto}}
+
+/* hero */
+.hero{color:#fff;background:
+  radial-gradient(900px 500px at 12% 8%,rgba(255,140,50,.30),transparent 60%),
+  radial-gradient(800px 500px at 92% 18%,rgba(220,60,160,.26),transparent 60%),
+  linear-gradient(160deg,var(--hero1),var(--hero2));overflow:hidden}
+.hero .wrap{padding-top:72px;padding-bottom:0;text-align:center}
+.hero .appicon{width:96px;height:96px;margin:0 auto 18px;filter:drop-shadow(0 12px 30px rgba(0,0,0,.5))}
+.hero h1{font-size:clamp(34px,6vw,62px);line-height:1.1;margin:0 0 18px;letter-spacing:-.02em}
+.hero h1 .grad{background:linear-gradient(90deg,#ffb35c,#ff6a3d,#ff4fa3);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:clamp(16px,2.2vw,20px);max-width:720px;margin:0 auto 28px;opacity:.88}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:13px 24px;font-weight:700;text-decoration:none;font-size:16px;transition:transform .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:#fff;color:#2a160a;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.btn.ghost{border:1px solid rgba(255,255,255,.35);color:#fff;background:rgba(255,255,255,.06)}
+.meta{margin-top:16px;font-size:13px;opacity:.7}
+.meta span{margin:0 6px;white-space:nowrap}
+
+/* mock window */
+.screen{position:relative;margin:48px auto 0;max-width:1000px;border-radius:14px 14px 0 0;overflow:hidden;text-align:left;
+  background:#16131b;color:#ece6f0;font-size:13px;
+  box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.12)}
+.screen::before{content:"";position:absolute;inset:0;padding:2px;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(90deg,#ff004c,#ff9a00,#d0ff00,#00ffa2,#00b3ff,#8a2bff,#ff004c);background-size:300% 100%;
+  animation:rgb 6s linear infinite;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+@keyframes rgb{to{background-position:300% 0}}
+.screen .titlebar{display:flex;align-items:center;gap:12px;height:40px;padding:0 14px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.07)}
+.screen .lights{display:flex;gap:7px}
+.screen .lights i{width:12px;height:12px;border-radius:50%;background:#ff5f57}.screen .lights i:nth-child(2){background:#febc2e}.screen .lights i:nth-child(3){background:#28c840}
+.screen .ttl{flex:1;text-align:center;color:#a99fb0;font-size:12.5px;margin-right:60px}
+.screen .player{display:flex;align-items:center;gap:14px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.07)}
+.screen .ctl{display:flex;gap:6px}
+.screen .ctl span{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.06);font-size:12px}
+.screen .ctl span.play{background:var(--brand);color:#fff}
+.screen .now{flex:1;min-width:0}
+.screen .now b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .now small{color:#a99fb0}
+.screen .seek{height:4px;border-radius:2px;background:rgba(255,255,255,.12);margin-top:6px;position:relative}
+.screen .seek i{position:absolute;left:0;top:0;bottom:0;width:38%;border-radius:2px;background:linear-gradient(90deg,#ff9e33,#f0641e)}
+.screen .tm{color:#a99fb0;font-variant-numeric:tabular-nums;white-space:nowrap}
+.screen .search{width:170px;height:28px;border:1px solid rgba(255,255,255,.12);border-radius:7px;padding:0 10px;display:flex;align-items:center;color:#8d8394}
+.screen .body{display:grid;grid-template-columns:200px 1fr;min-height:340px;position:relative}
+.screen .side{background:rgba(255,255,255,.025);border-right:1px solid rgba(255,255,255,.07);padding:12px 8px;position:relative;z-index:1}
+.screen .side h6{margin:6px 8px 4px;font-size:11px;color:#8d8394;font-weight:600}
+.screen .side div{display:flex;align-items:center;gap:6px;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.screen .side div.on{background:rgba(240,100,30,.28)}
+.screen .side .l1{padding-left:20px}.screen .side .l2{padding-left:34px}
+.screen .side .tw{color:#8d8394;width:10px;font-size:10px}
+.screen .list{position:relative;z-index:1}
+.screen table{width:100%;border-collapse:collapse}
+.screen th{font-weight:500;color:#8d8394;text-align:left;padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.07);font-size:12px}
+.screen td{padding:5px 12px;white-space:nowrap}
+.screen tr:nth-child(even) td{background:rgba(255,255,255,.025)}
+.screen tr.sel td{background:rgba(240,100,30,.32)!important}
+.screen td.m{color:#a99fb0}
+.screen td.p{color:#ff9e33;width:18px;padding-right:0}
+.screen canvas{position:absolute;left:200px;right:0;bottom:0;height:150px;width:calc(100% - 200px);pointer-events:none;opacity:.55}
+.screen .keyhint{position:absolute;right:18px;bottom:18px;display:flex;flex-direction:column;gap:6px;align-items:flex-end;z-index:2}
+.screen .keyhint span{background:rgba(0,0,0,.7);color:#fff;border-radius:10px;padding:6px 12px;font-size:12.5px;backdrop-filter:blur(8px)}
+.screen kbd{font:inherit;font-weight:700;background:#fff;color:#111;border-radius:5px;padding:0 6px;margin-right:4px}
+@media (max-width:760px){
+  .screen .body{grid-template-columns:1fr}.screen canvas{left:0;width:100%}
+  .screen .side,.screen .search,.screen th.h,.screen td.h,.screen .keyhint,.screen .tm{display:none}
+}
+
+/* sections */
+section{padding:84px 0}
+.eyebrow{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--brand)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .eyebrow{color:#ffab5e}}
+h2{font-size:clamp(28px,4vw,42px);line-height:1.15;margin:8px 0 14px;letter-spacing:-.01em}
+.sub{color:var(--muted);max-width:720px;font-size:17px;margin:0 0 36px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.card .em{font-size:26px;line-height:1;margin-bottom:12px}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--muted);font-size:14.5px}
+.alt{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.alt .card{background:var(--bg)}
+
+/* feature rows */
+.feature-row{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-bottom:64px}
+.feature-row:last-child{margin-bottom:0}
+.feature-row h3{font-size:24px;margin:0 0 10px}
+.feature-row p{color:var(--muted);margin:0 0 12px}
+.feature-row ul{margin:0;padding-left:20px;color:var(--muted)}
+.feature-row li{margin:6px 0}
+@media (max-width:860px){.feature-row{grid-template-columns:1fr}}
+
+/* tree mock */
+.tree{background:#16131b;color:#ece6f0;border-radius:14px;box-shadow:0 18px 40px rgba(0,0,0,.25);padding:16px 14px;font-size:13.5px;max-width:440px;width:100%;margin:0 auto}
+.tree div{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:6px;white-space:nowrap;overflow:hidden}
+.tree .l1{padding-left:26px}.tree .l2{padding-left:44px}.tree .l3{padding-left:62px}
+.tree .on{background:rgba(240,100,30,.3)}
+.tree .tw{color:#8d8394;width:10px;font-size:10px}
+.tree em{font-style:normal;color:#8d8394;margin-left:auto;font-size:12px}
+.tree .zip{color:#ffb35c}
+
+/* rgb demo */
+.rgbdemo{border-radius:16px;overflow:hidden;background:#0b0a0e;position:relative;height:260px;box-shadow:0 18px 40px rgba(0,0,0,.3)}
+.rgbdemo canvas{position:absolute;inset:0;width:100%;height:100%}
+.rgbdemo .lab{position:absolute;left:14px;top:12px;color:#fff;font-size:12.5px;background:rgba(0,0,0,.5);padding:4px 10px;border-radius:999px;backdrop-filter:blur(6px)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.chips span{font-size:12.5px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--muted);cursor:pointer;user-select:none}
+.chips span.on{background:var(--brand);border-color:var(--brand);color:#fff}
+
+/* keys */
+.keys{display:grid;grid-template-columns:repeat(2,1fr);gap:0 36px}
+@media (max-width:760px){.keys{grid-template-columns:1fr}}
+.keys div{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
+.keys div span:last-child{color:var(--muted);text-align:right}
+.keys kbd{font:600 13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--bg);border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:2px 8px;margin-right:4px;white-space:nowrap;display:inline-block}
+
+/* themes */
+.themes{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.theme{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--card);font-size:13px}
+.theme .sw{height:76px;position:relative}
+.theme .sw i{position:absolute;left:12px;right:12px;height:6px;border-radius:3px;opacity:.4}
+.theme .sw i:nth-child(1){top:16px}.theme .sw i:nth-child(2){top:30px;right:40%}
+.theme .sw b{position:absolute;left:12px;bottom:14px;width:46%;height:10px;border-radius:5px}
+.theme .nm{padding:8px 10px;font-weight:600}
+
+/* steps / faq */
+.steps{counter-reset:s;display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.steps .card{position:relative;padding-top:52px}
+.steps .card::before{counter-increment:s;content:counter(s);position:absolute;top:18px;left:22px;width:26px;height:26px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:10px}
+details summary{cursor:pointer;font-weight:700;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";float:right;color:var(--muted);font-weight:400}
+details[open] summary::after{content:"–"}
+details p{color:var(--muted);margin:10px 0 0}
+
+.final{text-align:center}
+.final .btn.primary{background:var(--brand);color:#fff}
+
+footer{padding:40px 0 60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+footer .links{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px}
+footer a{color:var(--ink)}
+.ver{font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion: reduce){.screen::before{animation:none}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="img/icon-256.png" alt="">Foomac</a>
+    <nav>
+      <a href="#features"><span class="zh">功能</span><span class="en">Features</span></a>
+      <a href="#rgb"><span class="zh">RGB 燈效</span><span class="en">RGB</span></a>
+      <a href="#keys"><span class="zh">快捷鍵</span><span class="en">Shortcuts</span></a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/bittyferrari/foomac">GitHub</a>
+    </nav>
+    <button class="lang" id="langBtn" type="button" aria-label="Switch language"><span class="zh">English</span><span class="en">中文</span></button>
+    <a class="dl" href="https://github.com/bittyferrari/foomac/releases/latest/download/Foomac.dmg"><span class="zh">免費下載</span><span class="en">Download</span></a>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero" style="padding:0">
+  <div class="wrap">
+    <img class="appicon" src="img/icon-256.png" alt="Foomac icon" width="96" height="96">
+    <h1>
+      <span class="zh">把整個音樂資料夾<br><span class="grad">丟進來就能播</span></span>
+      <span class="en">Drop in your music folder.<br><span class="grad">Press play.</span></span>
+    </h1>
+    <p class="lead">
+      <span class="zh">foobar2000 風格的 Mac 播放器：選資料夾就遞迴掃描，zip 不用解壓縮，資料夾樹狀圖一層層展開。<br>再加上 RGB 電競燈效和即時頻譜，聽歌也能很熱鬧。</span>
+      <span class="en">A foobar2000-style player for Mac. Add a folder and every subfolder gets scanned, zips play without unzipping, and a folder tree lets you drill down. Then light it up with RGB effects and a live spectrum.</span>
+    </p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/bittyferrari/foomac/releases/latest/download/Foomac.dmg">⬇ <span class="zh">免費下載</span><span class="en">Download free</span></a>
+      <a class="btn ghost" href="#rgb">🌈 <span class="zh">看 RGB 燈效</span><span class="en">See the RGB lights</span></a>
+    </div>
+    <div class="meta">
+      <span>macOS 14+</span>·<span>Apple silicon &amp; Intel</span>·<span class="zh">已通過 Apple 公證</span><span class="en">Notarized by Apple</span>·<span class="ver">v1.0.0</span>
+    </div>
+
+    <div class="screen" role="img" aria-label="Foomac window preview">
+      <div class="titlebar"><div class="lights"><i></i><i></i><i></i></div><div class="ttl">Foomac</div></div>
+      <div class="player">
+        <div class="ctl"><span>⏮</span><span class="play">⏸</span><span>⏭</span><span>🔀</span></div>
+        <div class="now"><b>Midnight Drive</b><small>Neon Harbor — City Lights (2024)</small><div class="seek"><i></i></div></div>
+        <div class="tm">1:32 / 4:05</div>
+        <div class="search">🔍&nbsp;<span class="zh">搜尋</span><span class="en">Search</span></div>
+      </div>
+      <div class="body">
+        <div class="side">
+          <h6><span class="zh">音樂庫</span><span class="en">Library</span></h6>
+          <div><span class="tw"></span>🎵 <span class="zh">全部歌曲</span><span class="en">All Songs</span></div>
+          <h6><span class="zh">資料夾</span><span class="en">Folders</span></h6>
+          <div><span class="tw">▾</span>📁 Music</div>
+          <div class="l1"><span class="tw">▸</span>📁 Jazz</div>
+          <div class="l1"><span class="tw">▾</span>📁 Synthwave</div>
+          <div class="l2 on"><span class="tw"></span>🗜 City Lights.zip</div>
+          <div class="l2"><span class="tw"></span>📁 Outrun</div>
+          <div class="l1"><span class="tw">▸</span>📁 Soundtracks</div>
+          <div><span class="tw">▸</span>📁 Downloads</div>
+        </div>
+        <div class="list">
+          <table>
+            <tr><th></th><th>#</th><th><span class="zh">標題</span><span class="en">Title</span></th><th class="h"><span class="zh">演出者</span><span class="en">Artist</span></th><th class="h"><span class="zh">專輯</span><span class="en">Album</span></th><th><span class="zh">長度</span><span class="en">Length</span></th></tr>
+            <tr><td class="p"></td><td class="m">01</td><td>Harbor Lights</td><td class="m h">Neon Harbor</td><td class="m h">City Lights</td><td class="m">3:48</td></tr>
+            <tr class="sel"><td class="p">▶</td><td class="m">02</td><td>Midnight Drive</td><td class="m h">Neon Harbor</td><td class="m h">City Lights</td><td class="m">4:05</td></tr>
+            <tr><td class="p"></td><td class="m">03</td><td>Chrome Skyline</td><td class="m h">Neon Harbor</td><td class="m h">City Lights</td><td class="m">3:21</td></tr>
+            <tr><td class="p"></td><td class="m">04</td><td>Afterglow</td><td class="m h">Neon Harbor</td><td class="m h">City Lights</td><td class="m">5:12</td></tr>
+            <tr><td class="p"></td><td class="m">05</td><td>Rain on Glass</td><td class="m h">Neon Harbor</td><td class="m h">City Lights</td><td class="m">4:37</td></tr>
+            <tr><td class="p"></td><td class="m">06</td><td>Last Train Home</td><td class="m h">Neon Harbor</td><td class="m h">City Lights</td><td class="m">3:59</td></tr>
+            <tr><td class="p"></td><td class="m">07</td><td>Static Hearts</td><td class="m h">Neon Harbor</td><td class="m h">City Lights</td><td class="m">4:14</td></tr>
+          </table>
+        </div>
+        <canvas id="heroViz" aria-hidden="true"></canvas>
+      </div>
+      <div class="keyhint">
+        <span><kbd>⌥⌘S</kbd><span class="zh">隨機 ⇄ 預設</span><span class="en">Shuffle on / off</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- features -->
+<section id="features">
+  <div class="wrap">
+    <span class="eyebrow"><span class="zh">完全免費 · 沒有廣告 · 不收集資料</span><span class="en">Free · no ads · no tracking</span></span>
+    <h2><span class="zh">你的音樂就放在資料夾裡，播放器也該這樣想</span><span class="en">Your music lives in folders. Your player should too.</span></h2>
+    <p class="sub"><span class="zh">不用匯入音樂庫、不用整理標籤。Foomac 直接讀你的資料夾結構，跟 foobar2000 一樣，打開就聽。</span><span class="en">No importing, no tag cleanup. Foomac reads your folders as they are — just like foobar2000 — and you’re listening in seconds.</span></p>
+    <div class="grid">
+      <div class="card"><div class="em">📂</div><h3><span class="zh">加入資料夾就好</span><span class="en">Just add a folder</span></h3><p><span class="zh">⌘O 或直接拖進視窗，遞迴掃描所有子資料夾：mp3、m4a、aac、flac、wav、aiff。</span><span class="en">⌘O or drag it in. Every subfolder is scanned for mp3, m4a, aac, flac, wav and aiff.</span></p></div>
+      <div class="card"><div class="em">🗜️</div><h3><span class="zh">zip 當資料夾播</span><span class="en">Zips are folders</span></h3><p><span class="zh">不用先解壓縮，播到哪首才解那首。支援 ZIP64 和 Windows 壓的 Big5 / GBK / Shift-JIS 檔名。</span><span class="en">No unzipping — each song is pulled out only when it plays. ZIP64 and Big5 / GBK / Shift-JIS names from Windows work.</span></p></div>
+      <div class="card"><div class="em">🌲</div><h3><span class="zh">資料夾樹狀圖</span><span class="en">Folder tree</span></h3><p><span class="zh">像 foobar2000 的 Album List，選任何一層就列出它底下所有歌，右鍵直接播放整個資料夾。</span><span class="en">Like foobar2000’s Album List: pick any level to list every song under it, or right-click to play the whole folder.</span></p></div>
+      <div class="card"><div class="em">📋</div><h3><span class="zh">表格式播放清單</span><span class="en">A real table</span></h3><p><span class="zh">標題、演出者、專輯、曲序、年份、類型、位元率，點欄位排序；搜尋可用空白分隔多個關鍵字。</span><span class="en">Title, artist, album, track, year, genre and bitrate. Click a column to sort; search with several keywords at once.</span></p></div>
+      <div class="card"><div class="em">🔀</div><h3><span class="zh">真正的隨機</span><span class="en">Shuffle done right</span></h3><p><span class="zh">整份清單播完一輪才重新洗牌，不會一直聽到同幾首。也有重複清單和重複單曲。</span><span class="en">Plays the whole list before reshuffling, so you won’t hear the same few songs. Repeat list and repeat one too.</span></p></div>
+      <div class="card"><div class="em">⚡</div><h3><span class="zh">重新掃描很快</span><span class="en">Fast rescans</span></h3><p><span class="zh">掃描結果會快取，沒變的檔案直接沿用，上萬首也只要一下子。</span><span class="en">Scan results are cached and unchanged files are skipped, so even huge libraries rescan in moments.</span></p></div>
+      <div class="card"><div class="em">⌨️</div><h3><span class="zh">媒體鍵與控制中心</span><span class="en">Media keys</span></h3><p><span class="zh">鍵盤的播放、上一首、下一首都能用，控制中心「正在播放」也看得到。</span><span class="en">Play, previous and next keys just work, and the song shows up in Control Center’s Now Playing.</span></p></div>
+      <div class="card"><div class="em">🌏</div><h3><span class="zh">4 種語言</span><span class="en">4 languages</span></h3><p><span class="zh">繁體中文、简体中文、English、日本語，或跟隨系統，切換立即生效。</span><span class="en">English, Traditional &amp; Simplified Chinese and Japanese — or follow the system. Switches instantly.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- tree row -->
+<section class="alt">
+  <div class="wrap">
+    <div class="feature-row">
+      <div class="tree" role="img" aria-label="Folder tree">
+        <div><span class="tw">▾</span>📁 Music<em>2,418</em></div>
+        <div class="l1"><span class="tw">▸</span>📁 Classical<em>612</em></div>
+        <div class="l1"><span class="tw">▾</span>📁 J-Pop<em>389</em></div>
+        <div class="l2"><span class="tw">▾</span><span class="zip">🗜 2003 ベスト.zip</span><em>18</em></div>
+        <div class="l3 on"><span class="tw"></span>📁 Disc 1<em>9</em></div>
+        <div class="l3"><span class="tw"></span>📁 Disc 2<em>9</em></div>
+        <div class="l2"><span class="tw">▸</span>📁 Live<em>44</em></div>
+        <div class="l1"><span class="tw">▸</span><span class="zip">🗜 華語金曲.zip</span><em>120</em></div>
+        <div class="l1"><span class="tw">▸</span>📁 Soundtracks<em>203</em></div>
+      </div>
+      <div>
+        <span class="eyebrow"><span class="zh">資料夾 + zip</span><span class="en">Folders + zips</span></span>
+        <h3><span class="zh">zip 裡的子資料夾，照樣展開</span><span class="en">Folders inside zips open up too</span></h3>
+        <p><span class="zh">側邊欄把 zip 顯示成一層資料夾，裡面的 Disc 1、Disc 2 也照樣展開。從網路下載的整包專輯，不用解壓縮就能直接聽。</span><span class="en">The sidebar shows a zip as just another folder, with its Disc 1 and Disc 2 inside. Albums you downloaded as one big zip play straight away.</span></p>
+        <ul>
+          <li><span class="zh">支援 stored / deflate、ZIP64</span><span class="en">Stored / deflate and ZIP64</span></li>
+          <li><span class="zh">Windows 壓的 Big5、GBK、Shift-JIS 檔名不會變亂碼</span><span class="en">Big5, GBK and Shift-JIS names from Windows come through intact</span></li>
+          <li><span class="zh">右鍵：播放此資料夾、在 Finder 顯示、拷貝路徑、重新掃描</span><span class="en">Right-click: play this folder, show in Finder, copy path, rescan</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- rgb -->
+<section id="rgb">
+  <div class="wrap">
+    <div class="feature-row">
+      <div>
+        <span class="eyebrow"><span class="zh">RGB 電競燈效 · 音樂視覺化</span><span class="en">RGB lights · visualizer</span></span>
+        <h3><span class="zh">34 種燈效，跟著音樂一起動</span><span class="en">34 effects that move with the music</span></h3>
+        <p><span class="zh">像電競鍵盤一樣的 RGB 燈效，可以亮在背景、視窗外框或播放清單底光。真的即時分析正在播的聲音，畫出頻譜長條、波形和環形。</span><span class="en">Gaming-keyboard RGB on the background, the window border or under the playlist. Foomac really analyzes what’s playing and draws spectrum bars, waveforms and rings.</span></p>
+        <ul>
+          <li><span class="zh">可調速度、亮度、顏色，或交給「自動輪播」</span><span class="en">Tune speed, brightness and colors — or let Showcase cycle them</span></li>
+          <li><span class="zh">「音樂律動」「鼓點爆發」直接跟著節拍閃</span><span class="en">“Music reactive” and “Beat burst” flash right on the beat</span></li>
+          <li><span class="zh">頻譜長條會有掉落的頂點，就像以前的音響</span><span class="en">Spectrum bars with falling peaks, like a stereo from the 90s</span></li>
+        </ul>
+        <div class="chips" id="fx"></div>
+      </div>
+      <div class="rgbdemo"><canvas id="rgbViz" aria-hidden="true"></canvas><span class="lab" id="fxLab"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- themes -->
+<section class="alt" id="themes">
+  <div class="wrap">
+    <span class="eyebrow"><span class="zh">漸層主題 · 視窗透明度</span><span class="en">Gradient themes · transparency</span></span>
+    <h2><span class="zh">挑一個配你音樂的顏色</span><span class="en">Colors that suit your music</span></h2>
+    <p class="sub"><span class="zh">跟隨系統、淺色、深色，或 7 種漸層主題。「自訂」可以自己挑漸層兩個顏色、方向和強調色；整個視窗還能調成 20%～100% 半透明。</span><span class="en">System, light, dark or seven gradient themes. Custom lets you pick both gradient colors, the direction and the accent — and the whole window can go 20–100% transparent.</span></p>
+    <div class="themes" id="themeGrid"></div>
+  </div>
+</section>
+
+<!-- keys -->
+<section id="keys">
+  <div class="wrap">
+    <span class="eyebrow"><span class="zh">快捷鍵</span><span class="en">Shortcuts</span></span>
+    <h2><span class="zh">手不用離開鍵盤</span><span class="en">Keep your hands on the keys</span></h2>
+    <div class="keys" style="margin-top:28px">
+      <div><span><kbd>Space</kbd> <kbd>⌘P</kbd></span><span><span class="zh">播放／暫停</span><span class="en">Play / pause</span></span></div>
+      <div><span><kbd>⌘.</kbd></span><span><span class="zh">停止</span><span class="en">Stop</span></span></div>
+      <div><span><kbd>⌥⌘←</kbd> <kbd>⌥⌘→</kbd></span><span><span class="zh">上一首／下一首</span><span class="en">Previous / next</span></span></div>
+      <div><span><kbd>⇧⌘←</kbd> <kbd>⇧⌘→</kbd></span><span><span class="zh">倒轉／快轉 5 秒</span><span class="en">Back / forward 5 s</span></span></div>
+      <div><span><kbd>⌥⌘↑</kbd> <kbd>⌥⌘↓</kbd></span><span><span class="zh">音量</span><span class="en">Volume</span></span></div>
+      <div><span><kbd>⌥⌘S</kbd></span><span><span class="zh">隨機播放 開／關</span><span class="en">Shuffle on / off</span></span></div>
+      <div><span><kbd>⌘O</kbd></span><span><span class="zh">加入資料夾</span><span class="en">Add a folder</span></span></div>
+      <div><span><kbd>⌘R</kbd></span><span><span class="zh">重新掃描全部資料夾</span><span class="en">Rescan all folders</span></span></div>
+      <div><span><kbd>Enter</kbd></span><span><span class="zh">播放選取的歌</span><span class="en">Play the selected song</span></span></div>
+      <div><span><kbd>⌘,</kbd></span><span><span class="zh">設定（語言、主題、燈效）</span><span class="en">Settings (language, theme, lights)</span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- setup -->
+<section class="alt" id="setup">
+  <div class="wrap">
+    <span class="eyebrow"><span class="zh">開始使用</span><span class="en">Getting started</span></span>
+    <h2><span class="zh">三步驟開始聽</span><span class="en">Three steps</span></h2>
+    <div class="steps" style="margin-top:28px">
+      <div class="card"><h3><span class="zh">下載 dmg</span><span class="en">Download the dmg</span></h3><p><span class="zh">打開後把 Foomac 拖進「應用程式」資料夾。</span><span class="en">Open it and drag Foomac into Applications.</span></p></div>
+      <div class="card"><h3><span class="zh">打開 Foomac</span><span class="en">Open Foomac</span></h3><p><span class="zh">已通過 Apple 公證，不會跳出「無法驗證開發者」。</span><span class="en">It’s notarized by Apple, so there’s no “unidentified developer” warning.</span></p></div>
+      <div class="card"><h3><span class="zh">加入音樂資料夾</span><span class="en">Add your music</span></h3><p><span class="zh">⌘O 選資料夾，或直接拖進視窗。之後每次打開都會記得。</span><span class="en">Press ⌘O or drag a folder in. Foomac remembers it from then on.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- faq -->
+<section id="faq">
+  <div class="wrap" style="max-width:820px">
+    <span class="eyebrow">FAQ</span>
+    <h2><span class="zh">常見問題</span><span class="en">Questions</span></h2>
+    <details><summary><span class="zh">真的免費嗎？</span><span class="en">Is it really free?</span></summary><p><span class="zh">是的，沒有試用期、沒有廣告，也不會收集任何資料。</span><span class="en">Yes — no trial, no ads, and no data collection.</span></p></details>
+    <details><summary><span class="zh">會動到我的音樂檔嗎？</span><span class="en">Does it change my files?</span></summary><p><span class="zh">不會。Foomac 只讀取，不會搬移、改名或改標籤；zip 也不會被解壓到你的資料夾，播放時只解一首到暫存檔。</span><span class="en">No. Foomac only reads — it never moves, renames or retags anything, and zips are never extracted into your folders; one song at a time goes to a temporary file.</span></p></details>
+    <details><summary><span class="zh">支援哪些格式？</span><span class="en">Which formats work?</span></summary><p><span class="zh">mp3、m4a、aac、flac、wav、aiff，以及裝著這些檔案的 zip。加密的 zip 目前不支援。</span><span class="en">mp3, m4a, aac, flac, wav and aiff — plus zips containing them. Encrypted zips aren’t supported yet.</span></p></details>
+    <details><summary><span class="zh">音樂庫存在哪裡？</span><span class="en">Where is the library stored?</span></summary><p><span class="zh">掃描快取在 ~/Library/Application Support/Foomac/library.json，刪掉它只會讓下次掃描慢一點。</span><span class="en">The scan cache lives in ~/Library/Application Support/Foomac/library.json. Deleting it only makes the next scan slower.</span></p></details>
+    <details><summary><span class="zh">支援哪些 Mac？</span><span class="en">Which Macs are supported?</span></summary><p><span class="zh">macOS 14 Sonoma 以上，Apple silicon 和 Intel 都可以。</span><span class="en">macOS 14 Sonoma or later, on Apple silicon and Intel.</span></p></details>
+    <details><summary><span class="zh">發現問題或有建議？</span><span class="en">Found a bug or have an idea?</span></summary><p><span class="zh">歡迎到 <a href="https://github.com/bittyferrari/foomac/issues">GitHub Issues</a> 告訴我。</span><span class="en">Please open an issue on <a href="https://github.com/bittyferrari/foomac/issues">GitHub</a>.</span></p></details>
+  </div>
+</section>
+
+<section class="final alt">
+  <div class="wrap">
+    <img src="img/icon-256.png" alt="" width="80" height="80" style="margin:0 auto 14px">
+    <h2><span class="zh">把資料夾變成播放清單</span><span class="en">Turn your folders into a playlist</span></h2>
+    <p class="sub" style="margin:0 auto 28px"><span class="zh">免費、原生、不到幾 MB。</span><span class="en">Free, native, and just a few MB.</span></p>
+    <a class="btn primary" href="https://github.com/bittyferrari/foomac/releases/latest/download/Foomac.dmg">⬇ <span class="zh">下載 Foomac</span><span class="en">Download Foomac</span> <span class="ver">v1.0.0</span></a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="links">
+      <a href="https://github.com/bittyferrari/foomac/releases"><span class="zh">版本紀錄</span><span class="en">Release notes</span></a>
+      <a href="https://github.com/bittyferrari/foomac/issues"><span class="zh">回報問題</span><span class="en">Report a problem</span></a>
+      <a href="../">bittyferrari.github.io</a>
+    </div>
+    <p>© 2026 Bitty Ferrari</p>
+    <p class="zh">Foomac 是獨立開發的第三方軟體，與 Apple Inc. 或 foobar2000 專案沒有任何關聯，也未經其贊助或認可。Mac 與 macOS 是 Apple Inc. 的商標。</p>
+    <p class="en">Foomac is an independent product and is not affiliated with, endorsed by, or sponsored by Apple Inc. or the foobar2000 project. Mac and macOS are trademarks of Apple Inc., registered in the U.S. and other countries.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  function pick(){
+    try{var q=new URLSearchParams(location.search).get('lang');if(q==='zh'||q==='en')return q;}catch(e){}
+    try{var s=localStorage.getItem('foomac-lang');if(s==='zh'||s==='en')return s;}catch(e){}
+    var n=(navigator.languages&&navigator.languages[0])||navigator.language||'en';
+    return /^zh/i.test(n)?'zh':'en';
+  }
+  function set(l){
+    root.setAttribute('data-l',l);
+    root.setAttribute('lang',l==='zh'?'zh-Hant':'en');
+    document.title=l==='zh'?'Foomac — Mac 上的 foobar2000 風格播放器':'Foomac — A foobar2000-style music player for Mac';
+    renderChips();
+  }
+
+  // 主題色票：取自 Sources/Settings.swift 的 ThemeGradient
+  var themes=[
+    ['海洋','Ocean','#0B3A66','#0A6A80','#3FD7FF','#fff'],
+    ['森林','Forest','#0E3B26','#2F5A1C','#5BEA8E','#fff'],
+    ['葡萄','Grape','#3B1366','#6E1A6B','#D38BFF','#fff'],
+    ['霓虹','Neon','#120A2A','#3A0B4F','#FF2BD6','#fff'],
+    ['夕陽','Sunset','#FFE0C2','#FFC6CF','#F0441A','#222'],
+    ['櫻花','Sakura','#FFE3EE','#EEDCFF','#E0336E','#222'],
+    ['檸檬','Lemon','#FFF6B8','#D8F5C4','#1F9D55','#222'],
+    ['RGB 電競','RGB','#0b0a0e','#1a1022','rainbow','#fff']
+  ];
+  var g=document.getElementById('themeGrid');
+  themes.forEach(function(t){
+    var d=document.createElement('div');d.className='theme';
+    var acc=t[4]==='rainbow'?'linear-gradient(90deg,#ff004c,#ff9a00,#d0ff00,#00ffa2,#00b3ff,#8a2bff)':t[4];
+    d.innerHTML='<div class="sw" style="background:linear-gradient(135deg,'+t[2]+','+t[3]+')"><i style="background:'+t[5]+'"></i><i style="background:'+t[5]+'"></i><b style="background:'+acc+'"></b></div><div class="nm"><span class="zh"></span><span class="en"></span></div>';
+    d.querySelector('.nm .zh').textContent=t[0];d.querySelector('.nm .en').textContent=t[1];
+    g.appendChild(d);
+  });
+
+  // RGB 展示：幾種代表性燈效
+  var fx=[['wave','彩虹波浪','Rainbow wave'],['spectrum','頻譜長條','Spectrum bars'],['breathing','呼吸燈','Breathing'],['aurora','極光','Aurora'],['fire','火焰','Fire'],['scope','波形','Waveform']];
+  var cur=1;
+  var chips=document.getElementById('fx'),lab=document.getElementById('fxLab');
+  function renderChips(){
+    if(!chips)return;
+    var zh=root.getAttribute('data-l')==='zh';
+    chips.innerHTML='';
+    fx.forEach(function(f,i){
+      var s=document.createElement('span');s.textContent=zh?f[1]:f[2];if(i===cur)s.className='on';
+      s.addEventListener('click',function(){cur=i;renderChips();});
+      chips.appendChild(s);
+    });
+    lab.textContent=(zh?fx[cur][1]:fx[cur][2]);
+  }
+  set(pick());
+  document.getElementById('langBtn').addEventListener('click',function(){
+    var l=root.getAttribute('data-l')==='zh'?'en':'zh';set(l);
+    try{localStorage.setItem('foomac-lang',l);}catch(e){}
+  });
+
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function fit(c){var r=c.getBoundingClientRect(),d=window.devicePixelRatio||1;c.width=Math.max(1,r.width*d);c.height=Math.max(1,r.height*d);return c.getContext('2d');}
+  var hero=document.getElementById('heroViz'),demo=document.getElementById('rgbViz');
+  var hx=fit(hero),dx=fit(demo);
+  window.addEventListener('resize',function(){hx=fit(hero);dx=fit(demo);});
+  var N=48,peaks=new Array(N).fill(0);
+  function level(i,t){ // 假的「音樂」：幾個正弦疊加 + 低頻鼓點
+    var x=i/N,beat=Math.pow(Math.max(0,Math.sin(t*4.2)),12);
+    var v=.35+.25*Math.sin(t*1.7+i*.35)+.18*Math.sin(t*3.1-i*.8)+.12*Math.sin(t*7+i*1.9);
+    return Math.max(.04,Math.min(1,v*(1.15-x*.6)+beat*(1-x)*.5));
+  }
+  function hue(i,t){return (i*360/N+t*60)%360;}
+  function bars(ctx,w,h,t,alpha){
+    var bw=w/N;
+    for(var i=0;i<N;i++){
+      var v=level(i,t),bh=v*h*.9;
+      peaks[i]=Math.max(peaks[i]-h*.008,bh);
+      ctx.fillStyle='hsla('+hue(i,t)+',95%,58%,'+alpha+')';
+      ctx.fillRect(i*bw+bw*.15,h-bh,bw*.7,bh);
+      ctx.fillRect(i*bw+bw*.15,h-peaks[i]-4,bw*.7,3);
+    }
+  }
+  function draw(ts){
+    var t=ts/1000;
+    // hero 背景頻譜
+    hx.clearRect(0,0,hero.width,hero.height);bars(hx,hero.width,hero.height,t,.9);
+    // demo
+    var w=demo.width,h=demo.height,k=fx[cur][0];
+    dx.globalCompositeOperation='source-over';dx.fillStyle='#0b0a0e';dx.fillRect(0,0,w,h);
+    if(k==='wave'){
+      var gr=dx.createLinearGradient(0,0,w,0);
+      for(var s=0;s<=6;s++)gr.addColorStop(s/6,'hsl('+((s*60+t*90)%360)+',95%,55%)');
+      dx.fillStyle=gr;dx.fillRect(0,0,w,h);
+    }else if(k==='spectrum'){bars(dx,w,h,t,1);}
+    else if(k==='breathing'){
+      var a=.15+.85*(.5+.5*Math.sin(t*2));
+      var rg=dx.createRadialGradient(w/2,h/2,0,w/2,h/2,w*.7);
+      rg.addColorStop(0,'hsla(20,100%,55%,'+a+')');rg.addColorStop(1,'rgba(0,0,0,0)');
+      dx.fillStyle=rg;dx.fillRect(0,0,w,h);
+    }else if(k==='aurora'){
+      for(var b=0;b<4;b++){
+        dx.beginPath();
+        for(var x=0;x<=w;x+=8){var y=h*(.3+b*.12)+Math.sin(x/w*6+t*(.6+b*.2)+b)*h*.12;x?dx.lineTo(x,y):dx.moveTo(x,y);}
+        dx.lineWidth=h*.14;dx.strokeStyle='hsla('+(140+b*40+Math.sin(t)*20)+',90%,55%,.35)';dx.stroke();
+      }
+    }else if(k==='fire'){
+      var cols=60,cw=w/cols;
+      for(var c=0;c<cols;c++){
+        var fh=h*(.35+.3*Math.sin(t*3+c*.7)*Math.sin(t*1.3+c*.31)+.15*Math.sin(t*9+c*2.1));
+        var fg=dx.createLinearGradient(0,h,0,h-fh);
+        fg.addColorStop(0,'#ffde59');fg.addColorStop(.4,'#ff7a1a');fg.addColorStop(1,'rgba(200,20,0,0)');
+        dx.fillStyle=fg;dx.fillRect(c*cw,h-fh,cw+1,fh);
+      }
+    }else{
+      dx.beginPath();
+      for(var x2=0;x2<=w;x2+=3){
+        var y2=h/2+Math.sin(x2/w*28+t*8)*h*.18*level(Math.floor(x2/w*N)%N,t)+Math.sin(x2/w*71-t*13)*h*.06;
+        x2?dx.lineTo(x2,y2):dx.moveTo(x2,y2);
+      }
+      var lg=dx.createLinearGradient(0,0,w,0);lg.addColorStop(0,'#ff4fa3');lg.addColorStop(.5,'#ff9e33');lg.addColorStop(1,'#00b3ff');
+      dx.strokeStyle=lg;dx.lineWidth=Math.max(2,h*.012);dx.shadowColor='#ff9e33';dx.shadowBlur=12;dx.stroke();dx.shadowBlur=0;
+    }
+    if(!reduce)requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
