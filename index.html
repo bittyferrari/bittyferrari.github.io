@@ -373,6 +373,7 @@ const ico = {
   server:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg>',
   client:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 10v6M9 13l3 3 3-3"/></svg>',
   gps:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><path d="M12 8l2.5 6L12 12.8 9.5 14z" fill="currentColor"/></svg>',
+  cut:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"/></svg>',
   slides:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 14l5-4 4 3 3-2 6 4"/><circle cx="16" cy="8.5" r="1.3"/></svg>',
   ja:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>',
 };
@@ -398,6 +399,9 @@ const apps = [
  {n:'GPS HUD',i:'gps',c:'#ff9f1c',p:'Android',t:'media',pkg:'com.bitty.gpshud',u:'android-gps-hud-editor/privacy-policy.html',
   s:{zh:'GPS 儀表疊加編輯器',en:'GPS overlay video editor',ja:'GPS オーバーレイ編集',ko:'GPS 오버레이 편집기'},
   d:{zh:'把 GPX 軌跡的速度、路線疊到行車／運動影片上，全部在裝置本機輸出。',en:'Overlay speed and route from GPX tracks onto your ride videos — rendered entirely on-device.',ja:'GPX の速度やルートを走行動画に重ねて書き出し。処理はすべて端末内で完結。',ko:'GPX 트랙의 속도와 경로를 주행 영상에 합성. 모든 처리는 기기 안에서.'}},
+ {n:'PlayCut',i:'cut',c:'#2f7df6',p:'Android',t:'media',pkg:'com.bittyferrari.playcut',u:'android-play-cut/privacy-policy.html',
+  s:{zh:'影片播放與剪輯',en:'Video player & cutter',ja:'動画プレーヤー＆カット',ko:'동영상 플레이어 & 컷 편집'},
+  d:{zh:'插旗標逐格精準剪片段，智慧剪輯、裁成 1:1、9:16 匯出，全部在裝置本機完成。',en:'Flag frame-accurate cut points, then smart-cut or crop to 1:1 and 9:16 — all processed on-device.',ja:'フラグでフレーム単位に正確カット。スマートカットや 1:1・9:16 への切り抜きも端末内で完結。',ko:'플래그로 프레임 단위 정확한 컷 편집. 스마트 컷, 1:1·9:16 자르기까지 모두 기기 안에서.'}},
  {n:'SlideShow',i:'slides',c:'#ff5ca8',p:'Android',t:'media',pkg:'com.bittyferrari.slideshow',u:'android-slideshow/privacy-policy.html',
   s:{zh:'幻燈片播放',en:'Photo slideshow',ja:'スライドショー',ko:'슬라이드쇼'},
   d:{zh:'選個資料夾就開始播放，簡單乾淨的相片幻燈片。',en:'Pick a folder and press play. A clean, simple photo slideshow.',ja:'フォルダを選ぶだけで再生開始。シンプルな写真スライドショー。',ko:'폴더를 고르면 바로 재생. 깔끔하고 단순한 사진 슬라이드쇼.'}},
