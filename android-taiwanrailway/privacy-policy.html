@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRA Timetable 隱私權政策 / Privacy Policy</title>
+<style>
+  :root { --bg:#fafaf7; --fg:#1d1d1b; --muted:#66655f; --line:#e2e0d8; --accent:#1f5fa8; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#141413; --fg:#ecebe6; --muted:#a3a29b; --line:#2e2d2a; --accent:#7fb0ea; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font:16px/1.75 system-ui,-apple-system,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; }
+  main { max-width:720px; margin:0 auto; padding:40px 20px 64px; }
+  header { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; }
+  h1 { font-size:1.7rem; line-height:1.3; margin:0 0 4px; }
+  h2 { font-size:1.15rem; margin:2em 0 .4em; padding-top:1em; border-top:1px solid var(--line); }
+  .meta { color:var(--muted); font-size:.9rem; margin:0; }
+  .lang { display:flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .lang button { background:none; border:0; color:var(--muted); padding:6px 12px; font:inherit; font-size:.9rem; cursor:pointer; }
+  .lang button[aria-pressed="true"] { background:var(--accent); color:#fff; }
+  .note { border-left:3px solid var(--accent); padding:8px 14px; margin:24px 0; background:color-mix(in srgb,var(--accent) 7%,transparent); }
+  table { width:100%; border-collapse:collapse; font-size:.95rem; margin:.6em 0; }
+  th, td { text-align:left; vertical-align:top; padding:8px 10px; border-bottom:1px solid var(--line); }
+  th { color:var(--muted); font-weight:600; }
+  a { color:var(--accent); }
+  ul { padding-left:1.3em; }
+  [lang="en"] { display:none; }
+  body.en [lang="zh-Hant"] { display:none; }
+  body.en [lang="en"] { display:revert; }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <div>
+    <h1><span lang="zh-Hant">TRA Timetable 隱私權政策</span><span lang="en">TRA Timetable Privacy Policy</span></h1>
+    <p class="meta"><span lang="zh-Hant">生效日期：2026 年 11 月 15 日</span><span lang="en">Effective date: November 15, 2026</span></p>
+  </div>
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" data-lang="zh" aria-pressed="true">中文</button>
+    <button type="button" data-lang="en" aria-pressed="false">English</button>
+  </div>
+</header>
+
+<!-- ===================== 繁體中文 ===================== -->
+<div lang="zh-Hant">
+  <div class="note">
+    簡單說：本 App <strong>不收集、不上傳、不分享</strong>任何個人資料，沒有帳號、廣告或分析追蹤。你的設定只存在你自己的手機裡。
+  </div>
+
+  <p>本隱私權政策說明「TRA Timetable」（以下稱「本 App」，套件名稱 <code>com.bittyferrari.taiwanrailway</code>）如何處理你的資料。本 App 由個人開發者獨立製作，<strong>並非</strong>國營臺灣鐵路股份有限公司（台鐵）或任何政府機關的官方 App。</p>
+
+  <h2>1. 我們收集的資料</h2>
+  <p>開發者<strong>不會</strong>收集任何個人資料。本 App：</p>
+  <ul>
+    <li>不需要註冊或登入帳號；</li>
+    <li>不要求定位、相機、聯絡人、儲存空間等權限，只使用「網路存取」權限來下載時刻表；</li>
+    <li>沒有內建廣告、分析（analytics）、當機回報或任何第三方追蹤 SDK；</li>
+    <li>開發者沒有自己的伺服器，不會收到你的使用紀錄。</li>
+  </ul>
+
+  <h2>2. 儲存在你裝置上的資料</h2>
+  <p>為了讓 App 正常運作，以下資料只會保存在你的手機上：</p>
+  <table>
+    <tr><th>資料</th><th>用途</th></tr>
+    <tr><td>App 設定（主題、顏色、語言、轉乘設定）</td><td>記住你的偏好</td></tr>
+    <tr><td>上次查詢的起訖站、最近使用的車站</td><td>方便下次快速查詢</td></tr>
+    <tr><td>你自行填入的 TDX Client ID / Client Secret（選填）</td><td>用你自己的金鑰連線 TDX</td></tr>
+    <tr><td>車站清單與時刻表快取</td><td>減少重複下載、加快速度</td></tr>
+  </table>
+  <p>移除 App 或在系統設定中「清除儲存空間」即可刪除上述所有資料。</p>
+  <p>若你的 Android 裝置開啟了 Google 的系統備份功能，上述設定可能會依照 Android 的機制備份到你自己的 Google 帳號；這由 Google 與你的裝置設定管理，開發者無法存取。</p>
+
+  <h2>3. 第三方服務：TDX 運輸資料流通服務</h2>
+  <p>本 App 的時刻表與車站資料來自交通部的 <a href="https://tdx.transportdata.tw/" rel="noopener">TDX 運輸資料流通服務平臺</a>。查詢時，你的裝置會直接連線到 TDX，傳送的內容僅限：</p>
+  <ul>
+    <li>查詢條件（例如車站代碼、日期、車次號碼）；</li>
+    <li>API 金鑰（App 內建的共用金鑰，或你自行填入的金鑰），用於取得存取權杖。</li>
+  </ul>
+  <p>如同一般網路連線，TDX 伺服器可能會記錄你的 IP 位址等連線資訊。TDX 如何處理這些資料，請參閱其平臺的隱私權與使用條款。本 App 不會傳送任何可識別你身分的資料給 TDX。</p>
+
+  <h2>4. 資料分享</h2>
+  <p>開發者不會出售、出租或與任何人分享你的資料，因為我們本來就沒有收集。</p>
+
+  <h2>5. 兒童隱私</h2>
+  <p>本 App 不針對兒童設計，也不會蓄意收集任何人（包括 13 歲以下兒童）的個人資料。</p>
+
+  <h2>6. 資料安全</h2>
+  <p>本 App 與 TDX 之間的連線一律使用 HTTPS 加密。儲存在裝置上的設定僅限本 App 存取。</p>
+
+  <h2>7. 政策變更</h2>
+  <p>若本政策有所修改，會更新此頁面並修改上方的生效日期。重大變更（例如開始收集資料）會在 App 更新說明中告知。</p>
+
+  <h2>8. 聯絡方式</h2>
+  <p>對本隱私權政策有任何問題，歡迎來信：<a href="mailto:YOUR_EMAIL@example.com">YOUR_EMAIL@example.com</a></p>
+
+  <h2>資料來源與聲明</h2>
+  <p>資料來源：交通部 TDX 運輸資料流通服務平臺。本 App 為非官方應用程式，與國營臺灣鐵路股份有限公司無關；實際班次、誤點與票價請以<a href="https://www.railway.gov.tw/" rel="noopener">台鐵官方網站</a>公告為準。</p>
+</div>
+
+<!-- ===================== English ===================== -->
+<div lang="en">
+  <div class="note">
+    In short: this app <strong>does not collect, upload, or share</strong> any personal data. There are no accounts, ads, or analytics. Your settings stay on your own phone.
+  </div>
+
+  <p>This Privacy Policy explains how "TRA Timetable" (the "App", package name <code>com.bittyferrari.taiwanrailway</code>) handles your data. The App is built by an independent developer and is <strong>not</strong> an official app of Taiwan Railway Corporation (TRA) or any government agency.</p>
+
+  <h2>1. Data we collect</h2>
+  <p>The developer does <strong>not</strong> collect any personal data. The App:</p>
+  <ul>
+    <li>requires no sign-up or account;</li>
+    <li>requests no location, camera, contacts, or storage permissions — only network access, to download timetables;</li>
+    <li>contains no advertising, analytics, crash-reporting, or other third-party tracking SDKs;</li>
+    <li>has no developer-operated server, so the developer never receives your usage data.</li>
+  </ul>
+
+  <h2>2. Data stored on your device</h2>
+  <p>To work properly, the App keeps the following data on your device only:</p>
+  <table>
+    <tr><th>Data</th><th>Purpose</th></tr>
+    <tr><td>App settings (theme, colors, language, transfer options)</td><td>Remember your preferences</td></tr>
+    <tr><td>Last searched stations and recently used stations</td><td>Faster repeat searches</td></tr>
+    <tr><td>Your own TDX Client ID / Client Secret, if you enter one (optional)</td><td>Connect to TDX with your own key</td></tr>
+    <tr><td>Cached station list and timetables</td><td>Fewer downloads, faster loading</td></tr>
+  </table>
+  <p>Uninstalling the App, or clearing its storage in system settings, deletes all of this data.</p>
+  <p>If Google system backup is turned on for your Android device, these settings may be backed up to your own Google account under Android's standard backup mechanism. That is managed by Google and your device settings; the developer has no access to it.</p>
+
+  <h2>3. Third-party service: TDX</h2>
+  <p>Timetable and station data come from the Ministry of Transportation and Communications' <a href="https://tdx.transportdata.tw/" rel="noopener">Transport Data eXchange (TDX)</a>. When you search, your device connects directly to TDX and sends only:</p>
+  <ul>
+    <li>the query itself (e.g. station codes, date, train number);</li>
+    <li>an API key (the App's built-in shared key, or your own), used to obtain an access token.</li>
+  </ul>
+  <p>As with any internet connection, TDX servers may log connection details such as your IP address. Please refer to TDX's own privacy policy and terms for how it handles that data. The App sends no information that identifies you to TDX.</p>
+
+  <h2>4. Data sharing</h2>
+  <p>The developer does not sell, rent, or share your data with anyone — there is none to share.</p>
+
+  <h2>5. Children's privacy</h2>
+  <p>The App is not directed at children and does not knowingly collect personal data from anyone, including children under 13.</p>
+
+  <h2>6. Security</h2>
+  <p>All connections between the App and TDX use HTTPS. Settings stored on the device are accessible only to the App.</p>
+
+  <h2>7. Changes to this policy</h2>
+  <p>If this policy changes, this page will be updated along with the effective date above. Material changes (such as starting to collect data) will be announced in the App's release notes.</p>
+
+  <h2>8. Contact</h2>
+  <p>Questions about this policy? Email: <a href="mailto:YOUR_EMAIL@example.com">YOUR_EMAIL@example.com</a></p>
+
+  <h2>Data source &amp; disclaimer</h2>
+  <p>Data source: Transport Data eXchange (TDX), Ministry of Transportation and Communications, Taiwan. This is an unofficial app, not affiliated with Taiwan Railway Corporation. For actual schedules, delays, and fares, please refer to the <a href="https://www.railway.gov.tw/" rel="noopener">official TRA website</a>.</p>
+</div>
+
+</main>
+<script>
+  (function () {
+    var buttons = document.querySelectorAll('.lang button');
+    function set(lang) {
+      document.body.classList.toggle('en', lang === 'en');
+      document.documentElement.lang = lang === 'en' ? 'en' : 'zh-Hant';
+      buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
+    }
+    buttons.forEach(function (b) { b.addEventListener('click', function () { set(b.dataset.lang); }); });
+    var q = new URLSearchParams(location.search).get('lang');
+    if (q === 'en' || (!q && !/^zh/i.test(navigator.language || ''))) set('en');
+  })();
+</script>
+</body>
+</html>
