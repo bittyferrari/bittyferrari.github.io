@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bitty Ferrari — Apps</title>
-<meta name="description" content="Bitty Ferrari — indie macOS / Android / iOS apps: Mochabar (a Windows-style taskbar for Mac), Bluetooth keyboard & mouse, FTP, GPS HUD, slideshows. Privacy-first, zero data collection.">
+<meta name="description" content="Bitty Ferrari — indie macOS / Windows / Android / iOS apps: Mochabar (a Windows-style taskbar for Mac), FileDeck, GitDeck, Foomac / Foowin music players, Hayabubusa image viewer, Bluetooth keyboard & mouse, FTP / HTTP servers, GPS tools, TRA Timetable, YoWeather, Video Masker. Privacy-first, zero data collection.">
 <meta name="theme-color" content="#07070c">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -261,8 +261,8 @@ body.party .gridbg{opacity:1;background-size:32px 32px;animation:gridmove .6s li
       <h1><span id="h1a">Bitty</span><span class="grad" id="h1b">Ferrari.</span></h1>
       <p class="sub"><span data-i="sub_a"></span><span class="typed" id="typed"></span><br><span data-i="sub_b" data-html></span></p>
       <div class="stats">
-        <div class="stat"><div class="n" data-count="10">0</div><div class="l" data-i="st_apps"></div></div>
-        <div class="stat"><div class="n" data-count="3">0</div><div class="l" data-i="st_plat"></div></div>
+        <div class="stat"><div class="n" id="napps" data-count="0">0</div><div class="l" data-i="st_apps"></div></div>
+        <div class="stat"><div class="n" data-count="4">0</div><div class="l" data-i="st_plat"></div></div>
         <div class="stat"><div class="n" data-count="0" data-suffix=" bytes">0</div><div class="l" data-i="st_data"></div></div>
       </div>
       <a class="scroll" href="#apps" data-i="scroll"></a>
@@ -278,12 +278,15 @@ body.party .gridbg{opacity:1;background-size:32px 32px;animation:gridmove .6s li
     <div class="head reveal">
       <h2><span class="kick" data-i="work_k" data-s></span><span data-i="work_t" data-s></span></h2>
       <div class="filters" id="filters">
-        <button class="on" data-f="all"><span data-i="f_all"></span><sup>10</sup></button>
-        <button data-f="bluetooth"><span data-i="f_bt"></span><sup>3</sup></button>
-        <button data-f="files"><span data-i="f_files"></span><sup>2</sup></button>
-        <button data-f="media"><span data-i="f_media"></span><sup>4</sup></button>
-        <button data-f="mac">macOS<sup>1</sup></button>
-        <button data-f="ios">iOS<sup>1</sup></button>
+        <button class="on" data-f="all"><span data-i="f_all"></span><sup></sup></button>
+        <button data-f="bluetooth"><span data-i="f_bt"></span><sup></sup></button>
+        <button data-f="files"><span data-i="f_files"></span><sup></sup></button>
+        <button data-f="media"><span data-i="f_media"></span><sup></sup></button>
+        <button data-f="tools"><span data-i="f_tools"></span><sup></sup></button>
+        <button data-f="mac">macOS<sup></sup></button>
+        <button data-f="win">Windows<sup></sup></button>
+        <button data-f="android">Android<sup></sup></button>
+        <button data-f="ios">iOS<sup></sup></button>
       </div>
     </div>
     <div class="grid" id="grid"></div>
@@ -322,10 +325,10 @@ body.party .gridbg{opacity:1;background-size:32px 32px;animation:gridmove .6s li
 const L = {
  zh:{label:'繁體中文',code:'中',html:'zh-Hant',
   nav_apps:'作品',nav_privacy:'隱私',nav_term:'終端機',tag:'// 獨立 App 開發者 · 台灣',
-  sub_a:'我做小而好用的 App —— ',sub_b:'<b>本機運作、不收集資料</b>，讓你的手機和 Mac 更好用。',
-  words:['Mac 工作列','藍牙鍵盤','藍牙滑鼠','FTP 伺服器','GPS HUD','日文幻燈片'],
+  sub_a:'我做小而好用的 App —— ',sub_b:'<b>本機運作、不收集資料</b>，讓你的手機、Mac 和 PC 更好用。',
+  words:['Mac 工作列','Mac 檔案總管','Git 客戶端','音樂播放器','看圖程式','藍牙鍵盤','台鐵時刻表','影片遮蔽'],
   st_apps:'款 App 已上架',st_plat:'個平台',st_data:'個人資料收集量',scroll:'往下捲動探索',drag:'拖曳旋轉 ↻',
-  work_k:'01 — 作品',work_t:'我的作品',f_all:'全部',f_bt:'藍牙',f_files:'檔案',f_media:'影像',pp:'隱私權政策',more:'看介紹',
+  work_k:'01 — 作品',work_t:'我的作品',f_all:'全部',f_bt:'藍牙',f_files:'檔案',f_media:'影音',f_tools:'工具',pp:'隱私權政策',more:'看介紹',
   priv_k:'02 — 隱私',priv_h:'隱私優先。<br><span>資料只留在你的裝置。</span>',
   priv_p:'每個 App 都在你的裝置上本機運作：沒有帳號、沒有追蹤、沒有我自己的伺服器。每個 App 都有公開的隱私權政策，歡迎檢閱。',
   c1:'不需註冊帳號',c2:'無分析追蹤工具',c3:'檔案只留在本機',c4:'公開隱私權政策',
@@ -333,10 +336,10 @@ const L = {
   whoami:'Bitty Ferrari — 台灣的獨立 App 開發者，專做隱私優先的小工具。',toast:'隱藏模式解鎖！'},
  en:{label:'English',code:'EN',html:'en',
   nav_apps:'Apps',nav_privacy:'Privacy',nav_term:'Terminal',tag:'// indie app developer · Taiwan',
-  sub_a:'I build small, useful apps — ',sub_b:'<b>Local-first, zero data collection</b> — tools that make your phone and Mac do more.',
-  words:['Mac taskbars','Bluetooth keyboards','Bluetooth mice','FTP servers','GPS HUDs','Japanese slideshows'],
+  sub_a:'I build small, useful apps — ',sub_b:'<b>Local-first, zero data collection</b> — tools that make your phone, Mac and PC do more.',
+  words:['Mac taskbars','file managers','Git clients','music players','image viewers','Bluetooth keyboards','train timetables','video maskers'],
   st_apps:'apps shipped',st_plat:'platforms',st_data:'personal data collected',scroll:'scroll to explore',drag:'drag to spin ↻',
-  work_k:'01 — WORK',work_t:'Selected apps',f_all:'All',f_bt:'Bluetooth',f_files:'Files',f_media:'Media',pp:'Privacy policy',more:'Learn more',
+  work_k:'01 — WORK',work_t:'Selected apps',f_all:'All',f_bt:'Bluetooth',f_files:'Files',f_media:'Media',f_tools:'Tools',pp:'Privacy policy',more:'Learn more',
   priv_k:'02 — PRIVACY',priv_h:'Privacy first.<br><span>Your data stays on your device.</span>',
   priv_p:'Every app runs locally on your device. No accounts, no tracking, no servers of mine. Each one has a public privacy policy — take a look.',
   c1:'No sign-up',c2:'No analytics or trackers',c3:'Files stay on-device',c4:'Public privacy policies',
@@ -344,10 +347,10 @@ const L = {
   whoami:'Bitty Ferrari — indie app developer from Taiwan, building small privacy-first tools.',toast:'Cheat mode unlocked!'},
  ja:{label:'日本語',code:'日',html:'ja',
   nav_apps:'アプリ',nav_privacy:'プライバシー',nav_term:'ターミナル',tag:'// インディーアプリ開発者 · 台湾',
-  sub_a:'小さくて便利なアプリを作っています —— ',sub_b:'<b>端末内で完結、データ収集ゼロ</b>。スマホと Mac をもっと便利に。',
-  words:['Mac のタスクバー','Bluetooth キーボード','Bluetooth マウス','FTP サーバー','GPS HUD','日本語スライドショー'],
+  sub_a:'小さくて便利なアプリを作っています —— ',sub_b:'<b>端末内で完結、データ収集ゼロ</b>。スマホ・Mac・PC をもっと便利に。',
+  words:['Mac のタスクバー','ファイルマネージャー','Git クライアント','音楽プレーヤー','画像ビューア','Bluetooth キーボード','台鉄時刻表','動画モザイク'],
   st_apps:'リリース済みアプリ',st_plat:'プラットフォーム',st_data:'収集する個人データ',scroll:'スクロールして見る',drag:'ドラッグで回転 ↻',
-  work_k:'01 — 作品',work_t:'アプリ一覧',f_all:'すべて',f_bt:'Bluetooth',f_files:'ファイル',f_media:'メディア',pp:'プライバシーポリシー',more:'詳しく見る',
+  work_k:'01 — 作品',work_t:'アプリ一覧',f_all:'すべて',f_bt:'Bluetooth',f_files:'ファイル',f_media:'メディア',f_tools:'ツール',pp:'プライバシーポリシー',more:'詳しく見る',
   priv_k:'02 — プライバシー',priv_h:'プライバシー最優先。<br><span>データはあなたの端末の中だけに。</span>',
   priv_p:'すべてのアプリは端末内で動作します。アカウント不要、トラッキングなし、開発者のサーバーもありません。各アプリのプライバシーポリシーを公開しています。',
   c1:'アカウント登録不要',c2:'解析・トラッキングなし',c3:'ファイルは端末内のみ',c4:'ポリシーを公開',
@@ -355,10 +358,10 @@ const L = {
   whoami:'Bitty Ferrari — 台湾のインディーアプリ開発者。プライバシー重視の小さなツールを作っています。',toast:'隠しモード解放！'},
  ko:{label:'한국어',code:'한',html:'ko',
   nav_apps:'앱',nav_privacy:'개인정보',nav_term:'터미널',tag:'// 인디 앱 개발자 · 대만',
-  sub_a:'작고 유용한 앱을 만듭니다 — ',sub_b:'<b>기기 안에서만 동작, 데이터 수집 제로</b>. 휴대폰과 Mac을 더 쓸모 있게.',
-  words:['Mac 작업 표시줄','블루투스 키보드','블루투스 마우스','FTP 서버','GPS HUD','일본어 슬라이드쇼'],
+  sub_a:'작고 유용한 앱을 만듭니다 — ',sub_b:'<b>기기 안에서만 동작, 데이터 수집 제로</b>. 휴대폰, Mac, PC를 더 쓸모 있게.',
+  words:['Mac 작업 표시줄','파일 관리자','Git 클라이언트','음악 플레이어','이미지 뷰어','블루투스 키보드','대만 철도 시간표','동영상 모자이크'],
   st_apps:'출시한 앱',st_plat:'플랫폼',st_data:'수집하는 개인정보',scroll:'스크롤해서 둘러보기',drag:'드래그해서 회전 ↻',
-  work_k:'01 — 작업',work_t:'내 앱',f_all:'전체',f_bt:'블루투스',f_files:'파일',f_media:'미디어',pp:'개인정보처리방침',more:'자세히 보기',
+  work_k:'01 — 작업',work_t:'내 앱',f_all:'전체',f_bt:'블루투스',f_files:'파일',f_media:'미디어',f_tools:'도구',pp:'개인정보처리방침',more:'자세히 보기',
   priv_k:'02 — 개인정보',priv_h:'프라이버시 우선.<br><span>데이터는 당신의 기기에만.</span>',
   priv_p:'모든 앱은 기기에서 로컬로 동작합니다. 계정도, 추적도, 개발자 서버도 없습니다. 각 앱의 개인정보처리방침을 공개하고 있습니다.',
   c1:'회원가입 불필요',c2:'분석·추적 도구 없음',c3:'파일은 기기에만 저장',c4:'공개된 개인정보처리방침',
@@ -376,38 +379,92 @@ const ico = {
   cut:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"/></svg>',
   slides:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 14l5-4 4 3 3-2 6 4"/><circle cx="16" cy="8.5" r="1.3"/></svg>',
   ja:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>',
+  music:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>',
+  route:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6"/><path d="M18 2.5a3 3 0 0 1 3 3c0 2.2-3 5-3 5s-3-2.8-3-5a3 3 0 0 1 3-3z"/></svg>',
+  thermo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V4.5a2 2 0 0 0-4 0v10.26a4 4 0 1 0 4 0z"/><path d="M12 9v7"/></svg>',
+  web:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>',
+  train:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M9 14h.01M15 14h.01M8 21l2-4M16 21l-2-4"/></svg>',
+  mask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="15" height="14" rx="2"/><path d="M17 10l5-3v10l-5-3"/><path d="M5 9h3v3H5zM8 12h3v3H8z" fill="currentColor" stroke="none"/></svg>',
+  weather:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v1.5M5.6 5.6l1 1M3 12h1.5M17.4 6.6l1-1"/><path d="M8.5 11a3.5 3.5 0 0 1 6.8-1.2"/><path d="M7 20h10a3.5 3.5 0 0 0 .4-7 5 5 0 0 0-9.6 1.2A3 3 0 0 0 7 20z"/></svg>',
+  game:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12a4 4 0 0 1 4 4v1a3.5 3.5 0 0 1-6.3 2.1L15 14H9l-.7 1.1A3.5 3.5 0 0 1 2 13v-1a4 4 0 0 1 4-4z"/><path d="M7 11v2M6 12h2M16 11h.01M18 13h.01"/></svg>',
 };
 const apps = [
- {n:'Mochabar',img:'mochabar/img/icon-256.png',shot:'mochabar/img/car-night.webp',feat:1,c:'#c08552',p:'macOS',t:'mac',pkg:'macOS 13+ · Free · Pro US$10',u:'mochabar/',link:'more',
+ {n:'Mochabar',img:'mochabar/img/icon-256.png',shot:'mochabar/img/car-night.webp',feat:1,c:'#c08552',p:'macOS',t:'tools mac',pkg:'macOS 13+ · Free · Pro US$10',u:'mochabar/',link:'more',
   s:{zh:'給 Mac 一條真正的工作列',en:'A real taskbar for your Mac',ja:'Mac に本物のタスクバーを',ko:'Mac에 진짜 작업 표시줄을'},
   d:{zh:'Windows 風格工作列：每個視窗一顆按鈕、單按 ⌘ 開始選單、完整系統匣與月曆。還有 RGB 燈效、10 種動畫場景和 19 款系統匣小遊戲。',en:'A Windows-style taskbar: one button per window, tap ⌘ for Start, a full system tray and calendar. Plus RGB lighting, 10 animated scenes and 19 mini games in the tray.',ja:'Windows 風タスクバー。ウィンドウごとのボタン、⌘ 単押しでスタート、システムトレイとカレンダー。RGB ライティング、10 種のアニメーション、19 本のミニゲームも。',ko:'Windows 스타일 작업 표시줄. 창마다 버튼, ⌘ 한 번으로 시작 메뉴, 시스템 트레이와 달력. RGB 조명, 10가지 애니메이션 장면, 19개 미니 게임까지.'}},
- {n:'Bluetooth Keyboard & Mouse',i:'combo',c:'#7c5cff',p:'Android',t:'bluetooth',pkg:'com.bittyferrari.bluetooth_combo',u:'android-bluetooth-combo/privacy-policy.html',
+ {n:'FileDeck',img:'filedeck/img/icon-256.png',c:'#3d8bff',p:'macOS',t:'files mac',pkg:'macOS 13+ · Free · v1.0.2',u:'filedeck/',link:'more',
+  s:{zh:'Mac 上的檔案總管',en:'Windows Explorer feel, on your Mac',ja:'Mac のエクスプローラー',ko:'Mac용 파일 탐색기'},
+  d:{zh:'Windows 檔案總管手感的檔案管理員：Enter 開啟、Backspace 上一頁、F2 改名、⌘X 剪下貼上、內容視窗，還有 22 套主題。',en:'A file manager with Windows Explorer muscle memory: Enter to open, Backspace to go up, F2 to rename, ⌘X cut & paste, a Properties window and 22 themes.',ja:'Windows エクスプローラーの操作感。Enter で開く、Backspace で戻る、F2 で名前変更、⌘X で切り取り＆貼り付け、プロパティ画面、22 種のテーマ。',ko:'Windows 탐색기 손맛 그대로. Enter로 열기, Backspace로 뒤로, F2 이름 바꾸기, ⌘X 잘라내기·붙여넣기, 속성 창, 22가지 테마.'}},
+ {n:'GitDeck',img:'gitdeck/img/icon-256.png',c:'#f05033',p:'macOS',t:'tools mac',pkg:'macOS 13+ · Free · v1.0.0',u:'gitdeck/',link:'more',
+  s:{zh:'一個視窗搞定所有 repo',en:'Every repo in one window',ja:'すべての repo をひとつのウィンドウで',ko:'모든 repo를 한 창에서'},
+  d:{zh:'SourceTree 版面的 Git 客戶端：Bookmarks 側邊欄、每個 repo 一個分頁、commit graph、逐 hunk stage、interactive rebase、22 套主題。',en:'A SourceTree-style Git client: a Bookmarks sidebar, one tab per repo, commit graph, per-hunk staging, interactive rebase and 22 themes.',ja:'SourceTree 風の Git クライアント。Bookmarks サイドバー、repo ごとのタブ、コミットグラフ、hunk 単位の stage、interactive rebase、22 種のテーマ。',ko:'SourceTree 스타일 Git 클라이언트. Bookmarks 사이드바, repo별 탭, 커밋 그래프, hunk 단위 stage, interactive rebase, 22가지 테마.'}},
+ {n:'Foomac',img:'foomac/img/icon-256.png',c:'#22d39a',p:'macOS',t:'media mac',pkg:'macOS 14+ · Free · v1.0.1',u:'foomac/',link:'more',
+  s:{zh:'foobar2000 風格音樂播放器',en:'A foobar2000-style music player',ja:'foobar2000 風ミュージックプレーヤー',ko:'foobar2000 스타일 음악 플레이어'},
+  d:{zh:'選資料夾遞迴掃描、zip 直接播、資料夾樹狀圖、表格式播放清單，再加上 RGB 電競燈效與即時頻譜。',en:'Recursive folder scanning, play straight from zip files, a folder tree, table-style playlists — plus RGB gaming lights and a live spectrum.',ja:'フォルダを再帰スキャン、zip をそのまま再生、フォルダツリー、表形式のプレイリスト。RGB ライティングとリアルタイムスペクトラムも。',ko:'폴더 재귀 스캔, zip 바로 재생, 폴더 트리, 표 형식 재생목록. RGB 게이밍 조명과 실시간 스펙트럼까지.'}},
+ {n:'Foowin',img:'foowin/img/icon-256.png',c:'#00b7ff',p:'Windows',t:'media win',pkg:'Windows 10 / 11 · Free · v1.0.4',u:'foowin/',link:'more',
+  s:{zh:'Foomac 的 Windows 版',en:'The Windows edition of Foomac',ja:'Foomac の Windows 版',ko:'Foomac의 Windows 버전'},
+  d:{zh:'同樣的 foobar2000 風格：資料夾掃描、zip 直接播、樹狀圖與表格式播放清單。用系統內建 WebView2，安裝檔只有 2 MB 左右。',en:'The same foobar2000-style player: folder scanning, zip playback, folder tree and table playlists. Built on the system WebView2, so the installer is only about 2 MB.',ja:'同じ foobar2000 スタイル。フォルダスキャン、zip 再生、ツリーと表形式プレイリスト。システムの WebView2 を使うのでインストーラーは約 2 MB。',ko:'같은 foobar2000 스타일. 폴더 스캔, zip 재생, 트리와 표 형식 재생목록. 시스템 WebView2를 사용해 설치 파일은 약 2 MB.'}},
+ {n:'Hayabubusa',img:'hayabubusa/img/icon-256.png',c:'#ffb020',p:'macOS · Win',t:'media mac win',pkg:'macOS 11+ · Windows 10 / 11 · Open source',u:'hayabubusa/',link:'more',
+  s:{zh:'點了就開的輕量看圖程式',en:'An image viewer that opens instantly',ja:'クリックで即開く軽量ビューア',ko:'클릭하면 바로 열리는 이미지 뷰어'},
+  d:{zh:'Rust 寫的輕量快速看圖程式：點圖秒開、按 Enter 在單圖與縮圖之間切換、漫畫模式一路往下捲。免費、開源。',en:'A lightweight, fast image viewer written in Rust: opens in an instant, Enter toggles single image and thumbnails, and a manga mode scrolls straight down. Free and open source.',ja:'Rust 製の軽量・高速な画像ビューア。一瞬で開き、Enter で単一表示とサムネイルを切り替え、マンガモードで縦にスクロール。無料・オープンソース。',ko:'Rust로 만든 가볍고 빠른 이미지 뷰어. 즉시 열리고, Enter로 단일 이미지와 썸네일 전환, 만화 모드로 쭉 스크롤. 무료·오픈 소스.'}},
+ {n:'Bluetooth Keyboard & Mouse',i:'combo',c:'#7c5cff',p:'Android',t:'bluetooth android',pkg:'com.bittyferrari.bluetooth_combo',u:'android-bluetooth-combo/privacy-policy.html',
   s:{zh:'藍牙鍵盤＋滑鼠',en:'Keyboard + touchpad in one',ja:'Bluetooth キーボード＋マウス',ko:'블루투스 키보드＋마우스'},
   d:{zh:'把手機變成二合一藍牙鍵盤與觸控板，一台就能控制電腦、平板或電視。',en:'Turn your phone into a 2-in-1 Bluetooth keyboard and touchpad for your PC, tablet or TV.',ja:'スマホを Bluetooth キーボードとタッチパッドの 2in1 に。PC・タブレット・テレビを操作。',ko:'휴대폰을 블루투스 키보드와 터치패드 2in1으로. PC, 태블릿, TV를 한 번에 제어하세요.'}},
- {n:'Bluetooth MultiLayout Keyboard',i:'keyboard',c:'#00e0ff',p:'Android',t:'bluetooth',pkg:'Bluetooth HID · local only',u:'android-bluetooth-keyboard/privacy-policy.html',
+ {n:'Bluetooth MultiLayout Keyboard',i:'keyboard',c:'#00e0ff',p:'Android',t:'bluetooth android',pkg:'Bluetooth HID · local only',u:'android-bluetooth-keyboard/privacy-policy.html',
   s:{zh:'多語系藍牙鍵盤',en:'Multi-layout wireless keyboard',ja:'マルチレイアウト キーボード',ko:'다국어 블루투스 키보드'},
   d:{zh:'支援多種鍵盤配置，手機直接變成外接藍牙鍵盤。',en:'Use your phone as a wireless Bluetooth keyboard, with support for many keyboard layouts.',ja:'多数のキーボード配列に対応。スマホをそのままワイヤレスキーボードに。',ko:'다양한 키보드 레이아웃 지원. 휴대폰을 무선 키보드로 사용하세요.'}},
- {n:'Bluetooth Mouse',i:'mouse',c:'#3d8bff',p:'Android',t:'bluetooth',pkg:'Bluetooth HID · local only',u:'android-bluetooth-mouse/privacy-policy.html',
+ {n:'Bluetooth Mouse',i:'mouse',c:'#3d8bff',p:'Android',t:'bluetooth android',pkg:'Bluetooth HID · local only',u:'android-bluetooth-mouse/privacy-policy.html',
   s:{zh:'藍牙滑鼠',en:'Your phone as a trackpad',ja:'Bluetooth マウス',ko:'블루투스 마우스'},
   d:{zh:'手機螢幕變觸控板，隔空操控電腦游標、點擊與捲動。',en:'Turn your screen into a trackpad — move the cursor, click and scroll from the couch.',ja:'画面がタッチパッドに。カーソル移動・クリック・スクロールを離れた場所から。',ko:'화면이 터치패드로. 멀리서 커서 이동, 클릭, 스크롤까지.'}},
- {n:'FTP Server',i:'server',c:'#22d39a',p:'Android',t:'files',pkg:'com.bitty.ftpserver',u:'android-ftp/privacy-policy.html',
+ {n:'FTP Server',i:'server',c:'#22d39a',p:'Android',t:'files android',pkg:'com.bitty.ftpserver',u:'android-ftp/privacy-policy.html',
   s:{zh:'FTP 伺服器',en:'Pocket FTP server',ja:'FTP サーバー',ko:'FTP 서버'},
   d:{zh:'一鍵在手機上架起 FTP 伺服器，區網內用電腦直接存取手機檔案。',en:'One tap runs an FTP server on your phone, so any computer on your network can reach its files.',ja:'ワンタップでスマホを FTP サーバーに。LAN 内の PC からファイルに直接アクセス。',ko:'탭 한 번으로 휴대폰에 FTP 서버를 실행하고 같은 네트워크의 PC에서 파일에 접근하세요.'}},
- {n:'FTP Client',i:'client',c:'#a3e635',p:'Android',t:'files',pkg:'com.bittyferrari.ftpclient',u:'android-ftp-client/privacy-policy.html',
+ {n:'FTP Client',i:'client',c:'#a3e635',p:'Android',t:'files android',pkg:'com.bittyferrari.ftpclient',u:'android-ftp-client/privacy-policy.html',
   s:{zh:'FTP 用戶端',en:'FTP client',ja:'FTP クライアント',ko:'FTP 클라이언트'},
   d:{zh:'連線到你自己的 FTP 伺服器，上傳、下載、管理遠端檔案。',en:'Connect to your own FTP servers to upload, download and manage remote files.',ja:'自分の FTP サーバーに接続して、アップロード・ダウンロード・ファイル管理。',ko:'내 FTP 서버에 연결해 업로드, 다운로드, 원격 파일 관리를 하세요.'}},
- {n:'GPS HUD',i:'gps',c:'#ff9f1c',p:'Android',t:'media',pkg:'com.bitty.gpshud',u:'android-gps-hud-editor/privacy-policy.html',
+ {n:'HTTP Server',i:'web',c:'#14b8a6',p:'Android',t:'files android',pkg:'com.bittyferrari.http_server',u:'android-http-server/privacy-policy.html',
+  s:{zh:'手機變網頁伺服器',en:'Your phone as a web server',ja:'スマホを Web サーバーに',ko:'휴대폰을 웹 서버로'},
+  d:{zh:'在區網內架起網頁伺服器，其他裝置用瀏覽器就能瀏覽、下載、上傳你選的資料夾，還能一起玩內建的網頁小遊戲。',en:'Runs a web server on your Wi-Fi: other devices browse, download and upload files in a folder you pick — and play the built-in browser games together.',ja:'Wi-Fi 内で Web サーバーを起動。他の端末からブラウザで選んだフォルダを閲覧・ダウンロード・アップロード。内蔵ブラウザゲームで一緒に遊べます。',ko:'Wi-Fi에서 웹 서버를 실행. 다른 기기가 브라우저로 선택한 폴더를 탐색·다운로드·업로드하고, 내장 브라우저 게임도 함께 즐겨요.'}},
+ {n:'Foodroid',i:'music',c:'#34d399',p:'Android',t:'media android',pkg:'com.bittyferrari.foodroid',u:'android-foodroid/privacy-policy.html',
+  s:{zh:'口袋裡的 foobar2000 風格播放器',en:'A foobar2000-style player in your pocket',ja:'ポケットの foobar2000 風プレーヤー',ko:'주머니 속 foobar2000 스타일 플레이어'},
+  d:{zh:'選資料夾就播放本機音樂，讀取標籤與封面、星號資料夾、背景與鎖定畫面播放控制。沒有網路權限。',en:'Point it at your music folders and play: tags and cover art, starred folders, background playback and lock-screen controls. No internet permission at all.',ja:'フォルダを選んでローカル音楽を再生。タグとジャケット、スター付きフォルダ、バックグラウンド再生とロック画面操作。ネット権限なし。',ko:'폴더를 고르면 로컬 음악 재생. 태그와 앨범 아트, 별표 폴더, 백그라운드 재생과 잠금 화면 제어. 인터넷 권한 없음.'}},
+ {n:'Hayabubusa',i:'image',c:'#ffb020',p:'Android',t:'media android',pkg:'com.bittyferrari.hayabubusa',u:'android-hayabubusa/privacy-policy.html',
+  s:{zh:'看圖與漫畫 · Android',en:'Image & manga viewer for Android',ja:'画像・マンガビューア · Android',ko:'이미지·만화 뷰어 · Android'},
+  d:{zh:'Hayabubusa 的 Android 版：開啟你選的圖片資料夾，縮圖瀏覽、漫畫連續捲動，還會記住閱讀進度。',en:'Hayabubusa on Android: open image folders you pick, browse thumbnails, scroll manga continuously, and pick up where you left off.',ja:'Hayabubusa の Android 版。選んだ画像フォルダを開き、サムネイル表示、マンガを連続スクロール、読書位置も記憶。',ko:'Hayabubusa의 Android 버전. 선택한 이미지 폴더를 열고 썸네일 탐색, 만화 연속 스크롤, 읽던 위치도 기억해요.'}},
+ {n:'Video Masker',i:'mask',c:'#ef4444',p:'Android',t:'media android',pkg:'com.bittyferrari.videomasker',u:'android-video-masker/privacy-policy.html',
+  s:{zh:'影片遮蔽：自動打碼人臉與車牌',en:'Auto-blur faces and plates',ja:'顔とナンバーを自動モザイク',ko:'얼굴·번호판 자동 모자이크'},
+  d:{zh:'自動偵測影片中的人臉與車牌並遮蔽，模型內建在 App 裡、全部在手機上運算，不需網路，也不會動到原始影片。',en:'Detects and masks faces and licence plates in your videos with an on-device model — no internet, and your original video is never touched.',ja:'動画内の顔とナンバープレートを自動検出してモザイク。モデルは端末内で動作、ネット不要、元の動画はそのまま。',ko:'동영상 속 얼굴과 번호판을 자동 감지해 가려요. 기기 내 모델로 처리, 인터넷 불필요, 원본은 그대로.'}},
+ {n:'GPS HUD',i:'gps',c:'#ff9f1c',p:'Android',t:'media android',pkg:'com.bitty.gpshud',u:'android-gps-hud-editor/privacy-policy.html',
   s:{zh:'GPS 儀表疊加編輯器',en:'GPS overlay video editor',ja:'GPS オーバーレイ編集',ko:'GPS 오버레이 편집기'},
   d:{zh:'把 GPX 軌跡的速度、路線疊到行車／運動影片上，全部在裝置本機輸出。',en:'Overlay speed and route from GPX tracks onto your ride videos — rendered entirely on-device.',ja:'GPX の速度やルートを走行動画に重ねて書き出し。処理はすべて端末内で完結。',ko:'GPX 트랙의 속도와 경로를 주행 영상에 합성. 모든 처리는 기기 안에서.'}},
- {n:'PlayCut',i:'cut',c:'#2f7df6',p:'Android',t:'media',pkg:'com.bittyferrari.playcut',u:'android-play-cut/privacy-policy.html',
+ {n:'PlayCut',i:'cut',c:'#2f7df6',p:'Android',t:'media android',pkg:'com.bittyferrari.playcut',u:'android-play-cut/privacy-policy.html',
   s:{zh:'影片播放與剪輯',en:'Video player & cutter',ja:'動画プレーヤー＆カット',ko:'동영상 플레이어 & 컷 편집'},
   d:{zh:'插旗標逐格精準剪片段，智慧剪輯、裁成 1:1、9:16 匯出，全部在裝置本機完成。',en:'Flag frame-accurate cut points, then smart-cut or crop to 1:1 and 9:16 — all processed on-device.',ja:'フラグでフレーム単位に正確カット。スマートカットや 1:1・9:16 への切り抜きも端末内で完結。',ko:'플래그로 프레임 단위 정확한 컷 편집. 스마트 컷, 1:1·9:16 자르기까지 모두 기기 안에서.'}},
- {n:'SlideShow',i:'slides',c:'#ff5ca8',p:'Android',t:'media',pkg:'com.bittyferrari.slideshow',u:'android-slideshow/privacy-policy.html',
+ {n:'SlideShow',i:'slides',c:'#ff5ca8',p:'Android',t:'media android',pkg:'com.bittyferrari.slideshow',u:'android-slideshow/privacy-policy.html',
   s:{zh:'幻燈片播放',en:'Photo slideshow',ja:'スライドショー',ko:'슬라이드쇼'},
   d:{zh:'選個資料夾就開始播放，簡單乾淨的相片幻燈片。',en:'Pick a folder and press play. A clean, simple photo slideshow.',ja:'フォルダを選ぶだけで再生開始。シンプルな写真スライドショー。',ko:'폴더를 고르면 바로 재생. 깔끔하고 단순한 사진 슬라이드쇼.'}},
- {n:'Japanese Slideshow',i:'ja',c:'#ff2d55',p:'Android',t:'media',pkg:'com.bitty.jaslideshow',u:'android-japanese-slideshow/privacy-policy.html',
+ {n:'Japanese Slideshow',i:'ja',c:'#ff2d55',p:'Android',t:'media android',pkg:'com.bitty.jaslideshow',u:'android-japanese-slideshow/privacy-policy.html',
   s:{zh:'日文幻燈片',en:'Learn Japanese, slide by slide',ja:'日本語スライドショー',ko:'일본어 슬라이드쇼'},
   d:{zh:'用幻燈片方式反覆瀏覽日文，零碎時間輕鬆學習。',en:'Flip through Japanese as a slideshow and learn in spare moments.',ja:'日本語をスライドショーで繰り返し表示。すき間時間に気軽に学習。',ko:'일본어를 슬라이드쇼로 반복 학습. 자투리 시간에 가볍게.'}},
+ {n:'GPS Logger',i:'route',c:'#f59e0b',p:'Android',t:'tools android',pkg:'com.bittyferrari.gpslogger',u:'android-gps-logger/privacy-policy.html',
+  s:{zh:'GPS 軌跡記錄',en:'Record tracks to GPX',ja:'GPS ログを GPX に記録',ko:'GPS 트랙을 GPX로 기록'},
+  d:{zh:'按下開始就記錄軌跡，可從快速設定磚啟動、隨手標記航點，存成 .gpx 檔留在你手機裡。沒有網路權限。',en:'Press START (even from a Quick Settings tile) to record your track, MARK waypoints along the way, and save it as a .gpx file on your phone. No internet access.',ja:'START で軌跡を記録（クイック設定タイルからも）。MARK でウェイポイント、.gpx として端末に保存。ネット接続なし。',ko:'START로 트랙 기록(빠른 설정 타일에서도), MARK로 웨이포인트, .gpx 파일로 휴대폰에 저장. 인터넷 접근 없음.'}},
+ {n:'HeatCheck',i:'thermo',c:'#f97316',p:'Android',t:'tools android',pkg:'com.bittyferrari.heatcheck',u:'android-heat-check/privacy-policy.html',
+  s:{zh:'手機溫度與硬體監看',en:'Phone temperature & hardware monitor',ja:'スマホの温度とハードウェア監視',ko:'휴대폰 온도·하드웨어 모니터'},
+  d:{zh:'即時看 CPU、GPU、電池溫度與核心時脈、記憶體用量，支援桌面小工具、子母畫面與浮動視窗。',en:'Live CPU, GPU and battery temperatures, core clocks and memory use — in a widget, picture-in-picture window or floating overlay.',ja:'CPU・GPU・バッテリー温度、コアクロック、メモリ使用量をリアルタイム表示。ウィジェット、PiP、フローティング表示に対応。',ko:'CPU·GPU·배터리 온도, 코어 클럭, 메모리 사용량을 실시간으로. 위젯, PIP, 플로팅 창 지원.'}},
+ {n:'TRA Timetable',i:'train',c:'#0ea5e9',p:'Android',t:'tools android',pkg:'com.bittyferrari.taiwanrailway',u:'android-taiwanrailway/privacy-policy.html',
+  s:{zh:'台鐵時刻表',en:'Taiwan Railway timetable',ja:'台湾鉄道の時刻表',ko:'대만 철도 시간표'},
+  d:{zh:'用 TDX 公開資料查台鐵時刻，記住常用車站、支援轉乘查詢。非台鐵官方 App。',en:'Look up Taiwan Railway trains from TDX open data, with recent stations and transfer search. Not an official TRA app.',ja:'TDX のオープンデータで台湾鉄道の時刻を検索。よく使う駅を記憶、乗り換え検索にも対応。台鉄公式アプリではありません。',ko:'TDX 공개 데이터로 대만 철도 시간표 조회. 최근 역 기억, 환승 검색 지원. 대만철도 공식 앱이 아닙니다.'}},
+ {n:'YoWeather',i:'weather',c:'#38bdf8',p:'Android',t:'tools android',pkg:'com.bittyferrari.yoweather',u:'android-weather/privacy-policy.html',
+  s:{zh:'簡潔天氣與空氣品質',en:'Clean weather & air quality',ja:'シンプルな天気と大気質',ko:'깔끔한 날씨와 대기질'},
+  d:{zh:'Open-Meteo 天氣預報與空氣品質、收藏地點、桌面小工具。定位可選，不授權也能手動搜尋城市。',en:'Open-Meteo forecasts and air quality, saved places and a home-screen widget. Location is optional — search for a city instead.',ja:'Open-Meteo の天気予報と大気質、お気に入り地点、ウィジェット。位置情報は任意、都市を検索しても使えます。',ko:'Open-Meteo 예보와 대기질, 즐겨찾기 장소, 홈 화면 위젯. 위치 권한은 선택, 도시 검색으로도 OK.'}},
+ {n:'Game Host',i:'game',c:'#a855f7',p:'iOS',t:'tools ios',pkg:'iPhone · local Wi-Fi only',u:'ios-http-game/privacy-policy.html',
+  s:{zh:'iPhone 變區網遊戲主機',en:'Host party games from your iPhone',ja:'iPhone で LAN パーティーゲーム',ko:'iPhone으로 로컬 파티 게임'},
+  d:{zh:'把 iPhone 變成區網小伺服器，朋友在同一個 Wi-Fi 或個人熱點用瀏覽器加入，你在 App 裡一起玩。',en:'Turns your iPhone into a tiny server on your Wi-Fi: friends join from a browser on the same network or your hotspot, and you play in the app.',ja:'iPhone を LAN 内の小さなサーバーに。友だちは同じ Wi-Fi やテザリングからブラウザで参加、あなたはアプリで遊べます。',ko:'iPhone을 Wi-Fi 속 작은 서버로. 친구는 같은 네트워크나 핫스팟에서 브라우저로 참여하고, 나는 앱에서 플레이.'}},
+ {n:'SlideShow',img:'ios-slideshow/img/icon-256.png',c:'#ff5ca8',p:'iOS',t:'media ios',pkg:'iPhone · iPad',u:'ios-slideshow/privacy-policy.html',
+  s:{zh:'幻燈片播放 · iOS',en:'Photo slideshow for iOS',ja:'スライドショー · iOS',ko:'슬라이드쇼 · iOS'},
+  d:{zh:'SlideShow 的 iPhone / iPad 版本，選好相片就開始播放。',en:'SlideShow for iPhone and iPad — pick your photos and press play.',ja:'SlideShow の iPhone / iPad 版。写真を選んで再生するだけ。',ko:'SlideShow의 iPhone / iPad 버전. 사진을 고르고 재생만 하세요.'}},
  {n:'Japanese Slideshow',i:'ja',c:'#ff2d55',p:'iOS',t:'media ios',pkg:'com.bittyferrari.japanese-slideshow',u:'ios-japanese-slideshow/privacy-policy.html',
   s:{zh:'日文幻燈片 · iOS',en:'Japanese Slideshow for iOS',ja:'日本語スライドショー · iOS',ko:'일본어 슬라이드쇼 · iOS'},
   d:{zh:'iPhone / iPad 版本，隨時隨地複習日文。',en:'The iPhone & iPad edition — review Japanese anywhere.',ja:'iPhone / iPad 版。いつでもどこでも復習。',ko:'iPhone / iPad 버전. 언제 어디서나 복습하세요.'}},
@@ -418,6 +475,8 @@ const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},se
 const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fine=matchMedia('(pointer:fine)').matches; if(fine) document.documentElement.classList.add('fine');
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+$('#napps').dataset.count=new Set(apps.map(a=>a.n)).size;
+$$('#filters button').forEach(b=>{const f=b.dataset.f;b.querySelector('sup').textContent=f==='all'?apps.length:apps.filter(a=>a.t.split(' ').includes(f)).length});
 
 /* text scramble */
 const GLYPHS='01#$%&*+=<>/\\ABCDEFXYZ?!';
@@ -528,7 +587,7 @@ function counters(){$$('[data-count]').forEach(el=>{const to=+el.dataset.count,s
   const step=t=>{s??=t;const p=Math.min((t-s)/1300,1);el.textContent=Math.round(to*(1-Math.pow(1-p,3)))+suf;if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
 
 /* marquee */
-const mq=['Mochabar','macOS','Bluetooth Keyboard','FTP Server','GPS HUD','SlideShow','日本語','Bluetooth Mouse','FTP Client','0 trackers','Android','iOS','한국어','繁體中文'];
+const mq=['Mochabar','FileDeck','GitDeck','Foomac','Foowin','Hayabubusa','macOS','Windows','Bluetooth Keyboard','HTTP Server','Video Masker','TRA Timetable','YoWeather','HeatCheck','0 trackers','Android','iOS','日本語','한국어','繁體中文'];
 $('#track').innerHTML=[...mq,...mq].map(x=>`<span>${x}</span><span><em>✦</em></span>`).join('');
 
 /* cursor + magnetic */
@@ -553,7 +612,7 @@ addEventListener('scroll',()=>{const h=document.documentElement;$('#prog').style
   const N=720,P=[];const ga=Math.PI*(3-Math.sqrt(5));
   const mix=(a,b,t)=>a.map((v,i)=>v+(b[i]-v)*t);const A=[255,45,85],B=[124,92,255],C=[0,224,255];
   for(let i=0;i<N;i++){const y=1-(i/(N-1))*2,r=Math.sqrt(1-y*y),th=ga*i;const t=(y+1)/2;P.push({x:Math.cos(th)*r,y,z:Math.sin(th)*r,c:t<.5?mix(A,B,t*2):mix(B,C,(t-.5)*2)})}
-  const sats=apps.map((a,i)=>({c:a.c,inc:(i/apps.length)*Math.PI*.9-.45,rot:i*0.7,sp:.004+(i%3)*.0022,ph:i*1.3,r:1.28+(i%3)*.12,trail:[]}));
+  const SA=apps.slice(0,14);const sats=SA.map((a,i)=>({c:a.c,inc:(i/SA.length)*Math.PI*.9-.45,rot:i*0.7,sp:.004+(i%3)*.0022,ph:i*1.3,r:1.28+(i%3)*.12,trail:[]}));
   let ry=0,rx=-.35,vy=.004,drag=false,lx=0,tx=-.35;
   cv.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;cv.setPointerCapture(e.pointerId)});
   cv.addEventListener('pointermove',e=>{if(drag){vy=(e.clientX-lx)*.0009;lx=e.clientX}const r=cv.getBoundingClientRect();tx=-.35+((e.clientY-r.top)/r.height-.5)*.6});
@@ -591,7 +650,7 @@ function tp(html,cls){const d=document.createElement('div');if(cls)d.className=c
 const cmds={
   help:()=>tp(`<span class="k">help</span>      this list\n<span class="k">whoami</span>    about me\n<span class="k">apps</span>      list apps\n<span class="k">open</span> &lt;n&gt;  open app n's privacy policy\n<span class="k">lang</span> &lt;x&gt;  zh | en | ja | ko\n<span class="k">privacy</span>   data report\n<span class="k">date</span>      current time\n<span class="k">clear</span>     clear screen`),
   whoami:()=>tp(esc(T('whoami'))),
-  apps:()=>tp(apps.map((a,i)=>`<span class="d">${String(i+1).padStart(2,'0')}</span>  <span style="color:${a.c}">●</span> ${esc(a.n).padEnd(32)} <span class="d">${a.p}</span>`).join('\n')),
+  apps:()=>tp(apps.map((a,i)=>`<span class="d">${String(i+1).padStart(2,'0')}</span>  <span style="color:${a.c}">●</span> ${esc(a.n).padEnd(31)} <span class="d">${a.p}</span>`).join('\n')),
   open:(n)=>{const a=apps[(+n||0)-1];if(!a)return tp('usage: open 1-'+apps.length,'d');tp(`opening ${esc(a.n)} ...`,'d');setTimeout(()=>location.href=a.u,500)},
   lang:(l)=>{if(!L[l])return tp('usage: lang zh | en | ja | ko','d');setLang(l);tp(`language → ${L[l].label}`,'d')},
   privacy:()=>tp('trackers ........ <span class="k">0</span>\naccounts ........ <span class="k">0</span>\nservers ......... <span class="k">0</span>\nyour data ....... <span class="p">stays on your device ✓</span>'),
